@@ -1,0 +1,145 @@
+**🌹 Super Modern Website for “Dubai Rose” – A Women-Only Beauty & Aesthetics Center**
+
+---
+
+### 1. **Business Overview**
+
+Design and build a sophisticated, multilingual website for **Dubai Rose**, a **women-only beauty and aesthetic center**. The brand specializes in high-end cosmetic treatments and personal grooming services. The website should reflect elegance, luxury, and trust while offering practical booking and multilingual navigation for a diverse clientele.
+
+---
+
+### 2. **Core Services Offered**
+
+Each of these services should be displayed in an attractive, easy-to-navigate format with individual pages or sections:
+
+* **Laser Hair Removal**
+* **Skin Tightening**
+* **Tattoo Removal**
+* **Facial Cleansing**
+* **Fillers & Botox**
+* **Bridal Preparation**
+* **Hair Styling**
+* **Professional Makeup**
+* **Eyelash Extensions**
+* **Hair Extensions**
+* **Lip Tattoo**
+* **Carbon Facial Mask**
+* **Teeth Whitening**
+* **Waxing**
+* **Hair Coloring & Highlights**
+* **Chemical Peeling** (incl. Green Peel)
+
+These services must clearly communicate that **Dubai Rose is a women-only center** (نسواني فقط).
+
+---
+
+### 3. **VIP Membership System**
+
+Create a dedicated **“VIP Membership”** section to explain the center’s loyalty program. This is an essential part of customer engagement and brand positioning.
+
+**Membership Tiers:**
+
+1. **Golden Kundenkarte**
+
+   * **40% permanent discount**
+   * **Free of charge**
+   * Granted by the owner to **long-term loyal clients**
+
+2. **Silver Kundenkarte**
+
+   * **20% permanent discount**
+   * **Free of charge**
+   * Also granted selectively by the owner
+
+**Requirements:**
+
+* Clearly explain that these cards are not purchasable and are based on loyalty.
+* Include visual representations (e.g., sleek gold and silver card designs).
+* Membership benefits should be displayed on service and booking pages (e.g., "Discounted Price for VIP Members").
+* Optional: Area for registered VIPs to enter their card number or code (manual or future-proofed).
+
+---
+
+### 4. **Website Features & Functional Requirements**
+
+#### a. **Homepage**
+
+* Hero banner with visuals of treatments, happy clients, and luxury ambiance.
+* Multilingual slogan like:
+  *"جمالكِ مسؤوليتنا – Dubai Rose"*
+  *"Deine Schönheit, unsere Mission – Dubai Rose"*
+* CTAs for **“احجزي الآن” / “Jetzt Buchen” / “Book Now” / “Randevu Al”**
+
+#### b. **Appointment Booking**
+
+* Integrated, multilingual booking system with:
+
+  * Service selection
+  * Staff (optional)
+  * Date and time
+  * Contact info
+* Responsive calendar view
+* Email and/or SMS confirmation
+* Optional: note or toggle for VIP members to indicate card type
+
+#### c. **Contact Page**
+
+* Embedded map
+* Click-to-call & WhatsApp button
+* Contact form
+* Operating hours
+
+#### d. **Languages**
+
+The website must support:
+
+* **Arabic**
+* **German**
+* **Turkish**
+* **English**
+
+Content must be **professionally translated** and SEO-localized. Provide a language switcher in the header. Ensure all forms, labels, CTAs, and menus reflect selected language.
+
+---
+
+### 5. **Design & Branding**
+
+#### Style:
+
+* **Modern, elegant, feminine**
+* Colors: Soft pink, white, beige, gold accents
+* Fonts: Refined, readable across scripts (Arabic, Latin, Turkish)
+* Icons and illustrations tailored to the services (e.g., laser icon, hairbrush, makeup palette)
+
+#### Branding Assets:
+
+* “Dubai Rose” logo (if not available, placeholder text-based logo)
+* Include room for a future gallery or before/after section
+
+---
+
+### 6. **Technology Stack Suggestions**
+
+* **Frontend**: Next.js or React with multilingual routing
+* **CMS**: Headless CMS (e.g., Sanity, Strapi) or WordPress with WPML
+* **Booking Integration**: Calendly, SimplyBook.me, or custom
+* **Hosting**: Vercel, Netlify, or traditional LAMP hosting for WordPress
+
+---
+
+### 7. **Optional Future Features**
+
+* VIP portal (with login) for managing appointments and viewing discounts
+* Gallery or Instagram feed
+* Testimonials and reviews
+* Blog for skincare tips and news
+
+---
+
+### 8. **Deliverables**
+
+* Fully functional, responsive, multilingual website
+* Booking system
+* Service and membership pages
+* Admin panel access (for editing content, services, and availability)
+* Deployment and setup documentation
