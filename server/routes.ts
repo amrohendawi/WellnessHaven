@@ -60,8 +60,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         date,
         time,
         vipNumber: vipNumber || null,
-        status: 'pending',
-        createdAt: new Date().toISOString()
+        status: 'pending'
       });
       
       res.status(200).json({ 
@@ -133,7 +132,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Get services list
-  app.get('/api/services', (req, res) => {
+  app.get('/api/services', async (req, res) => {
     try {
       // Get language from query parameter, default to English
       const lang = (req.query.lang as string) || 'en';
@@ -141,9 +140,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const language = validLangs.includes(lang) ? lang : 'en';
       
       // Get services from storage
-      const services = storage.getServices(language);
+      const services = await storage.getServices();
       
-      res.status(200).json(services);
+      // Transform database records to ServiceDisplay format for frontend
+      const formattedServices = services.map(service => ({
+        id: service.id,
+        slug: service.slug,
+        category: service.category,
+        name: {
+          en: service.nameEn,
+          ar: service.nameAr,
+          de: service.nameDe,
+          tr: service.nameTr
+        },
+        description: {
+          en: service.descriptionEn,
+          ar: service.descriptionAr,
+          de: service.descriptionDe,
+          tr: service.descriptionTr
+        },
+        longDescription: service.longDescriptionEn ? {
+          en: service.longDescriptionEn,
+          ar: service.longDescriptionAr || '',
+          de: service.longDescriptionDe || '',
+          tr: service.longDescriptionTr || ''
+        } : undefined,
+        duration: service.duration,
+        price: service.price,
+        imageUrl: service.imageUrl,
+        imageLarge: service.imageLarge || undefined
+      }));
+      
+      res.status(200).json(formattedServices);
     } catch (error) {
       console.error('Error getting services:', error);
       res.status(500).json({ 
@@ -153,7 +181,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Get single service by slug
-  app.get('/api/services/:slug', (req, res) => {
+  app.get('/api/services/:slug', async (req, res) => {
     try {
       const { slug } = req.params;
       const lang = (req.query.lang as string) || 'en';
@@ -161,7 +189,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const language = validLangs.includes(lang) ? lang : 'en';
       
       // Get service from storage
-      const service = storage.getServiceBySlug(slug, language);
+      const service = await storage.getServiceBySlug(slug);
       
       if (!service) {
         return res.status(404).json({ 
@@ -169,7 +197,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      res.status(200).json(service);
+      // Transform database record to ServiceDisplay format for frontend
+      const formattedService = {
+        id: service.id,
+        slug: service.slug,
+        category: service.category,
+        name: {
+          en: service.nameEn,
+          ar: service.nameAr,
+          de: service.nameDe,
+          tr: service.nameTr
+        },
+        description: {
+          en: service.descriptionEn,
+          ar: service.descriptionAr,
+          de: service.descriptionDe,
+          tr: service.descriptionTr
+        },
+        longDescription: service.longDescriptionEn ? {
+          en: service.longDescriptionEn,
+          ar: service.longDescriptionAr || '',
+          de: service.longDescriptionDe || '',
+          tr: service.longDescriptionTr || ''
+        } : undefined,
+        duration: service.duration,
+        price: service.price,
+        imageUrl: service.imageUrl,
+        imageLarge: service.imageLarge || undefined,
+        // For demo purposes, we'll add static benefits and includes
+        benefits: [
+          { en: "Professional service", ar: "خدمة احترافية", de: "Professioneller Service", tr: "Profesyonel hizmet" },
+          { en: "Premium products", ar: "منتجات متميزة", de: "Premium-Produkte", tr: "Premium ürünler" }
+        ],
+        includes: [
+          { en: "Consultation", ar: "استشارة", de: "Beratung", tr: "Danışma" },
+          { en: "Aftercare advice", ar: "نصائح العناية اللاحقة", de: "Nachsorgeberatung", tr: "Bakım tavsiyeleri" }
+        ]
+      };
+      
+      res.status(200).json(formattedService);
     } catch (error) {
       console.error('Error getting service:', error);
       res.status(500).json({ 
