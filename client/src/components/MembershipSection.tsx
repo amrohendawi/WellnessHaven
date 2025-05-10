@@ -22,79 +22,129 @@ const MembershipSection = () => {
         
         <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-16 mt-8">
           {/* Golden Card */}
-          <div className="vip-card w-full md:w-96 rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-[#f0c75e] to-[#e2b93b] text-white p-6 md:p-8 transform transition-transform">
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <h3 className="font-display text-2xl font-bold mb-1">{t('goldCard')}</h3>
-                <div className="bg-white bg-opacity-20 rounded-full px-3 py-1 inline-block">
-                  <span className="text-sm font-medium">Premium VIP</span>
+          <div className="vip-card w-full md:w-96 rounded-2xl overflow-hidden shadow-xl p-0.5 transform transition-all duration-500 bg-gradient-to-r from-gold/30 via-gold to-gold/30">
+            <div className="bg-gradient-to-br from-[#f7df8e] to-[#d4af37] text-black-gold rounded-2xl p-6 md:p-8 h-full backdrop-blur-sm">
+              {/* Decorative pattern */}
+              <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-xl"></div>
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-white rounded-full blur-xl"></div>
+              </div>
+              
+              <div className="flex justify-between items-start mb-10 relative">
+                <div>
+                  <h3 className="font-display text-3xl font-bold mb-2 flex items-center">
+                    <i className="fas fa-crown text-gold-dark mr-3 text-xl"></i>
+                    <span>{t('goldCard')}</span>
+                  </h3>
+                  <div className="bg-black/10 rounded-full px-4 py-1 inline-block border border-gold-dark/20">
+                    <span className="text-sm font-medium">Premium VIP</span>
+                  </div>
+                </div>
+                <div className="absolute top-0 right-0 w-20 h-20 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-gold-dark opacity-20 rounded-full"></div>
+                  <div className="text-5xl text-gold-dark z-10">
+                    <i className="fas fa-crown"></i>
+                  </div>
                 </div>
               </div>
-              <div className="text-4xl"><i className="fas fa-crown"></i></div>
-            </div>
-            
-            <div className="bg-white bg-opacity-10 rounded-xl p-4 mb-6">
-              <div className="text-3xl font-bold mb-1">{t('goldDiscount')}</div>
-              <div className="text-sm text-white text-opacity-80">{t('goldCost')}</div>
-            </div>
-            
-            <div className="mb-6">
-              <div className={`flex items-center mb-3 ${dir === 'rtl' ? 'flex-row-reverse text-right' : ''}`}>
-                <i className={`fas fa-check-circle ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`}></i>
-                <span>{t('goldEligibility')}</span>
+              
+              <div className="bg-black/5 backdrop-blur-sm border border-gold-dark/20 rounded-xl p-5 mb-8">
+                <div className="text-4xl font-bold mb-1 flex items-center text-gold-dark">
+                  <span>{t('goldDiscount')}</span>
+                  <div className="w-1 h-12 bg-gold-dark/20 mx-4"></div>
+                  <span className="text-base font-normal text-black-gold opacity-80">{t('goldCost')}</span>
+                </div>
               </div>
-              <div className={`flex items-center mb-3 ${dir === 'rtl' ? 'flex-row-reverse text-right' : ''}`}>
-                <i className={`fas fa-check-circle ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`}></i>
-                <span>{t('priorityBooking')}</span>
+              
+              <div className="mb-8">
+                <div className={`flex items-start mb-4 ${dir === 'rtl' ? 'flex-row-reverse text-right' : ''}`}>
+                  <div className={`${dir === 'rtl' ? 'ml-3' : 'mr-3'} mt-1 bg-gold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0`}>
+                    <i className="fas fa-check text-white text-xs"></i>
+                  </div>
+                  <span className="font-medium">{t('goldEligibility')}</span>
+                </div>
+                <div className={`flex items-start mb-4 ${dir === 'rtl' ? 'flex-row-reverse text-right' : ''}`}>
+                  <div className={`${dir === 'rtl' ? 'ml-3' : 'mr-3'} mt-1 bg-gold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0`}>
+                    <i className="fas fa-check text-white text-xs"></i>
+                  </div>
+                  <span className="font-medium">{t('priorityBooking')}</span>
+                </div>
+                <div className={`flex items-start ${dir === 'rtl' ? 'flex-row-reverse text-right' : ''}`}>
+                  <div className={`${dir === 'rtl' ? 'ml-3' : 'mr-3'} mt-1 bg-gold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0`}>
+                    <i className="fas fa-check text-white text-xs"></i>
+                  </div>
+                  <span className="font-medium">{t('exclusiveEvents')}</span>
+                </div>
               </div>
-              <div className={`flex items-center ${dir === 'rtl' ? 'flex-row-reverse text-right' : ''}`}>
-                <i className={`fas fa-check-circle ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`}></i>
-                <span>{t('exclusiveEvents')}</span>
-              </div>
-            </div>
-            
-            <div className="mt-auto">
-              <div className="font-medium text-sm text-white text-opacity-80 text-center">
-                {t('byInvitationOnly')}
+              
+              <div className="mt-auto pt-4 border-t border-gold-dark/20">
+                <div className="font-medium text-sm text-black-gold text-opacity-80 text-center">
+                  {t('byInvitationOnly')}
+                </div>
               </div>
             </div>
           </div>
           
           {/* Silver Card */}
-          <div className="vip-card w-full md:w-96 rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-[#e0e0e0] to-[#b8b8b8] text-gray-800 p-6 md:p-8 transform transition-transform">
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <h3 className="font-display text-2xl font-bold mb-1">{t('silverCard')}</h3>
-                <div className="bg-white bg-opacity-30 rounded-full px-3 py-1 inline-block">
-                  <span className="text-sm font-medium">{t('preferredMember')}</span>
+          <div className="vip-card w-full md:w-96 rounded-2xl overflow-hidden shadow-xl p-0.5 transform transition-all duration-500 bg-gradient-to-r from-[#C0C0C0]/30 via-[#C0C0C0] to-[#C0C0C0]/30">
+            <div className="bg-gradient-to-br from-[#f5f5f5] to-[#e6e6e6] text-gray-800 rounded-2xl p-6 md:p-8 h-full backdrop-blur-sm">
+              {/* Decorative pattern */}
+              <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-xl"></div>
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-white rounded-full blur-xl"></div>
+              </div>
+              
+              <div className="flex justify-between items-start mb-10 relative">
+                <div>
+                  <h3 className="font-display text-3xl font-bold mb-2 flex items-center">
+                    <i className="fas fa-award text-gray-500 mr-3 text-xl"></i>
+                    <span>{t('silverCard')}</span>
+                  </h3>
+                  <div className="bg-black/5 rounded-full px-4 py-1 inline-block border border-gray-400/20">
+                    <span className="text-sm font-medium">{t('preferredMember')}</span>
+                  </div>
+                </div>
+                <div className="absolute top-0 right-0 w-20 h-20 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-gray-400 opacity-20 rounded-full"></div>
+                  <div className="text-5xl text-gray-500 z-10">
+                    <i className="fas fa-award"></i>
+                  </div>
                 </div>
               </div>
-              <div className="text-4xl"><i className="fas fa-award"></i></div>
-            </div>
-            
-            <div className="bg-white bg-opacity-20 rounded-xl p-4 mb-6">
-              <div className="text-3xl font-bold mb-1">{t('silverDiscount')}</div>
-              <div className="text-sm text-gray-800 text-opacity-80">{t('silverCost')}</div>
-            </div>
-            
-            <div className="mb-6">
-              <div className={`flex items-center mb-3 ${dir === 'rtl' ? 'flex-row-reverse text-right' : ''}`}>
-                <i className={`fas fa-check-circle ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`}></i>
-                <span>{t('silverEligibility')}</span>
+              
+              <div className="bg-black/5 backdrop-blur-sm border border-gray-400/20 rounded-xl p-5 mb-8">
+                <div className="text-4xl font-bold mb-1 flex items-center text-gray-700">
+                  <span>{t('silverDiscount')}</span>
+                  <div className="w-1 h-12 bg-gray-400/20 mx-4"></div>
+                  <span className="text-base font-normal text-gray-600 opacity-80">{t('silverCost')}</span>
+                </div>
               </div>
-              <div className={`flex items-center mb-3 ${dir === 'rtl' ? 'flex-row-reverse text-right' : ''}`}>
-                <i className={`fas fa-check-circle ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`}></i>
-                <span>{t('specialOffers')}</span>
+              
+              <div className="mb-8">
+                <div className={`flex items-start mb-4 ${dir === 'rtl' ? 'flex-row-reverse text-right' : ''}`}>
+                  <div className={`${dir === 'rtl' ? 'ml-3' : 'mr-3'} mt-1 bg-gray-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0`}>
+                    <i className="fas fa-check text-white text-xs"></i>
+                  </div>
+                  <span className="font-medium">{t('silverEligibility')}</span>
+                </div>
+                <div className={`flex items-start mb-4 ${dir === 'rtl' ? 'flex-row-reverse text-right' : ''}`}>
+                  <div className={`${dir === 'rtl' ? 'ml-3' : 'mr-3'} mt-1 bg-gray-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0`}>
+                    <i className="fas fa-check text-white text-xs"></i>
+                  </div>
+                  <span className="font-medium">{t('specialOffers')}</span>
+                </div>
+                <div className={`flex items-start ${dir === 'rtl' ? 'flex-row-reverse text-right' : ''}`}>
+                  <div className={`${dir === 'rtl' ? 'ml-3' : 'mr-3'} mt-1 bg-gray-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0`}>
+                    <i className="fas fa-check text-white text-xs"></i>
+                  </div>
+                  <span className="font-medium">{t('prioritySupport')}</span>
+                </div>
               </div>
-              <div className={`flex items-center ${dir === 'rtl' ? 'flex-row-reverse text-right' : ''}`}>
-                <i className={`fas fa-check-circle ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`}></i>
-                <span>{t('prioritySupport')}</span>
-              </div>
-            </div>
-            
-            <div className="mt-auto">
-              <div className="font-medium text-sm text-gray-800 text-opacity-80 text-center">
-                {t('byInvitationOnly')}
+              
+              <div className="mt-auto pt-4 border-t border-gray-400/20">
+                <div className="font-medium text-sm text-gray-600 text-opacity-80 text-center">
+                  {t('byInvitationOnly')}
+                </div>
               </div>
             </div>
           </div>
