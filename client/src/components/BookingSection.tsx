@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/dialog";
 import { useQuery } from '@tanstack/react-query';
 import type { ServiceDisplay } from '@shared/schema';
+import { useToast } from '@/hooks/use-toast';
+import { Toaster } from '@/components/ui/toaster';
 
 // Service categories for booking (matching categories in the database)
 const serviceCategories = [
@@ -127,13 +129,16 @@ const BookingSection = () => {
     setServiceModalOpen(false);
   };
 
+  // Toast notification setup
+  const { toast } = useToast();
+  
   // Handle form submission
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     if (!selectedService || !selectedDate || !selectedTime) {
       return;
     }
     
-    // In a real app, this would submit to the server using API
+    // Prepare booking data
     const bookingData = {
       ...data,
       service: selectedService.slug,
@@ -147,8 +152,52 @@ const BookingSection = () => {
     
     console.log('Booking submitted:', bookingData);
     
-    // Display confirmation
-    alert(t('bookingConfirmation'));
+    try {
+      // Submit to server
+      const response = await fetch('/api/booking', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bookingData),
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        // Show success toast notification
+        toast({
+          title: t('bookingSuccess'),
+          description: t('bookingConfirmation'),
+          duration: 5000,
+        });
+        
+        // Reset form
+        form.reset();
+        setSelectedService(null);
+        setSelectedDate(undefined);
+        setSelectedTime(null);
+        setBookingStep(1);
+      } else {
+        // Show error toast
+        toast({
+          title: t('bookingError'),
+          description: result.message || t('bookingErrorMsg'),
+          variant: "destructive",
+          duration: 5000,
+        });
+      }
+    } catch (error) {
+      console.error('Booking error:', error);
+      
+      // Show error toast
+      toast({
+        title: t('bookingError'),
+        description: t('bookingErrorMsg'),
+        variant: "destructive",
+        duration: 5000,
+      });
+    }
   };
 
   return (
@@ -484,7 +533,7 @@ const BookingSection = () => {
                     <div className="border-t pt-6">
                       <Button
                         type="submit"
-                        className="w-full py-6 bg-gold-dark hover:bg-gold text-white text-lg font-bold"
+                        className="w-full py-6 bg-pink hover:bg-pink-dark shadow-lg transition-all text-white text-lg font-bold relative"
                         disabled={!form.watch('name') || !form.watch('email') || !form.watch('phone')}
                       >
                         {t('confirmBooking')} <i className="ml-2 fas fa-check"></i>
