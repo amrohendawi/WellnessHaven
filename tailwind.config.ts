@@ -79,10 +79,30 @@ export default {
             height: "0",
           },
         },
+        "pulse-slow": {
+          '0%, 100%': { opacity: '0.1' },
+          '50%': { opacity: '0.15' },
+        },
+        "shimmer": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-slow": "pulse-slow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "shimmer": "shimmer 3s infinite"
+      },
+      transitionDelay: {
+        '0': '0ms',
+        '500': '500ms',
+        '700': '700ms',
+        '1000': '1000ms',
+        '1200': '1200ms',
+        '1500': '1500ms',
+        '2000': '2000ms',
+        '2500': '2500ms',
       },
     },
   },
