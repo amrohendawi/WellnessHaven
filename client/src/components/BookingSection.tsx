@@ -395,9 +395,9 @@ const BookingSection = () => {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('formName')}</FormLabel>
+                        <FormLabel>{t('formName')} <span className="text-pink">*</span></FormLabel>
                         <FormControl>
-                          <Input {...field} required />
+                          <Input placeholder={t('yourName')} {...field} required />
                         </FormControl>
                       </FormItem>
                     )}
@@ -408,9 +408,9 @@ const BookingSection = () => {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('formEmail')}</FormLabel>
+                        <FormLabel>{t('formEmail')} <span className="text-pink">*</span></FormLabel>
                         <FormControl>
-                          <Input type="email" {...field} required />
+                          <Input type="email" placeholder={t('yourEmail')} {...field} required />
                         </FormControl>
                       </FormItem>
                     )}
@@ -421,9 +421,9 @@ const BookingSection = () => {
                     name="phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('formPhone')}</FormLabel>
+                        <FormLabel>{t('formPhone')} <span className="text-pink">*</span></FormLabel>
                         <FormControl>
-                          <Input type="tel" {...field} required />
+                          <Input type="tel" placeholder={t('yourPhone')} {...field} required />
                         </FormControl>
                       </FormItem>
                     )}
@@ -470,20 +470,31 @@ const BookingSection = () => {
                     </div>
                   </div>
                   
-                  <div className="flex justify-between mt-8">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={prevStep}
-                    >
-                      {t('back')}
-                    </Button>
-                    <Button
-                      type="submit"
-                      className="bg-gold-dark hover:bg-gold text-white"
-                    >
-                      {t('confirmBooking')}
-                    </Button>
+                  <div className="mt-8">
+                    <div className="flex justify-between mb-4">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={prevStep}
+                      >
+                        {t('back')}
+                      </Button>
+                    </div>
+                    
+                    <div className="border-t pt-6">
+                      <Button
+                        type="submit"
+                        className="w-full py-6 bg-gold-dark hover:bg-gold text-white text-lg font-bold"
+                        disabled={!form.watch('name') || !form.watch('email') || !form.watch('phone')}
+                      >
+                        {t('confirmBooking')} <i className="ml-2 fas fa-check"></i>
+                      </Button>
+                      
+                      {/* Required fields note */}
+                      <div className="text-center mt-2 text-xs text-gray-500">
+                        <span className="text-pink">*</span> {t('requiredFields')}
+                      </div>
+                    </div>
                   </div>
                 </form>
               </Form>
