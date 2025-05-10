@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { format } from 'date-fns';
 import { ar, de, tr, enUS } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, ChevronDownIcon } from 'lucide-react';
+import { CalendarIcon } from 'lucide-react';
 import { 
   Dialog, 
   DialogContent, 
@@ -27,23 +27,8 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import type { ServiceDisplay } from '@shared/schema';
 
-// Service categories for booking
+// Service categories for booking (matching categories in the database)
 const serviceCategories = [
-  {
-    id: 'facial',
-    nameKey: 'facialTreatments',
-    descriptionKey: 'facialTreatmentsDesc'
-  },
-  {
-    id: 'laser',
-    nameKey: 'laserTreatments',
-    descriptionKey: 'laserTreatmentsDesc'
-  },
-  {
-    id: 'hair',
-    nameKey: 'hairServices',
-    descriptionKey: 'hairServicesDesc'
-  },
   {
     id: 'beauty',
     nameKey: 'beautyServices',
@@ -104,10 +89,14 @@ const BookingSection = () => {
 
   // When category is selected, open the service selection modal if there are services
   useEffect(() => {
-    if (selectedCategory && filteredServices.length > 0) {
-      setServiceModalOpen(true);
+    if (selectedCategory) {
+      const timer = setTimeout(() => {
+        setServiceModalOpen(true);
+      }, 100);
+      
+      return () => clearTimeout(timer);
     }
-  }, [selectedCategory, filteredServices.length]);
+  }, [selectedCategory]);
 
   // Process to next step
   const nextStep = () => {
@@ -126,6 +115,7 @@ const BookingSection = () => {
   // Handle category selection
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(categoryId);
+    
     if (!selectedService || selectedService.category !== categoryId) {
       setSelectedService(null);
     }
@@ -192,7 +182,7 @@ const BookingSection = () => {
             </div>
             <div 
               className={`booking-step flex-1 py-4 text-center border-r border-gray-200 cursor-pointer ${bookingStep === 2 ? 'active' : ''}`}
-              onClick={() => selectedCategory && setBookingStep(2)}
+              onClick={() => selectedService && setBookingStep(2)}
             >
               <div className="flex flex-col items-center">
                 <div className={`w-8 h-8 rounded-full ${bookingStep === 2 ? 'bg-pink' : 'bg-gray-200'} flex items-center justify-center mb-1`}>
@@ -232,6 +222,17 @@ const BookingSection = () => {
                     <div className="text-sm text-gray-600">{t(category.descriptionKey)}</div>
                   </div>
                 ))}
+              </div>
+              
+              {/* Button to view all services directly */}
+              <div className="text-center mb-6">
+                <Button
+                  onClick={() => setServiceModalOpen(true)}
+                  variant="outline"
+                  className="w-full md:w-auto"
+                >
+                  {t('viewAllServices')}
+                </Button>
               </div>
               
               {/* Selected Service Display */}
@@ -304,65 +305,6 @@ const BookingSection = () => {
               </div>
             </div>
           )}
-          
-          {/* Service Selection Modal */}
-          <Dialog open={serviceModalOpen} onOpenChange={setServiceModalOpen}>
-            <DialogContent className="sm:max-w-[500px]">
-              <DialogHeader>
-                <DialogTitle>{t('selectSpecificService')}</DialogTitle>
-              </DialogHeader>
-              
-              {isLoading ? (
-                <div className="flex justify-center p-6">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink"></div>
-                </div>
-              ) : filteredServices.length > 0 ? (
-                <div className="py-4 max-h-[400px] overflow-y-auto">
-                  {filteredServices.map(service => (
-                    <div 
-                      key={service.id}
-                      onClick={() => handleServiceSelect(service)}
-                      className="p-3 mb-2 border rounded-md hover:bg-pink-lightest cursor-pointer"
-                    >
-                      <div className="flex items-start">
-                        {service.imageUrl && (
-                          <div className="w-16 h-16 rounded overflow-hidden flex-shrink-0 mr-3">
-                            <img 
-                              src={service.imageUrl} 
-                              alt={service.name[language] || service.name.en} 
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        )}
-                        <div className="flex-1">
-                          <h3 className="font-medium text-pink-dark">
-                            {service.name[language] || service.name.en}
-                          </h3>
-                          <p className="text-sm text-gray-600 mb-1">
-                            {service.description[language] || service.description.en}
-                          </p>
-                          <div className="flex text-sm text-gray-500">
-                            <span className="mr-3">{service.duration} {t('minutes')}</span>
-                            <span>{service.price} AED</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="py-6 text-center text-gray-500">
-                  {t('noServicesInCategory')}
-                </div>
-              )}
-              
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setServiceModalOpen(false)}>
-                  {t('cancel')}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
           
           {/* Step 2: Date & Time Selection */}
           {bookingStep === 2 && (
@@ -549,6 +491,96 @@ const BookingSection = () => {
           )}
         </div>
       </div>
+
+      {/* Service Selection Modal */}
+      <Dialog open={serviceModalOpen} onOpenChange={setServiceModalOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>{t('selectSpecificService')}</DialogTitle>
+          </DialogHeader>
+          
+          {isLoading ? (
+            <div className="flex justify-center p-6">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink"></div>
+            </div>
+          ) : services && services.length > 0 ? (
+            <div className="space-y-4">
+              {/* Category filter buttons */}
+              <div className="flex flex-wrap gap-2 px-1">
+                <Button 
+                  variant={!selectedCategory ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedCategory(null)}
+                  className="text-xs"
+                >
+                  {t('allServices')}
+                </Button>
+                
+                {services
+                  .map(s => s.category)
+                  .filter((cat, i, arr) => arr.indexOf(cat) === i)
+                  .map(category => (
+                    <Button
+                      key={category}
+                      variant={selectedCategory === category ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setSelectedCategory(category)}
+                      className="text-xs"
+                    >
+                      {t(`${category}Services`) || category}
+                    </Button>
+                  ))
+                }
+              </div>
+            
+              {/* Service list */}
+              <div className="max-h-[400px] overflow-y-auto">
+                {(selectedCategory ? filteredServices : services).map(service => (
+                  <div 
+                    key={service.id}
+                    onClick={() => handleServiceSelect(service)}
+                    className="p-3 mb-2 border rounded-md hover:bg-pink-lightest cursor-pointer"
+                  >
+                    <div className="flex items-start">
+                      {service.imageUrl && (
+                        <div className="w-16 h-16 rounded overflow-hidden flex-shrink-0 mr-3">
+                          <img 
+                            src={service.imageUrl} 
+                            alt={service.name[language] || service.name.en} 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <h3 className="font-medium text-pink-dark">
+                          {service.name[language] || service.name.en}
+                        </h3>
+                        <p className="text-sm text-gray-600 mb-1">
+                          {service.description[language] || service.description.en}
+                        </p>
+                        <div className="flex text-sm text-gray-500">
+                          <span className="mr-3">{service.duration} {t('minutes')}</span>
+                          <span>{service.price} AED</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="py-6 text-center text-gray-500">
+              {t('noServicesAvailable')}
+            </div>
+          )}
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setServiceModalOpen(false)}>
+              {t('cancel')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };

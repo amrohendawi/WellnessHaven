@@ -77,6 +77,8 @@
   "change": "Change",
   "selectSpecificService": "Select Specific Service",
   "noServicesInCategory": "No services found in this category",
+  "noServicesAvailable": "No services available",
+  "allServices": "All Services",
   
   "facialService": "Facial Treatments",
   "laserService": "Laser Treatments",
