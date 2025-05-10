@@ -27,7 +27,6 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import type { ServiceDisplay } from '@shared/schema';
 import { useToast } from '@/hooks/use-toast';
-import { Toaster } from '@/components/ui/toaster';
 
 // Service categories for booking (matching categories in the database)
 const serviceCategories = [
@@ -202,9 +201,6 @@ const BookingSection = () => {
 
   return (
     <section id="booking" className="py-16 bg-pink-light">
-      {/* Add Toaster component for toast notifications */}
-      <Toaster />
-      
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="royal-heading text-3xl md:text-4xl mb-8">
@@ -534,13 +530,13 @@ const BookingSection = () => {
                     </div>
                     
                     <div className="border-t pt-6">
-                      <Button
+                      <button
                         type="submit"
-                        className="w-full py-6 bg-pink hover:bg-pink-dark shadow-lg transition-all text-white text-lg font-bold relative"
+                        className="w-full py-6 rounded-md bg-pink hover:bg-pink-dark shadow-lg transition-all text-white text-lg font-bold"
                         disabled={!form.watch('name') || !form.watch('email') || !form.watch('phone')}
                       >
                         {t('confirmBooking')} <i className="ml-2 fas fa-check"></i>
-                      </Button>
+                      </button>
                       
                       {/* Required fields note */}
                       <div className="text-center mt-2 text-xs text-gray-500">
