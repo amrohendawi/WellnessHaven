@@ -202,6 +202,9 @@ const BookingSection = () => {
 
   return (
     <section id="booking" className="py-16 bg-pink-light">
+      {/* Add Toaster component for toast notifications */}
+      <Toaster />
+      
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="royal-heading text-3xl md:text-4xl mb-8">
