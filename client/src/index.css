@@ -13,27 +13,31 @@
   --card-foreground: 20 14.3% 4.1%;
   --border: 20 5.9% 90%;
   --input: 20 5.9% 90%;
-  --primary: 320 70% 90%;
+  --primary: 329 40% 70%;
   --primary-foreground: 320 20% 25%;
   --secondary: 60 4.8% 95.9%;
   --secondary-foreground: 24 9.8% 10%;
-  --accent: 44 69% 53%;
-  --accent-foreground: 43 70% 18%;
+  --accent: 36 75% 55%;
+  --accent-foreground: 36 70% 18%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 60 9.1% 97.8%;
-  --ring: 20 14.3% 4.1%;
+  --ring: 36 75% 55%;
   --radius: 0.5rem;
 
-  /* Custom colors for Dubai Rose */
-  --pink-light: 330 70% 95%;
-  --pink: 330 70% 90%;
-  --pink-dark: 330 70% 85%;
-  --beige-light: 40 30% 95%;
-  --beige: 40 30% 90%;
-  --beige-dark: 40 30% 85%;
-  --gold-light: 44 69% 73%;
-  --gold: 44 69% 53%;
-  --gold-dark: 44 69% 45%;
+  /* Custom colors for Dubai Rose - Royal Dubai Style */
+  --pink-light: 329 40% 95%;
+  --pink: 329 40% 75%;
+  --pink-dark: 329 40% 55%;
+  --beige-light: 36 30% 95%;
+  --beige: 36 30% 90%;
+  --beige-dark: 36 30% 85%;
+  --gold-light: 36 75% 70%;
+  --gold: 36 75% 55%;
+  --gold-dark: 36 75% 45%;
+  --royal-purple: 270 50% 40%;
+  --royal-purple-light: 270 50% 90%;
+  --black-gold: 40 30% 15%;
+  --cream: 40 30% 96%;
 }
 
 .dark {
@@ -71,6 +75,7 @@
 /* Custom font settings */
 .font-display {
   font-family: 'Playfair Display', serif;
+  letter-spacing: 0.03em;
 }
 
 .font-body {
@@ -85,23 +90,102 @@
   font-family: 'Tajawal', sans-serif;
 }
 
+/* Royal styling elements */
+.royal-heading {
+  @apply font-display font-bold relative;
+  color: hsl(var(--black-gold));
+}
+
+.royal-heading::after {
+  content: '';
+  position: absolute;
+  bottom: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(to right, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-light)));
+}
+
+/* Gold border elements */
+.gold-border {
+  border: 1px solid hsl(var(--gold));
+}
+
+.gold-shadow {
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
+}
+
+/* Fancy section divider */
+.fancy-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  margin: 2rem 0;
+}
+
+.fancy-divider::before,
+.fancy-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid hsl(var(--gold-light));
+}
+
+.fancy-divider::before {
+  margin-right: 1rem;
+}
+
+.fancy-divider::after {
+  margin-left: 1rem;
+}
+
+.fancy-divider-icon {
+  color: hsl(var(--gold));
+}
+
 /* Service card transitions */
 .service-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid transparent;
 }
 
 .service-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 30px -10px rgba(212, 175, 55, 0.2);
+  border-color: hsl(var(--gold-light));
 }
 
 /* VIP card transitions */
 .vip-card {
-  transition: transform 0.3s ease;
+  transition: all 0.4s ease;
+  position: relative;
 }
 
 .vip-card:hover {
   transform: translateY(-10px);
+}
+
+.vip-card::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    hsl(var(--gold)) 0%, 
+    transparent 50%, 
+    hsl(var(--gold)) 100%
+  );
+  z-index: -1;
+  border-radius: 2.25rem;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.vip-card:hover::before {
+  opacity: 1;
 }
 
 /* Booking step styling */
@@ -109,4 +193,37 @@
   background-color: hsl(var(--pink));
   color: #333;
   border-color: hsl(var(--gold));
+  box-shadow: 0 5px 15px -5px rgba(212, 175, 55, 0.3);
+}
+
+/* Royal buttons */
+.btn-royal {
+  @apply relative overflow-hidden transition-all duration-300;
+  background: linear-gradient(to right, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-dark)));
+  color: white;
+  border: none;
+  box-shadow: 0 4px 15px -3px rgba(212, 175, 55, 0.3);
+}
+
+.btn-royal:hover {
+  box-shadow: 0 6px 20px -3px rgba(212, 175, 55, 0.4);
+}
+
+.btn-royal::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent 100%
+  );
+  transition: left 0.5s ease;
+}
+
+.btn-royal:hover::after {
+  left: 100%;
 }

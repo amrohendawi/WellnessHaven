@@ -105,10 +105,13 @@ const BookingSection = () => {
   return (
     <section id="booking" className="py-16 bg-pink-light">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-3 text-gray-800">
+        <div className="text-center mb-16">
+          <h2 className="royal-heading text-3xl md:text-4xl mb-8">
             {t('bookingTitle')}
           </h2>
+          <div className="fancy-divider mb-4">
+            <i className="fas fa-calendar-alt fancy-divider-icon text-gold mx-2"></i>
+          </div>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             {t('bookingSubtitle')}
           </p>
