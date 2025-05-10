@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
@@ -16,7 +16,16 @@ import { Input } from "@/components/ui/input";
 import { format } from 'date-fns';
 import { ar, de, tr, enUS } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, ChevronDownIcon } from 'lucide-react';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogTitle, 
+  DialogHeader,
+  DialogFooter 
+} from "@/components/ui/dialog";
+import { useQuery } from '@tanstack/react-query';
+import type { ServiceDisplay } from '@shared/schema';
 
 // Service categories for booking
 const serviceCategories = [
@@ -39,6 +48,11 @@ const serviceCategories = [
     id: 'beauty',
     nameKey: 'beautyServices',
     descriptionKey: 'beautyServicesDesc'
+  },
+  {
+    id: 'skincare',
+    nameKey: 'skincareTreatments', 
+    descriptionKey: 'skincareTreatmentsDesc'
   }
 ];
 
@@ -53,8 +67,20 @@ const BookingSection = () => {
   const { language, dir } = useLanguage();
   const [bookingStep, setBookingStep] = useState<number>(1);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedService, setSelectedService] = useState<ServiceDisplay | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [serviceModalOpen, setServiceModalOpen] = useState(false);
+
+  // Fetch services from API
+  const { data: services = [], isLoading } = useQuery<ServiceDisplay[]>({
+    queryKey: ['/api/services'],
+  });
+
+  // Filter services by selected category
+  const filteredServices = selectedCategory 
+    ? services.filter(service => service.category === selectedCategory)
+    : [];
 
   // Form setup
   const form = useForm({
@@ -76,6 +102,13 @@ const BookingSection = () => {
     }
   };
 
+  // When category is selected, open the service selection modal if there are services
+  useEffect(() => {
+    if (selectedCategory && filteredServices.length > 0) {
+      setServiceModalOpen(true);
+    }
+  }, [selectedCategory, filteredServices.length]);
+
   // Process to next step
   const nextStep = () => {
     if (bookingStep < 3) {
@@ -90,15 +123,41 @@ const BookingSection = () => {
     }
   };
 
+  // Handle category selection
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    if (!selectedService || selectedService.category !== categoryId) {
+      setSelectedService(null);
+    }
+  };
+
+  // Handle service selection
+  const handleServiceSelect = (service: ServiceDisplay) => {
+    setSelectedService(service);
+    setServiceModalOpen(false);
+  };
+
   // Handle form submission
   const onSubmit = (data: any) => {
-    console.log('Booking submitted:', {
+    if (!selectedService || !selectedDate || !selectedTime) {
+      return;
+    }
+    
+    // In a real app, this would submit to the server using API
+    const bookingData = {
       ...data,
-      serviceCategory: selectedCategory,
-      date: selectedDate,
+      service: selectedService.slug,
+      serviceId: selectedService.id,
+      serviceName: selectedService.name[language] || selectedService.name.en,
+      date: format(selectedDate, "yyyy-MM-dd"),
       time: selectedTime,
-    });
-    // In a real app, this would submit to the server
+      price: selectedService.price,
+      duration: selectedService.duration
+    };
+    
+    console.log('Booking submitted:', bookingData);
+    
+    // Display confirmation
     alert(t('bookingConfirmation'));
   };
 
@@ -164,7 +223,7 @@ const BookingSection = () => {
                 {serviceCategories.map((category) => (
                   <div 
                     key={category.id}
-                    onClick={() => setSelectedCategory(category.id)}
+                    onClick={() => handleCategorySelect(category.id)}
                     className={`border rounded-lg p-4 hover:border-pink cursor-pointer ${
                       selectedCategory === category.id ? 'border-pink-dark bg-pink-light' : ''
                     }`}
@@ -174,6 +233,39 @@ const BookingSection = () => {
                   </div>
                 ))}
               </div>
+              
+              {/* Selected Service Display */}
+              {selectedService && (
+                <div className="bg-pink-lightest border border-pink rounded-lg p-4 mb-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium">{t('selectedService')}</h4>
+                      <p className="text-md font-semibold text-pink-dark">
+                        {selectedService.name[language] || selectedService.name.en}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {selectedService.description[language] || selectedService.description.en}
+                      </p>
+                      <div className="flex items-center mt-1 text-sm">
+                        <span className="text-gray-700 mr-4">
+                          <i className="far fa-clock mr-1"></i> {selectedService.duration} {t('minutes')}
+                        </span>
+                        <span className="text-gray-700">
+                          <i className="far fa-money-bill-alt mr-1"></i> {selectedService.price} AED
+                        </span>
+                      </div>
+                    </div>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => setServiceModalOpen(true)}
+                      className="text-pink-dark hover:text-pink-darker"
+                    >
+                      {t('change')}
+                    </Button>
+                  </div>
+                </div>
+              )}
               
               {/* VIP Member Section */}
               <div className="bg-beige-light rounded-lg p-4 flex flex-col md:flex-row items-center mb-6">
@@ -203,7 +295,7 @@ const BookingSection = () => {
                   {t('cancel')}
                 </Button>
                 <Button
-                  disabled={!selectedCategory}
+                  disabled={!selectedService}
                   onClick={nextStep}
                   className="bg-pink hover:bg-pink-dark text-gray-800"
                 >
@@ -212,6 +304,65 @@ const BookingSection = () => {
               </div>
             </div>
           )}
+          
+          {/* Service Selection Modal */}
+          <Dialog open={serviceModalOpen} onOpenChange={setServiceModalOpen}>
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle>{t('selectSpecificService')}</DialogTitle>
+              </DialogHeader>
+              
+              {isLoading ? (
+                <div className="flex justify-center p-6">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink"></div>
+                </div>
+              ) : filteredServices.length > 0 ? (
+                <div className="py-4 max-h-[400px] overflow-y-auto">
+                  {filteredServices.map(service => (
+                    <div 
+                      key={service.id}
+                      onClick={() => handleServiceSelect(service)}
+                      className="p-3 mb-2 border rounded-md hover:bg-pink-lightest cursor-pointer"
+                    >
+                      <div className="flex items-start">
+                        {service.imageUrl && (
+                          <div className="w-16 h-16 rounded overflow-hidden flex-shrink-0 mr-3">
+                            <img 
+                              src={service.imageUrl} 
+                              alt={service.name[language] || service.name.en} 
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <h3 className="font-medium text-pink-dark">
+                            {service.name[language] || service.name.en}
+                          </h3>
+                          <p className="text-sm text-gray-600 mb-1">
+                            {service.description[language] || service.description.en}
+                          </p>
+                          <div className="flex text-sm text-gray-500">
+                            <span className="mr-3">{service.duration} {t('minutes')}</span>
+                            <span>{service.price} AED</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-6 text-center text-gray-500">
+                  {t('noServicesInCategory')}
+                </div>
+              )}
+              
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setServiceModalOpen(false)}>
+                  {t('cancel')}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
           
           {/* Step 2: Date & Time Selection */}
           {bookingStep === 2 && (
@@ -343,7 +494,19 @@ const BookingSection = () => {
                       <div className="grid grid-cols-2 gap-2 mb-1">
                         <span className="text-gray-600">{t('service')}:</span>
                         <span className="font-medium">
-                          {selectedCategory && t(`${selectedCategory}Service`)}
+                          {selectedService && (selectedService.name[language] || selectedService.name.en)}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 mb-1">
+                        <span className="text-gray-600">{t('duration')}:</span>
+                        <span className="font-medium">
+                          {selectedService && `${selectedService.duration} ${t('minutes')}`}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 mb-1">
+                        <span className="text-gray-600">{t('price')}:</span>
+                        <span className="font-medium">
+                          {selectedService && `${selectedService.price} AED`}
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-2 mb-1">

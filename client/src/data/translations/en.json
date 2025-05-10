@@ -17,6 +17,8 @@
   "viewAllServices": "View All Services",
   "exploreServiceRange": "Explore our complete range of treatments",
   "exploreMore": "Explore More",
+  "skincareTreatments": "Skincare Treatments",
+  "skincareTreatmentsDesc": "Rejuvenating and revitalizing treatments",
   
   "membershipTitle": "Exclusive VIP Membership",
   "membershipSubtitle": "Experience exceptional benefits and personalized care",
@@ -70,6 +72,11 @@
   "vipDiscount": "VIP Discount",
   "applied": "Applied",
   "bookingConfirmation": "Your booking has been confirmed! We will send you a confirmation message shortly.",
+  "duration": "Duration",
+  "selectedService": "Selected Service",
+  "change": "Change",
+  "selectSpecificService": "Select Specific Service",
+  "noServicesInCategory": "No services found in this category",
   
   "facialService": "Facial Treatments",
   "laserService": "Laser Treatments",
