@@ -78,15 +78,7 @@ const HeroSection = () => {
             </div>
           </div>
           
-          {/* Scroll indicator */}
-          <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 fade-in animation-delay-2500">
-            <div className="flex flex-col items-center">
-              <span className="text-gold text-sm mb-2">{t('scrollDown')}</span>
-              <div className="w-6 h-10 border-2 border-gold rounded-full flex justify-center">
-                <div className="w-1.5 h-3 bg-gold rounded-full mt-2 animate-bounce"></div>
-              </div>
-            </div>
-          </div>
+          {/* Removed scroll indicator */}
         </div>
       </div>
     </section>
