@@ -3,7 +3,7 @@ import { config } from 'dotenv';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from "ws";
-import * as schema from "../shared/schema";
+import * as schema from "./schema";
 import { and, gte, lt } from 'drizzle-orm';
 
 // Ensure environment variables are loaded
@@ -33,19 +33,7 @@ export default async function handler(
   request: VercelRequest,
   response: VercelResponse,
 ) {
-  // Allow CORS
-  response.setHeader('Access-Control-Allow-Credentials', 'true');
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
-  response.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
-
-  if (request.method === 'OPTIONS') {
-    return response.status(200).end();
-  }
-
+  // Only GET is supported
   if (request.method !== 'GET') {
     return response.status(405).json({ message: 'Method not allowed' });
   }

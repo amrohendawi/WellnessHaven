@@ -3,7 +3,7 @@ import { config } from 'dotenv';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from "ws";
-import * as schema from "../shared/schema";
+import * as schema from "./schema";
 import { eq } from 'drizzle-orm';
 
 // Ensure environment variables are loaded
@@ -58,19 +58,7 @@ export default async function handler(
   request: VercelRequest,
   response: VercelResponse,
 ) {
-  // Allow CORS
-  response.setHeader('Access-Control-Allow-Credentials', 'true');
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
-  response.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
-  
-  if (request.method === 'OPTIONS') {
-    return response.status(200).end();
-  }
-  
+  // Only GET is supported
   if (request.method !== 'GET') {
     return response.status(405).json({ message: 'Method not allowed' });
   }
@@ -79,16 +67,16 @@ export default async function handler(
     // Create a new DB connection for this request
     const db = createDbConnection();
     
-    const { type } = request.query;
+    const { tier } = request.query;
     
-    if (type) {
-      // Get specific membership by type
+    if (tier) {
+      // Get specific membership by tier
       const membership = await db.query.memberships.findFirst({
-        where: (memberships) => eq(memberships.type, String(type)),
+        where: (memberships) => eq(memberships.tier, String(tier)),
       });
       
       if (!membership) {
-        return response.status(404).json({ message: 'Membership type not found' });
+        return response.status(404).json({ message: 'Membership tier not found' });
       }
       
       return response.status(200).json(transformMembership(membership));
