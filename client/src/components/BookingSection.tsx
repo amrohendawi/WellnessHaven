@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
@@ -47,10 +47,42 @@ const BookingSection = () => {
     queryKey: ['/api/services'],
   });
   
-  // Fetch service groups from API
-  const { data: serviceGroups = [], isLoading: isGroupsLoading } = useQuery<ServiceGroupDisplay[]>({
-    queryKey: ['/api/service-groups'],
-  });
+  // Generate service groups from service categories
+  const serviceGroups = useMemo(() => {
+    if (!services || services.length === 0) return [];
+    
+    // Get unique categories from services
+    const uniqueCategories = [...new Set(services.map(s => s.category))];
+    
+    // Format category slug into readable name
+    const formatCategoryName = (categorySlug: string, lang: string): string => {
+      return categorySlug
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    };
+    
+    // Create service groups from categories
+    return uniqueCategories.map(category => ({
+      id: category,
+      slug: category,
+      name: {
+        en: formatCategoryName(category, 'en'),
+        ar: formatCategoryName(category, 'ar'),
+        de: formatCategoryName(category, 'de'),
+        tr: formatCategoryName(category, 'tr')
+      },
+      description: {
+        en: `${formatCategoryName(category, 'en')} treatments and services`,
+        ar: `علاجات وخدمات ${formatCategoryName(category, 'ar')}`,
+        de: `${formatCategoryName(category, 'de')} Behandlungen und Dienstleistungen`,
+        tr: `${formatCategoryName(category, 'tr')} tedavileri ve hizmetleri`
+      }
+    }));
+  }, [services]);
+  
+  // Set loading state for service groups based on services loading
+  const isGroupsLoading = isServicesLoading;
 
   // Filter services by selected category
   const filteredServices = selectedCategory 
@@ -288,9 +320,9 @@ const BookingSection = () => {
                           : 'hover:shadow-sm hover:bg-pink-lightest'
                       }`}
                     >
-                      <h4 className="font-medium mb-2">{group.name[language]}</h4>
+                      <h4 className="font-medium mb-2">{group.name[language as keyof typeof group.name] || group.name.en}</h4>
                       {group.description && (
-                        <div className="text-sm text-gray-600">{group.description[language]}</div>
+                        <div className="text-sm text-gray-600">{group.description[language as keyof typeof group.description] || group.description.en}</div>
                       )}
                     </div>
                   ))

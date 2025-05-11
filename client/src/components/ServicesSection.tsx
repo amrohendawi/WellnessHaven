@@ -3,7 +3,8 @@ import { Link } from 'wouter';
 import { useLanguage } from '@/context/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { ServiceDisplay } from '@shared/schema';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
+import { Button } from '@/components/ui/button';
 
 const ServicesSection = () => {
   const { t } = useTranslation();
@@ -21,6 +22,41 @@ const ServicesSection = () => {
   
   // Use all services for the slideshow
   const allServices = services ? (services as ServiceDisplay[]) : [];
+  
+  // Format category name from slug
+  const formatCategoryName = (categorySlug: string, lang: string): string => {
+    // Convert kebab-case to Title Case
+    const formattedName = categorySlug
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+      
+    return formattedName;
+  };
+  
+  // Extract unique categories from services
+  const categories = useMemo(() => {
+    if (!allServices) return [];
+    
+    const uniqueCategories = [...new Set(allServices.map(s => s.category))];
+    return uniqueCategories.map(category => ({
+      id: category,
+      name: {
+        en: formatCategoryName(category, 'en'),
+        ar: formatCategoryName(category, 'ar'),
+        de: formatCategoryName(category, 'de'),
+        tr: formatCategoryName(category, 'tr')
+      }
+    }));
+  }, [allServices]);
+  
+  // State for selected category
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  
+  // Filter services by category
+  const filteredServices = selectedCategory
+    ? allServices.filter(service => service.category === selectedCategory)
+    : allServices;
 
   // Auto-scroll effect
   useEffect(() => {
@@ -183,7 +219,32 @@ const ServicesSection = () => {
           </div>
         )}
         
-        {!isLoading && !error && allServices.length > 0 && (
+        {/* Category filters */}
+        {!isLoading && !error && categories.length > 0 && (
+          <div className="mb-8 flex flex-wrap justify-center gap-2">
+            <Button
+              variant={!selectedCategory ? "default" : "outline"}
+              size="sm"
+              onClick={() => setSelectedCategory(null)}
+              className="rounded-full px-4"
+            >
+              {t('all')}
+            </Button>
+            {categories.map(category => (
+              <Button
+                key={category.id}
+                variant={selectedCategory === category.id ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedCategory(category.id)}
+                className="rounded-full px-4"
+              >
+                {category.name[language as keyof typeof category.name] || category.name.en}
+              </Button>
+            ))}
+          </div>
+        )}
+        
+        {!isLoading && !error && filteredServices.length > 0 && (
           <div className="relative">
             {/* Navigation buttons */}
             <button 
@@ -204,14 +265,13 @@ const ServicesSection = () => {
               <i className="fas fa-chevron-left"></i>
             </button>
             
-            {/* Services slideshow container */}
-            <div 
+            {/* Services slider container */}
+            <div
               ref={slideContainerRef}
-              className="flex overflow-x-scroll no-scrollbar py-4 px-2 -mx-2"
+              className="overflow-x-scroll scrollbar-none relative flex snap-x snap-mandatory py-4 px-2 -mx-2"
               style={{
-                scrollBehavior: 'smooth',
-                scrollSnapType: 'x mandatory',
-                WebkitOverflowScrolling: 'touch',
+                scrollBehavior: isDragging ? 'auto' : 'smooth',
+                WebkitOverflowScrolling: 'touch'
               }}
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
@@ -221,14 +281,13 @@ const ServicesSection = () => {
               onTouchMove={handleTouchMove}
               onTouchEnd={handleDragEnd}
             >
-              {/* First set of cards */}
-              {serviceCards(allServices)}
+              {serviceCards(filteredServices)}
               
-              {/* Duplicated cards for seamless looping */}
-              {serviceCards(allServices.map(service => ({...service, id: service.id + 1000})))}
+              {/* Add duplicate cards for infinite scrolling */}
+              {serviceCards(filteredServices.map(service => ({...service, id: service.id + '-duplicate'})))}
             </div>
             
-            <button 
+            <button
               className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-lg text-gold hover:bg-gold hover:text-white transition-colors duration-200 focus:outline-none"
               onClick={() => {
                 if (slideContainerRef.current) {
