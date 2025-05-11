@@ -192,10 +192,11 @@
 
 /* Booking step styling */
 .booking-step.active {
-  background-color: hsl(var(--pink));
-  color: #333;
+  background-color: rgb(141, 91, 108);
+  color: white;
   border-color: hsl(var(--gold));
-  box-shadow: 0 5px 15px -5px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 5px 15px -5px rgba(141, 91, 108, 0.5);
+  transition: all 0.3s ease;
 }
 
 /* Royal buttons */

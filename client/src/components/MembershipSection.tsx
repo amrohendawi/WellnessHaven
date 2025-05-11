@@ -49,9 +49,9 @@ const MembershipSection = () => {
               </div>
               
               <div className="bg-black/5 backdrop-blur-sm border border-gold-dark/20 rounded-xl p-5 mb-8">
-                <div className="flex justify-between items-center text-gold-dark">
-                  <span className="text-4xl font-bold">{t('goldDiscount')}</span>
-                  <span className="text-base font-normal text-black-gold opacity-80 ml-2">{t('goldCost')}</span>
+                <div className="flex flex-col text-gold-dark">
+                  <span className="text-4xl font-bold break-words">{t('goldDiscount')}</span>
+                  <span className="text-base font-normal text-black-gold opacity-80 mt-2">{t('goldCost')}</span>
                 </div>
               </div>
               
@@ -112,9 +112,9 @@ const MembershipSection = () => {
               </div>
               
               <div className="bg-black/5 backdrop-blur-sm border border-gray-400/20 rounded-xl p-5 mb-8">
-                <div className="flex justify-between items-center text-gray-700">
-                  <span className="text-4xl font-bold">{t('silverDiscount')}</span>
-                  <span className="text-base font-normal text-gray-600 opacity-80 ml-2">{t('silverCost')}</span>
+                <div className="flex flex-col text-gray-700">
+                  <span className="text-4xl font-bold break-words">{t('silverDiscount')}</span>
+                  <span className="text-base font-normal text-gray-600 opacity-80 mt-2">{t('silverCost')}</span>
                 </div>
               </div>
               

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
@@ -28,7 +28,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { ServiceDisplay, ServiceGroupDisplay } from '@shared/schema';
 import { useToast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
-import { getAvailableTimeSlots, createBooking } from '@/lib/api';
+import { getAvailableTimeSlots, createBooking, getServiceGroups } from '@/lib/api';
 
 // Time slots will be fetched from the API for each date
 
@@ -41,49 +41,21 @@ const BookingSection = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [serviceModalOpen, setServiceModalOpen] = useState(false);
+  
+  // Create a ref for the booking section container
+  const bookingSectionRef = useRef<HTMLDivElement>(null);
 
   // Fetch services from API
   const { data: services = [], isLoading: isServicesLoading } = useQuery<ServiceDisplay[]>({
     queryKey: ['/api/services'],
   });
   
-  // Generate service groups from service categories
-  const serviceGroups = useMemo(() => {
-    if (!services || services.length === 0) return [];
-    
-    // Get unique categories from services
-    const uniqueCategories = [...new Set(services.map(s => s.category))];
-    
-    // Format category slug into readable name
-    const formatCategoryName = (categorySlug: string, lang: string): string => {
-      return categorySlug
-        .split('-')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-    };
-    
-    // Create service groups from categories
-    return uniqueCategories.map(category => ({
-      id: category,
-      slug: category,
-      name: {
-        en: formatCategoryName(category, 'en'),
-        ar: formatCategoryName(category, 'ar'),
-        de: formatCategoryName(category, 'de'),
-        tr: formatCategoryName(category, 'tr')
-      },
-      description: {
-        en: `${formatCategoryName(category, 'en')} treatments and services`,
-        ar: `علاجات وخدمات ${formatCategoryName(category, 'ar')}`,
-        de: `${formatCategoryName(category, 'de')} Behandlungen und Dienstleistungen`,
-        tr: `${formatCategoryName(category, 'tr')} tedavileri ve hizmetleri`
-      }
-    }));
-  }, [services]);
+  // Fetch service groups from API
+  const { data: serviceGroups = [], isLoading: isGroupsLoading } = useQuery<ServiceGroupDisplay[]>({
+    queryKey: ['/api/service-groups'],
+    queryFn: getServiceGroups
+  });
   
-  // Set loading state for service groups based on services loading
-  const isGroupsLoading = isServicesLoading;
-
   // Filter services by selected category
   const filteredServices = selectedCategory 
     ? services.filter(service => service.category === selectedCategory)
@@ -123,17 +95,35 @@ const BookingSection = () => {
     }
   }, [selectedCategory]);
 
+  // Helper function to maintain scroll position when changing steps
+  const changeStepWithoutJump = (newStep: number) => {
+    // Get the current container position
+    const containerTop = bookingSectionRef.current?.getBoundingClientRect().top || 0;
+    const scrollTop = window.scrollY + containerTop;
+    
+    // Change step
+    setBookingStep(newStep);
+    
+    // Maintain position after render
+    setTimeout(() => {
+      window.scrollTo({
+        top: scrollTop,
+        behavior: "instant" // More modern alternative to "auto", prevents any animation
+      });
+    }, 0);
+  };
+
   // Process to next step
   const nextStep = () => {
     if (bookingStep < 3) {
-      setBookingStep(bookingStep + 1);
+      changeStepWithoutJump(bookingStep + 1);
     }
   };
 
   // Go back to previous step
   const prevStep = () => {
     if (bookingStep > 1) {
-      setBookingStep(bookingStep - 1);
+      changeStepWithoutJump(bookingStep - 1);
     }
   };
 
@@ -227,7 +217,7 @@ const BookingSection = () => {
   };
 
   return (
-    <section id="booking" className="py-16 bg-pink-light">
+    <section ref={bookingSectionRef} id="booking" className="py-16 bg-pink-light">
       {/* Add Toaster component for toast notifications */}
       <Toaster />
       
@@ -249,42 +239,42 @@ const BookingSection = () => {
           <div className="flex border-b">
             <div 
               className={`booking-step flex-1 py-4 text-center border-r border-gray-200 cursor-pointer ${bookingStep === 1 ? 'active' : ''}`}
-              onClick={() => setBookingStep(1)}
+              onClick={() => changeStepWithoutJump(1)}
             >
               <div className="flex flex-col items-center">
-                <div className={`w-8 h-8 rounded-full ${bookingStep === 1 ? 'bg-pink' : 'bg-gray-200'} flex items-center justify-center mb-1`}>
+                <div className={`w-8 h-8 rounded-full ${bookingStep === 1 ? 'bg-[rgb(141,91,108)]' : 'bg-gray-200'} flex items-center justify-center mb-1 transition-all duration-300`}>
                   <i className={`fas fa-spa ${bookingStep === 1 ? 'text-white' : 'text-gray-500'}`}></i>
                 </div>
                 <span 
-                  className="text-sm font-medium"
+                  className="text-sm font-medium transition-all duration-300"
                   style={{ color: bookingStep === 1 ? 'white' : 'inherit' }}
                 >1. {t('selectService')}</span>
               </div>
             </div>
             <div 
               className={`booking-step flex-1 py-4 text-center border-r border-gray-200 cursor-pointer ${bookingStep === 2 ? 'active' : ''}`}
-              onClick={() => selectedService && setBookingStep(2)}
+              onClick={() => selectedService && changeStepWithoutJump(2)}
             >
               <div className="flex flex-col items-center">
-                <div className={`w-8 h-8 rounded-full ${bookingStep === 2 ? 'bg-pink' : 'bg-gray-200'} flex items-center justify-center mb-1`}>
+                <div className={`w-8 h-8 rounded-full ${bookingStep === 2 ? 'bg-[rgb(141,91,108)]' : 'bg-gray-200'} flex items-center justify-center mb-1 transition-all duration-300`}>
                   <i className={`fas fa-calendar-alt ${bookingStep === 2 ? 'text-white' : 'text-gray-500'}`}></i>
                 </div>
                 <span 
-                  className="text-sm font-medium"
+                  className="text-sm font-medium transition-all duration-300"
                   style={{ color: bookingStep === 2 ? 'white' : 'inherit' }}
                 >2. {t('dateTime')}</span>
               </div>
             </div>
             <div 
               className={`booking-step flex-1 py-4 text-center cursor-pointer ${bookingStep === 3 ? 'active' : ''}`}
-              onClick={() => selectedDate && selectedTime && setBookingStep(3)}
+              onClick={() => (selectedDate && selectedTime) && changeStepWithoutJump(3)}
             >
               <div className="flex flex-col items-center">
-                <div className={`w-8 h-8 rounded-full ${bookingStep === 3 ? 'bg-pink' : 'bg-gray-200'} flex items-center justify-center mb-1`}>
+                <div className={`w-8 h-8 rounded-full ${bookingStep === 3 ? 'bg-[rgb(141,91,108)]' : 'bg-gray-200'} flex items-center justify-center mb-1 transition-all duration-300`}>
                   <i className={`fas fa-user ${bookingStep === 3 ? 'text-white' : 'text-gray-500'}`}></i>
                 </div>
                 <span 
-                  className="text-sm font-medium"
+                  className="text-sm font-medium transition-all duration-300"
                   style={{ color: bookingStep === 3 ? 'white' : 'inherit' }}
                 >3. {t('yourDetails')}</span>
               </div>
@@ -663,7 +653,7 @@ const BookingSection = () => {
                     onClick={() => setSelectedCategory(group.slug)}
                     className="text-xs hover-lift"
                   >
-                    {group.name[language]}
+                    {group.name[language as keyof typeof group.name] || group.name.en}
                   </Button>
                 ))}
               </div>
