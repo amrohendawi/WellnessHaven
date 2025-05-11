@@ -73,24 +73,22 @@ export default async function handler(
   }
   
   try {
-    const { tier } = request.query;
+    const { type } = request.query;
     
-    if (tier) {
-      // Get specific membership by tier
+    if (type) {
+      // Get specific membership by type
       const membership = await db.query.memberships.findFirst({
-        where: eq(schema.memberships.tier, String(tier)),
+        where: (memberships) => eq(memberships.type, String(type)),
       });
       
       if (!membership) {
-        return response.status(404).json({ message: 'Membership tier not found' });
+        return response.status(404).json({ message: 'Membership type not found' });
       }
       
       return response.status(200).json(transformMembership(membership));
     } else {
       // Get all memberships
-      const memberships = await db.query.memberships.findMany({
-        orderBy: (memberships, { asc }) => [asc(memberships.price)]
-      });
+      const memberships = await db.query.memberships.findMany({});
       
       const transformedMemberships = memberships.map(transformMembership);
       
