@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import { submitContactForm } from "@/lib/api";
 
 const ContactSection = () => {
   const { t } = useTranslation();
@@ -34,10 +35,8 @@ const ContactSection = () => {
     setSubmitting(true);
     
     try {
-      // In a real app, this would submit to the server
-      // const response = await apiRequest('POST', '/api/contact', data);
-      // Simulate API request
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Submit to server using the API function from our centralized client
+      const result = await submitContactForm(data);
       
       toast({
         title: t('messageSent'),

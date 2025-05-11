@@ -1,4 +1,5 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
+import * as api from './api';
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
@@ -12,7 +13,17 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  const res = await fetch(url, {
+  // Base API URL for Vercel deployment
+  const API_BASE_URL = process.env.NODE_ENV === 'production' 
+    ? 'https://dubai-rose-spa.vercel.app' // Dubai Rose vercel deployment URL
+    : '';
+
+  // Prepare the full URL for the fetch request
+  const fullUrl = url.startsWith('/api') 
+    ? `${API_BASE_URL}${url}` 
+    : url;
+
+  const res = await fetch(fullUrl, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
     body: data ? JSON.stringify(data) : undefined,
@@ -24,21 +35,42 @@ export async function apiRequest(
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";
-export const getQueryFn: <T>(options: {
-  on401: UnauthorizedBehavior;
-}) => QueryFunction<T> =
-  ({ on401: unauthorizedBehavior }) =>
+export const getQueryFn = <T>({ on401: unauthorizedBehavior }: { on401: UnauthorizedBehavior }): QueryFunction<T> => 
   async ({ queryKey }) => {
-    const res = await fetch(queryKey[0] as string, {
+    // Handle special query keys that should use API functions
+    const [path, ...params] = queryKey as [string, ...any[]];
+    
+    if (path === '/api/services' && params.length === 0) {
+      return api.getServices() as unknown as T;
+    }
+    
+    if (path === '/api/services' && params.length === 1) {
+      return api.getServiceBySlug(params[0]) as unknown as T;
+    }
+    
+    if (path === '/api/service-groups' && params.length === 0) {
+      return api.getServiceGroups() as unknown as T;
+    }
+    
+    if (path === '/api/service-groups' && params.length === 1) {
+      return api.getServiceGroupBySlug(params[0]) as unknown as T;
+    }
+    
+    if (path === '/api/memberships') {
+      return api.getMemberships() as unknown as T;
+    }
+    
+    // Fall back to the original implementation for other paths
+    const res = await fetch(path as string, {
       credentials: "include",
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
-      return null;
+      return null as unknown as T;
     }
 
     await throwIfResNotOk(res);
-    return await res.json();
+    return await res.json() as T;
   };
 
 export const queryClient = new QueryClient({

@@ -28,12 +28,9 @@ import { useQuery } from '@tanstack/react-query';
 import type { ServiceDisplay, ServiceGroupDisplay } from '@shared/schema';
 import { useToast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
+import { getAvailableTimeSlots, createBooking } from '@/lib/api';
 
-// Available time slots
-const timeSlots = [
-  '10:00', '11:00', '12:00', '13:00', '14:00', 
-  '15:00', '16:00', '17:00', '18:00', '19:00'
-];
+// Time slots will be fetched from the API for each date
 
 const BookingSection = () => {
   const { t } = useTranslation();
@@ -158,16 +155,8 @@ const BookingSection = () => {
     console.log('Booking submitted:', bookingData);
     
     try {
-      // Submit to server
-      const response = await fetch('/api/booking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bookingData),
-      });
-      
-      const result = await response.json();
+      // Submit to server using the API function from our centralized client
+      const result = await createBooking(bookingData);
       
       if (result.success) {
         // Show success toast notification
@@ -443,21 +432,20 @@ const BookingSection = () => {
                 {/* Time Selection */}
                 <div>
                   <h4 className="font-medium mb-3">{t('selectTime')}</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {timeSlots.map((time) => (
-                      <Button
-                        key={time}
-                        variant="outline"
-                        className={cn(
-                          "justify-center", 
-                          selectedTime === time && "bg-pink text-gray-800 border-pink"
-                        )}
-                        onClick={() => setSelectedTime(time)}
-                      >
-                        {time}
-                      </Button>
-                    ))}
-                  </div>
+                  
+                  {/* Fetch available time slots for the selected date */}
+                  {selectedDate ? (
+                    <AvailableTimeSlots 
+                      date={selectedDate} 
+                      serviceId={selectedService?.id}
+                      selectedTime={selectedTime}
+                      onSelectTime={setSelectedTime}
+                    />
+                  ) : (
+                    <div className="text-center text-gray-500 p-4 border rounded-md">
+                      {t('selectDateFirst')}
+                    </div>
+                  )}
                 </div>
               </div>
               
@@ -696,6 +684,78 @@ const BookingSection = () => {
         </DialogContent>
       </Dialog>
     </section>
+  );
+};
+
+// Available Time Slots Component
+interface AvailableTimeSlotsProps {
+  date: Date;
+  serviceId?: number;
+  selectedTime: string | null;
+  onSelectTime: (time: string) => void;
+}
+
+const AvailableTimeSlots = ({ date, serviceId, selectedTime, onSelectTime }: AvailableTimeSlotsProps) => {
+  const { t } = useTranslation();
+  const { language } = useLanguage();
+  
+  // Format date for API request
+  const formattedDate = format(date, 'yyyy-MM-dd');
+  
+  // Fetch available time slots from API
+  const { data, isLoading, error } = useQuery<{ availableSlots: string[] }>({
+    queryKey: ['/api/appointments', formattedDate, serviceId],
+    queryFn: () => getAvailableTimeSlots(formattedDate, serviceId),
+    enabled: !!date
+  });
+  
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-3 gap-2">
+        {[1, 2, 3, 4, 5, 6].map(i => (
+          <div key={i} className="h-10 bg-gray-100 animate-pulse rounded-md"></div>
+        ))}
+      </div>
+    );
+  }
+  
+  if (error || !data) {
+    return (
+      <div className="text-center text-gray-500 p-4 border border-red-100 rounded-md bg-red-50">
+        {t('errorLoadingTimeSlots')}
+        <Button 
+          variant="link" 
+          className="block mx-auto mt-2" 
+          onClick={() => window.location.reload()}
+        >
+          {t('tryAgain')}
+        </Button>
+      </div>
+    );
+  }
+  
+  if (data.availableSlots.length === 0) {
+    return (
+      <div className="text-center text-gray-500 p-4 border rounded-md">
+        {t('noTimeSlotsAvailable')}
+        <p className="mt-2 text-sm">{t('tryAnotherDate')}</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+      {data.availableSlots.map(time => (
+        <Button
+          key={time}
+          variant={selectedTime === time ? "default" : "outline"}
+          className="hover-lift"
+          onClick={() => onSelectTime(time)}
+        >
+          {time}
+        </Button>
+      ))}
+    </div>
   );
 };
 
