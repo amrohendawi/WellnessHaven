@@ -11,14 +11,17 @@ config();
 
 neonConfig.webSocketConstructor = ws;
 
-if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?",
-  );
+// Create database connection function to ensure fresh connections in serverless environment
+function createDbConnection() {
+  if (!process.env.DATABASE_URL) {
+    throw new Error(
+      "DATABASE_URL must be set. Did you forget to provision a database?",
+    );
+  }
+  
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  return drizzle({ client: pool, schema });
 }
-
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const db = drizzle({ client: pool, schema });
 
 // Helper function to transform DB service group to frontend format
 function transformServiceGroup(group: any) {
@@ -64,6 +67,9 @@ export default async function handler(
   }
 
   try {
+    // Create a new DB connection for this request
+    const db = createDbConnection();
+    
     const { slug } = request.query;
 
     if (slug) {

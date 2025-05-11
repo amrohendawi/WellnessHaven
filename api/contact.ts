@@ -10,14 +10,17 @@ config();
 
 neonConfig.webSocketConstructor = ws;
 
-if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?",
-  );
+// Create database connection function to ensure fresh connections in serverless environment
+function createDbConnection() {
+  if (!process.env.DATABASE_URL) {
+    throw new Error(
+      "DATABASE_URL must be set. Did you forget to provision a database?",
+    );
+  }
+  
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  return drizzle({ client: pool, schema });
 }
-
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const db = drizzle({ client: pool, schema });
 
 export default async function handler(
   request: VercelRequest,
@@ -41,6 +44,9 @@ export default async function handler(
   }
   
   try {
+    // Create a new DB connection for this request
+    const db = createDbConnection();
+    
     const { name, email, phone, message } = request.body;
     
     if (!name || !email || !phone || !message) {

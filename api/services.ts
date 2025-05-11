@@ -11,14 +11,17 @@ config();
 
 neonConfig.webSocketConstructor = ws;
 
-if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?",
-  );
+// Create database connection function to ensure fresh connections in serverless environment
+function createDbConnection() {
+  if (!process.env.DATABASE_URL) {
+    throw new Error(
+      "DATABASE_URL must be set. Did you forget to provision a database?",
+    );
+  }
+  
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  return drizzle({ client: pool, schema });
 }
-
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const db = drizzle({ client: pool, schema });
 
 // Helper function to transform DB service to frontend service format
 function transformService(service: any) {
@@ -74,12 +77,15 @@ export default async function handler(
   }
   
   try {
+    // Create a new DB connection for this request
+    const db = createDbConnection();
+    
     const { slug } = request.query;
     
     if (slug) {
       // Get specific service by slug
       const service = await db.query.services.findFirst({
-        where: eq(schema.services.slug, String(slug)),
+        where: (services) => eq(services.slug, String(slug)),
       });
       
       if (!service) {
@@ -88,9 +94,9 @@ export default async function handler(
       
       return response.status(200).json(transformService(service));
     } else {
-      // Get all active services
+      // Get all services
       const services = await db.query.services.findMany({
-        where: eq(schema.services.isActive, true),
+        where: (services) => eq(services.isActive, true),
       });
       
       const transformedServices = services.map(transformService);
