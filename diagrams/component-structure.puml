@@ -1,0 +1,34 @@
+@startuml
+package "Frontend (React)" {
+  [App]
+  [Pages]
+  [Components]
+  [Hooks]
+  [Context]
+  [Utilities]
+}
+
+package "Backend (Express)" {
+  [API Routes]
+  [Storage Interface]
+  [Database Connection]
+}
+
+package "Database (PostgreSQL)" {
+  [Users]
+  [Services]
+  [Bookings]
+  [Memberships]
+  [Contacts]
+}
+
+[App] --> [Pages]
+[Pages] --> [Components]
+[Components] --> [Hooks]
+[Components] --> [Context]
+[Components] --> [Utilities]
+[Pages] --> [API Routes] : HTTP Requests
+[API Routes] --> [Storage Interface]
+[Storage Interface] --> [Database Connection]
+[Database Connection] --> [Database (PostgreSQL)]
+@enduml

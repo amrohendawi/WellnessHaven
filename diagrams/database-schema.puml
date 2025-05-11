@@ -1,0 +1,74 @@
+@startuml
+entity "users" {
+  * id : serial <<PK>>
+  --
+  * username : text <<unique>>
+  * password : text
+  * isAdmin : boolean
+  * createdAt : timestamp
+}
+
+entity "services" {
+  * id : serial <<PK>>
+  --
+  * slug : text <<unique>>
+  * category : text
+  * nameEn : text
+  * nameAr : text
+  * nameDe : text
+  * nameTr : text
+  * descriptionEn : text
+  * descriptionAr : text
+  * descriptionDe : text
+  * descriptionTr : text
+  * longDescriptionEn : text
+  * longDescriptionAr : text
+  * longDescriptionDe : text
+  * longDescriptionTr : text
+  * duration : integer
+  * price : integer
+  * imageUrl : text
+  * imageLarge : text
+  * isActive : boolean
+  * createdAt : timestamp
+}
+
+entity "bookings" {
+  * id : serial <<PK>>
+  --
+  * name : text
+  * email : text
+  * phone : text
+  * service : text
+  * date : text
+  * time : text
+  vipNumber : text
+  * status : text
+  * createdAt : timestamp
+}
+
+entity "memberships" {
+  * id : serial <<PK>>
+  --
+  * membershipNumber : text <<unique>>
+  * name : text
+  * email : text
+  * phone : text
+  * type : text
+  * createdAt : timestamp
+  expiresAt : timestamp
+}
+
+entity "contacts" {
+  * id : serial <<PK>>
+  --
+  * name : text
+  * email : text
+  * phone : text
+  * message : text
+  * createdAt : timestamp
+}
+
+bookings ||--o| services : references
+bookings ||--o| memberships : references
+@enduml

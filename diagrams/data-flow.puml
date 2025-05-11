@@ -1,0 +1,16 @@
+@startuml
+actor User
+boundary "React UI" as UI
+control "API" as API
+entity "Storage" as Storage
+database "PostgreSQL" as DB
+
+User -> UI : Interacts
+UI -> API : API Request
+API -> Storage : CRUD Operation
+Storage -> DB : SQL Query
+DB --> Storage : Result Set
+Storage --> API : Formatted Data
+API --> UI : JSON Response
+UI --> User : Updated View
+@enduml
