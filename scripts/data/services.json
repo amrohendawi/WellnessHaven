@@ -184,8 +184,8 @@
     "longDescriptionTr": "Yüksek kaliteli ürünler ve parlak bir cilt için gelişmiş teknikler kullanan premium tedavilerimizle yüz bakımında en üst düzey lüksü yaşayın.",
     "duration": 90,
     "price": 150,
-    "imageUrl": "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80",
-    "imageLarge": "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80",
+    "imageUrl": "https://images.unsplash.com/photo-1611169035510-f9af52e6dbe2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80",
+    "imageLarge": "https://images.unsplash.com/photo-1611169035510-f9af52e6dbe2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80",
     "isActive": true
   },
   {
@@ -205,8 +205,8 @@
     "longDescriptionTr": "Son teknoloji lazer epilasyon tedavilerimiz, minimum rahatsızlıkla kalıcı sonuçlar sağlar. Tüm cilt tipleri için güvenlidir.",
     "duration": 60,
     "price": 50,
-    "imageUrl": "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80",
-    "imageLarge": "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80",
+    "imageUrl": "https://images.unsplash.com/photo-1700760934166-4c766d708139?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80",
+    "imageLarge": "https://images.unsplash.com/photo-1700760934166-4c766d708139?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80",
     "isActive": true
   },
   {

@@ -223,7 +223,10 @@ const BookingSection = () => {
                 <div className={`w-8 h-8 rounded-full ${bookingStep === 1 ? 'bg-pink' : 'bg-gray-200'} flex items-center justify-center mb-1`}>
                   <i className={`fas fa-spa ${bookingStep === 1 ? 'text-white' : 'text-gray-500'}`}></i>
                 </div>
-                <span className="text-sm">1. {t('selectService')}</span>
+                <span 
+                  className="text-sm font-medium"
+                  style={{ color: bookingStep === 1 ? 'white' : 'inherit' }}
+                >1. {t('selectService')}</span>
               </div>
             </div>
             <div 
@@ -234,7 +237,10 @@ const BookingSection = () => {
                 <div className={`w-8 h-8 rounded-full ${bookingStep === 2 ? 'bg-pink' : 'bg-gray-200'} flex items-center justify-center mb-1`}>
                   <i className={`fas fa-calendar-alt ${bookingStep === 2 ? 'text-white' : 'text-gray-500'}`}></i>
                 </div>
-                <span className="text-sm">2. {t('dateTime')}</span>
+                <span 
+                  className="text-sm font-medium"
+                  style={{ color: bookingStep === 2 ? 'white' : 'inherit' }}
+                >2. {t('dateTime')}</span>
               </div>
             </div>
             <div 
@@ -245,7 +251,10 @@ const BookingSection = () => {
                 <div className={`w-8 h-8 rounded-full ${bookingStep === 3 ? 'bg-pink' : 'bg-gray-200'} flex items-center justify-center mb-1`}>
                   <i className={`fas fa-user ${bookingStep === 3 ? 'text-white' : 'text-gray-500'}`}></i>
                 </div>
-                <span className="text-sm">3. {t('yourDetails')}</span>
+                <span 
+                  className="text-sm font-medium"
+                  style={{ color: bookingStep === 3 ? 'white' : 'inherit' }}
+                >3. {t('yourDetails')}</span>
               </div>
             </div>
           </div>

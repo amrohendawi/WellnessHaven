@@ -3,21 +3,159 @@ import { Link } from 'wouter';
 import { useLanguage } from '@/context/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { ServiceDisplay } from '@shared/schema';
+import { useEffect, useRef, useState } from 'react';
 
 const ServicesSection = () => {
   const { t } = useTranslation();
   const { dir, language } = useLanguage();
+  const slideContainerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startPosition, setStartPosition] = useState(0);
+  const [currentPosition, setCurrentPosition] = useState(0);
+  const [autoScrollPaused, setAutoScrollPaused] = useState(false);
   
   // Fetch services from API
   const { data: services, isLoading, error } = useQuery({
     queryKey: ['/api/services']
   });
   
-  // Display only 6 services plus a "View All" card
-  const displayedServices = services ? (services as ServiceDisplay[]).slice(0, 6) : [];
+  // Use all services for the slideshow
+  const allServices = services ? (services as ServiceDisplay[]) : [];
+
+  // Auto-scroll effect
+  useEffect(() => {
+    let animationId: number;
+    let lastTimestamp = 0;
+    const scrollSpeed = 0.5; // pixels per millisecond
+    
+    const autoScroll = (timestamp: number) => {
+      if (!slideContainerRef.current || autoScrollPaused || isDragging) {
+        animationId = requestAnimationFrame(autoScroll);
+        return;
+      }
+      
+      if (lastTimestamp === 0) {
+        lastTimestamp = timestamp;
+        animationId = requestAnimationFrame(autoScroll);
+        return;
+      }
+      
+      const elapsed = timestamp - lastTimestamp;
+      lastTimestamp = timestamp;
+      
+      const container = slideContainerRef.current;
+      const scrollAmount = scrollSpeed * elapsed * (dir === 'rtl' ? -1 : 1);
+      
+      // Get the total width of all cards
+      const scrollWidth = container.scrollWidth;
+      const clientWidth = container.clientWidth;
+      
+      // Update position
+      let newPosition = (currentPosition + scrollAmount) % scrollWidth;
+      
+      // If we've scrolled past the width, loop back to beginning
+      if (newPosition > scrollWidth - clientWidth) {
+        // Add duplicated cards width to make it seamless
+        newPosition = 0;
+      } else if (newPosition < 0) {
+        // For RTL support
+        newPosition = scrollWidth - clientWidth;
+      }
+      
+      setCurrentPosition(newPosition);
+      container.scrollLeft = newPosition;
+      
+      animationId = requestAnimationFrame(autoScroll);
+    };
+    
+    animationId = requestAnimationFrame(autoScroll);
+    
+    return () => {
+      cancelAnimationFrame(animationId);
+    };
+  }, [currentPosition, autoScrollPaused, isDragging, dir]);
+  
+  // Handle mouse/touch interactions
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!slideContainerRef.current) return;
+    setIsDragging(true);
+    setStartPosition(e.clientX);
+    setAutoScrollPaused(true);
+  };
+  
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!slideContainerRef.current) return;
+    setIsDragging(true);
+    setStartPosition(e.touches[0].clientX);
+    setAutoScrollPaused(true);
+  };
+  
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !slideContainerRef.current) return;
+    const diff = startPosition - e.clientX;
+    slideContainerRef.current.scrollLeft += diff;
+    setStartPosition(e.clientX);
+  };
+  
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || !slideContainerRef.current) return;
+    const diff = startPosition - e.touches[0].clientX;
+    slideContainerRef.current.scrollLeft += diff;
+    setStartPosition(e.touches[0].clientX);
+  };
+  
+  const handleDragEnd = () => {
+    setIsDragging(false);
+    setAutoScrollPaused(false);
+    if (slideContainerRef.current) {
+      setCurrentPosition(slideContainerRef.current.scrollLeft);
+    }
+  };
+
+  // Generate duplicated services for seamless infinite scrolling
+  const serviceCards = (services: ServiceDisplay[]) => {
+    return services.map((service: ServiceDisplay) => (
+      <div 
+        key={service.id} 
+        className="service-card flex-shrink-0 bg-white/95 rounded-lg overflow-hidden shadow-lg gold-shadow group mx-2 my-2 w-[300px]"
+        style={{ scrollSnapAlign: 'start' }}
+      >
+        <div className="relative overflow-hidden">
+          <img 
+            src={service.imageUrl} 
+            alt={service.name[language] || service.name.en} 
+            className="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          
+          <div className="absolute bottom-3 right-3 bg-gold/90 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+            {service.price} €
+          </div>
+        </div>
+        
+        <div className="p-6 relative">
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-1 bg-gold rounded-full"></div>
+          
+          <h3 className={`text-xl font-semibold mb-3 ${language === 'ar' ? 'font-arabic' : 'font-display'} text-black-gold`}>
+            {service.name[language] || service.name.en}
+          </h3>
+          <p className="text-gray-600 text-sm mb-5 min-h-[3rem]">
+            {service.description[language] || service.description.en}
+          </p>
+          <Link 
+            to={`/services/${service.slug}`} 
+            className={`inline-flex items-center px-4 py-2 rounded-md border border-gold bg-transparent hover:bg-gold hover:text-white transition-colors duration-300 text-gold font-medium text-sm ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}
+          >
+            <span>{t('bookNow')}</span>
+            <i className={`fas fa-chevron-${dir === 'rtl' ? 'left mr-auto' : 'right ml-2'} text-xs`}></i>
+          </Link>
+        </div>
+      </div>
+    ));
+  };
 
   return (
-    <section id="services" className="py-16 bg-beige-light">
+    <section id="services" className="py-16 bg-beige-light overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="royal-heading text-3xl md:text-4xl mb-8">
@@ -45,64 +183,105 @@ const ServicesSection = () => {
           </div>
         )}
         
-        {!isLoading && !error && displayedServices.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {displayedServices.map((service: ServiceDisplay) => (
-              <div key={service.id} className="service-card bg-white/95 rounded-lg overflow-hidden shadow-lg gold-shadow group">
-                <div className="relative overflow-hidden">
-                  <img 
-                    src={service.imageUrl} 
-                    alt={service.name[language] || service.name.en} 
-                    className="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  
-                  <div className="absolute bottom-3 right-3 bg-gold/90 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
-                    {service.price} €
-                  </div>
-                </div>
-                
-                <div className="p-6 relative">
-                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-1 bg-gold rounded-full"></div>
-                  
-                  <h3 className={`text-xl font-semibold mb-3 ${language === 'ar' ? 'font-arabic' : 'font-display'} text-black-gold`}>
-                    {service.name[language] || service.name.en}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-5 min-h-[3rem]">
-                    {service.description[language] || service.description.en}
-                  </p>
-                  <Link 
-                    to={`/services/${service.slug}`} 
-                    className={`inline-flex items-center px-4 py-2 rounded-md border border-gold bg-transparent hover:bg-gold hover:text-white transition-colors duration-300 text-gold font-medium text-sm ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}
-                  >
-                    <span>{t('bookNow')}</span>
-                    <i className={`fas fa-chevron-${dir === 'rtl' ? 'left mr-auto' : 'right ml-2'} text-xs`}></i>
-                  </Link>
-                </div>
-              </div>
-            ))}
+        {!isLoading && !error && allServices.length > 0 && (
+          <div className="relative">
+            {/* Navigation buttons */}
+            <button 
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-lg text-gold hover:bg-gold hover:text-white transition-colors duration-200 focus:outline-none"
+              onClick={() => {
+                if (slideContainerRef.current) {
+                  const newPosition = currentPosition - 350;
+                  setCurrentPosition(newPosition);
+                  slideContainerRef.current.scrollTo({
+                    left: newPosition,
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+              onMouseEnter={() => setAutoScrollPaused(true)}
+              onMouseLeave={() => setAutoScrollPaused(false)}
+            >
+              <i className="fas fa-chevron-left"></i>
+            </button>
             
-            <div className="service-card bg-gradient-to-br from-pink/20 to-gold/20 rounded-lg overflow-hidden shadow-lg gold-shadow flex items-center justify-center group border border-gold/20">
-              <div className="p-8 text-center">
-                <div className="w-16 h-16 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-5 group-hover:bg-gold/30 transition-colors duration-300">
-                  <i className="fas fa-spa text-2xl text-gold"></i>
-                </div>
-                <h3 className="text-xl font-display font-semibold mb-3 text-black-gold">{t('viewAllServices')}</h3>
-                <p className="text-gray-600 text-sm mb-5">{t('exploreServiceRange')}</p>
-                <Link 
-                  to="/services" 
-                  className={`inline-flex items-center btn-royal px-6 py-2.5 rounded-md font-medium text-sm ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}
-                >
-                  <span>{t('exploreMore')}</span>
-                  <i className={`fas fa-chevron-${dir === 'rtl' ? 'left mr-2' : 'right ml-2'} text-xs`}></i>
-                </Link>
-              </div>
+            {/* Services slideshow container */}
+            <div 
+              ref={slideContainerRef}
+              className="flex overflow-x-scroll no-scrollbar py-4 px-2 -mx-2"
+              style={{
+                scrollBehavior: 'smooth',
+                scrollSnapType: 'x mandatory',
+                WebkitOverflowScrolling: 'touch',
+              }}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleDragEnd}
+              onMouseLeave={handleDragEnd}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleDragEnd}
+            >
+              {/* First set of cards */}
+              {serviceCards(allServices)}
+              
+              {/* Duplicated cards for seamless looping */}
+              {serviceCards(allServices.map(service => ({...service, id: service.id + 1000})))}
             </div>
+            
+            <button 
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-lg text-gold hover:bg-gold hover:text-white transition-colors duration-200 focus:outline-none"
+              onClick={() => {
+                if (slideContainerRef.current) {
+                  const newPosition = currentPosition + 350;
+                  setCurrentPosition(newPosition);
+                  slideContainerRef.current.scrollTo({
+                    left: newPosition,
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+              onMouseEnter={() => setAutoScrollPaused(true)}
+              onMouseLeave={() => setAutoScrollPaused(false)}
+            >
+              <i className="fas fa-chevron-right"></i>
+            </button>
           </div>
         )}
+        
+        {/* View all services link */}
+        <div className="text-center mt-12">
+          <Link 
+            to="/services" 
+            className={`inline-flex items-center btn-royal px-6 py-3 rounded-md font-medium ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}
+          >
+            <span>{t('exploreMore')}</span>
+            <i className={`fas fa-chevron-${dir === 'rtl' ? 'left mr-2' : 'right ml-2'} text-xs`}></i>
+          </Link>
+        </div>
       </div>
     </section>
   );
 };
 
-export default ServicesSection;
+export default function ServicesCarousel() {
+  return (
+    <>
+      {/* Inject CSS */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          /* Hide scrollbar for Chrome, Safari and Opera */
+          .no-scrollbar::-webkit-scrollbar {
+            display: none;
+          }
+
+          /* Hide scrollbar for IE, Edge and Firefox */
+          .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+          }
+        `
+      }} />
+      <ServicesSection />
+    </>
+  );
+}
