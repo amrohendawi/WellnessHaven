@@ -1,11 +1,11 @@
 // Custom build script for Vercel deployment
+import { execSync } from 'child_process';
+
 console.log('🔧 Starting custom Vercel build process...');
 
 // This script is executed by Vercel during the build process
 // It helps ensure that the proper build steps are executed
 // and that the output is structured correctly for Vercel
-
-const { execSync } = require('child_process');
 
 // Run build commands
 try {
