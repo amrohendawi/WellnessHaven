@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
-import { 
+import {
   Form,
   FormControl,
   FormField,
@@ -33,16 +33,16 @@ const ContactSection = () => {
   // Handle form submission
   const onSubmit = async (data: any) => {
     setSubmitting(true);
-    
+
     try {
       // Submit to server using the API function from our centralized client
       const result = await submitContactForm(data);
-      
+
       toast({
         title: t('messageSent'),
         description: t('thankYouContact'),
       });
-      
+
       form.reset();
     } catch (error) {
       toast({
@@ -66,22 +66,22 @@ const ContactSection = () => {
             <i className="fas fa-envelope fancy-divider-icon text-gold mx-2"></i>
           </div>
         </div>
-        
+
         <div className={`flex flex-col ${dir === 'rtl' ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-12 max-w-6xl mx-auto`}>
           <div className="lg:w-1/2">
             {/* Map */}
             <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8 h-64 md:h-80">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3609.9877896682893!2d55.27126!3d25.197096!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43348a67e24b%3A0xff45e502e1ceb7e2!2sSheikh%20Zayed%20Road%20-%20Dubai!5e0!3m2!1sen!2sae!4v1656613039121!5m2!1sen!2sae" 
-                width="100%" 
-                height="100%" 
-                style={{ border: 0 }} 
-                loading="lazy" 
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2428.754375842194!2d13.43261131581464!3d52.48446647980757!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47a84e3b4e0b1a1b%3A0x6e6f5b6e9b2e5a5f!2sKarl-Marx-Stra%C3%9Fe%2045%2C%2012043%20Berlin%2C%20Germany!5e0!3m2!1sen!2sde!4v1715443380000!5m2!1sen!2sde"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Dubai Rose Location"
               ></iframe>
             </div>
-            
+
             {/* Contact Info */}
             <div className="bg-white rounded-xl shadow-md overflow-hidden p-6">
               <div className={`flex items-start mb-4 ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
@@ -93,7 +93,7 @@ const ContactSection = () => {
                   <p className="text-gray-600">{t('contactAddress')}</p>
                 </div>
               </div>
-              
+
               <div className={`flex items-start mb-4 ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
                 <div className={`text-gold-dark ${dir === 'ltr' ? 'mr-4' : 'ml-4'} mt-1`}>
                   <i className="fas fa-phone-alt text-xl"></i>
@@ -102,16 +102,16 @@ const ContactSection = () => {
                   <h4 className="font-medium mb-1">{t('phone')}</h4>
                   <p className="text-gray-600">{t('contactPhone')}</p>
                   <div className="flex mt-2 space-x-2 rtl:space-x-reverse">
-                    <a href="tel:+971501234567" className="bg-pink-light hover:bg-pink text-gray-800 px-3 py-1 rounded-full text-sm transition-colors">
+                    <a href={"tel:+491784423645"} className="bg-pink-light hover:bg-pink text-gray-800 px-3 py-1 rounded-full text-sm transition-colors">
                       <i className="fas fa-phone-alt mr-1 rtl:ml-1 rtl:mr-0"></i> {t('call')}
                     </a>
-                    <a href="https://wa.me/971501234567" className="bg-[#25D366] hover:bg-[#128C7E] text-white px-3 py-1 rounded-full text-sm transition-colors">
+                    <a href={`https://wa.me/491784423645`} className="bg-[#25D366] hover:bg-[#128C7E] text-white px-3 py-1 rounded-full text-sm transition-colors">
                       <i className="fab fa-whatsapp mr-1 rtl:ml-1 rtl:mr-0"></i> WhatsApp
                     </a>
                   </div>
                 </div>
               </div>
-              
+
               <div className={`flex items-start ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
                 <div className={`text-gold-dark ${dir === 'ltr' ? 'mr-4' : 'ml-4'} mt-1`}>
                   <i className="fas fa-clock text-xl"></i>
@@ -124,12 +124,12 @@ const ContactSection = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Contact Form */}
           <div className="lg:w-1/2">
             <div className="bg-white rounded-xl shadow-md overflow-hidden p-6">
               <h3 className="text-xl font-semibold mb-6">{t('sendMessage')}</h3>
-              
+
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <FormField
@@ -144,7 +144,7 @@ const ContactSection = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="email"
@@ -157,7 +157,7 @@ const ContactSection = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="phone"
@@ -170,7 +170,7 @@ const ContactSection = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="message"
@@ -183,7 +183,7 @@ const ContactSection = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <Button
                     type="submit"
                     className="w-full bg-gold-dark hover:bg-gold text-white"
@@ -193,7 +193,7 @@ const ContactSection = () => {
                   </Button>
                 </form>
               </Form>
-              
+
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-500">{t('connectSocial')}</p>
                 <div className="flex justify-center space-x-4 rtl:space-x-reverse mt-3">

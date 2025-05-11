@@ -79,7 +79,7 @@ const Footer = () => {
                   <div className={`w-8 h-8 bg-gold/10 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0 ${dir === 'ltr' ? 'mr-3' : 'ml-3'}`}>
                     <i className="fas fa-map-marker-alt text-gold text-sm"></i>
                   </div>
-                  <span className="text-gray-300">{t('footerAddress')}</span>
+                  <span className="text-gray-300">{t('contactAddress')}</span>
                 </li>
                 <li className={`flex items-start ${dir === 'rtl' ? 'flex-row-reverse text-right' : ''}`}>
                   <div className={`w-8 h-8 bg-gold/10 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0 ${dir === 'ltr' ? 'mr-3' : 'ml-3'}`}>
