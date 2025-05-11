@@ -3,7 +3,31 @@ import { config } from 'dotenv';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from "ws";
-import * as schema from "./schema";
+import { pgTable, serial, varchar, text, integer, boolean } from "drizzle-orm/pg-core";
+
+// Embedded minimal schema for this API route
+const memberships = pgTable("memberships", {
+  id: serial("id").primaryKey(),
+  tier: varchar("tier", { length: 50 }).notNull().unique(),
+  nameEn: varchar("name_en", { length: 100 }).notNull(),
+  nameAr: varchar("name_ar", { length: 100 }),
+  nameDe: varchar("name_de", { length: 100 }),
+  nameTr: varchar("name_tr", { length: 100 }),
+  descriptionEn: text("description_en").notNull(),
+  descriptionAr: text("description_ar"),
+  descriptionDe: text("description_de"),
+  descriptionTr: text("description_tr"),
+  benefitsEn: text("benefits_en"),
+  benefitsAr: text("benefits_ar"),
+  benefitsDe: text("benefits_de"),
+  benefitsTr: text("benefits_tr"),
+  price: integer("price").notNull(),
+  discountPercentage: integer("discount_percentage").default(0),
+  validity: integer("validity").notNull(),
+  color: varchar("color", { length: 20 }).default("#000000"),
+  isPopular: boolean("is_popular").default(false)
+});
+
 import { eq } from 'drizzle-orm';
 
 // Ensure environment variables are loaded
@@ -20,7 +44,7 @@ function createDbConnection() {
   }
   
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  return drizzle({ client: pool, schema });
+  return drizzle({ client: pool, schema: { memberships } });
 }
 
 // Helper function to transform membership data
@@ -70,9 +94,9 @@ export default async function handler(
     const { tier } = request.query;
     
     if (tier) {
-      // Get specific membership by tier
+      // Get specific membership by type
       const membership = await db.query.memberships.findFirst({
-        where: (memberships) => eq(memberships.tier, String(tier)),
+        where: (membershipsTable) => eq(membershipsTable.tier, String(tier)),
       });
       
       if (!membership) {

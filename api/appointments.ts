@@ -3,7 +3,32 @@ import { config } from 'dotenv';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from "ws";
-import * as schema from "./schema";
+import { pgTable, serial, varchar, text, date, time, integer, timestamp } from "drizzle-orm/pg-core";
+
+// Embedded minimal schema for this API route
+const bookings = pgTable("bookings", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  email: varchar("email", { length: 100 }).notNull(),
+  phone: varchar("phone", { length: 20 }).notNull(),
+  service: integer("service_id").notNull(),
+  date: date("date").notNull(),
+  time: time("time", { precision: 0 }).notNull(),
+  vipNumber: varchar("vip_number", { length: 50 }),
+  status: varchar("status", { length: 20 }).default("pending").notNull(),
+  createdAt: timestamp("created_at").defaultNow()
+});
+
+const services = pgTable("services", {
+  id: serial("id").primaryKey(),
+  nameEn: varchar("name_en", { length: 100 }).notNull(),
+  nameAr: varchar("name_ar", { length: 100 }),
+  nameDe: varchar("name_de", { length: 100 }),
+  nameTr: varchar("name_tr", { length: 100 }),
+  duration: integer("duration").notNull(),
+  price: integer("price").notNull()
+});
+
 import { eq, and, gte, lt } from 'drizzle-orm';
 
 // Ensure environment variables are loaded
@@ -20,7 +45,7 @@ function createDbConnection() {
     }
     
     const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-    return drizzle({ client: pool, schema });
+    return drizzle({ client: pool, schema: { bookings, services } });
 }
 
 export default async function handler(
@@ -60,8 +85,8 @@ export default async function handler(
             // Find booked slots
             const existingAppointments = await db.query.bookings.findMany({
                 where: and(
-                    gte(schema.bookings.date, selectedDate.toISOString().split('T')[0]),
-                    lt(schema.bookings.date, nextDay.toISOString().split('T')[0])
+                    gte(bookings.date, selectedDate.toISOString().split('T')[0]),
+                    lt(bookings.date, nextDay.toISOString().split('T')[0])
                 ),
                 orderBy: (bookings, { asc }) => [asc(bookings.time)]
             });
@@ -70,7 +95,7 @@ export default async function handler(
             let serviceDuration = 60; // default 60 minutes
             if (serviceId) {
                 const service = await db.query.services.findFirst({
-                    where: eq(schema.services.id, Number(serviceId))
+                    where: eq(services.id, Number(serviceId))
                 });
 
                 if (service) {
@@ -117,8 +142,8 @@ export default async function handler(
 
             const appointment = await db.query.bookings.findFirst({
                 where: and(
-                    eq(schema.bookings.id, Number(appointmentId)),
-                    eq(schema.bookings.email, email)
+                    eq(bookings.id, Number(appointmentId)),
+                    eq(bookings.email, email)
                 )
             });
 
@@ -130,7 +155,7 @@ export default async function handler(
 
             // Get service info
             const service = await db.query.services.findFirst({
-                where: eq(schema.services.id, Number(appointment.service))
+                where: eq(services.id, Number(appointment.service))
             });
 
             return response.status(200).json({
@@ -178,8 +203,8 @@ export default async function handler(
             // Verify appointment belongs to user
             const appointment = await db.query.bookings.findFirst({
                 where: and(
-                    eq(schema.bookings.id, Number(id)),
-                    eq(schema.bookings.email, email)
+                    eq(bookings.id, Number(id)),
+                    eq(bookings.email, email)
                 )
             });
 
@@ -191,9 +216,9 @@ export default async function handler(
 
             // Update appointment status
             await db
-                .update(schema.bookings)
+                .update(bookings)
                 .set({ status })
-                .where(eq(schema.bookings.id, Number(id)))
+                .where(eq(bookings.id, Number(id)))
                 .returning();
 
             return response.status(200).json({

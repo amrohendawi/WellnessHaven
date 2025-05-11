@@ -3,7 +3,16 @@ import { config } from 'dotenv';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from "ws";
-import * as schema from "./schema";
+import { pgTable, serial, varchar, text } from "drizzle-orm/pg-core";
+
+// Embedded minimal schema for this API route
+const contacts = pgTable("contacts", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  email: varchar("email", { length: 100 }).notNull(),
+  phone: varchar("phone", { length: 20 }).notNull(),
+  message: text("message").notNull()
+});
 
 // Ensure environment variables are loaded
 config();
@@ -19,7 +28,7 @@ function createDbConnection() {
   }
   
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  return drizzle({ client: pool, schema });
+  return drizzle({ client: pool, schema: { contacts } });
 }
 
 export default async function handler(
@@ -56,7 +65,7 @@ export default async function handler(
     }
     
     // Insert contact submission into database
-    const result = await db.insert(schema.contacts).values({
+    const result = await db.insert(contacts).values({
       name,
       email,
       phone,

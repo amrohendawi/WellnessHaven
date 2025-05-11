@@ -4,7 +4,36 @@ import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import { eq } from 'drizzle-orm';
 import ws from "ws";
-import * as schema from "./schema";
+import { pgTable, serial, varchar, text, boolean, integer, timestamp, uniqueIndex, index } from "drizzle-orm/pg-core";
+
+// Embedded minimal schema for this API route
+const serviceGroups = pgTable("service_groups", {
+  id: serial("id").primaryKey(),
+  slug: varchar("slug", { length: 100 }).notNull().unique(),
+  nameEn: varchar("name_en", { length: 100 }).notNull(),
+  nameAr: varchar("name_ar", { length: 100 }),
+  nameDe: varchar("name_de", { length: 100 }),
+  nameTr: varchar("name_tr", { length: 100 }),
+  descriptionEn: text("description_en"),
+  descriptionAr: text("description_ar"),
+  descriptionDe: text("description_de"),
+  descriptionTr: text("description_tr"),
+  icon: varchar("icon", { length: 50 }),
+  displayOrder: integer("display_order").default(0)
+});
+
+const services = pgTable("services", {
+  id: serial("id").primaryKey(),
+  slug: varchar("slug", { length: 100 }).notNull(),
+  groupId: integer("group_id").notNull(),
+  nameEn: varchar("name_en", { length: 100 }).notNull(),
+  nameAr: varchar("name_ar", { length: 100 }),
+  nameDe: varchar("name_de", { length: 100 }),
+  nameTr: varchar("name_tr", { length: 100 }),
+  duration: integer("duration").notNull(),
+  price: integer("price").notNull(),
+  imageUrl: text("image_url")
+});
 
 // Ensure environment variables are loaded
 config();
@@ -20,7 +49,7 @@ function createDbConnection() {
   }
   
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  return drizzle({ client: pool, schema });
+  return drizzle({ client: pool, schema: { serviceGroups, services } });
 }
 
 // Helper function to transform DB service group to frontend format
@@ -63,7 +92,7 @@ export default async function handler(
     if (slug) {
       // Get specific service group by slug
       const group = await db.query.serviceGroups.findFirst({
-        where: eq(schema.serviceGroups.slug, String(slug)),
+        where: eq(serviceGroups.slug, String(slug)),
       });
 
       if (!group) {
@@ -72,7 +101,7 @@ export default async function handler(
 
       // Get all services in this group
       const services = await db.query.services.findMany({
-        where: eq(schema.services.groupId, group.id),
+        where: eq(services.groupId, group.id),
       });
 
       const transformedGroup = transformServiceGroup(group);

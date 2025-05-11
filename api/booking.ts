@@ -3,12 +3,25 @@ import { config } from 'dotenv';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from "ws";
-import * as schema from "./schema";
+import { pgTable, serial, varchar, date, time, integer, timestamp, text } from "drizzle-orm/pg-core";
 
 // Ensure environment variables are loaded
 config();
 
 neonConfig.webSocketConstructor = ws;
+
+// Embedded minimal schema for this API route
+const bookings = pgTable("bookings", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  email: varchar("email", { length: 100 }).notNull(),
+  phone: varchar("phone", { length: 20 }).notNull(),
+  service: integer("service_id").notNull(),
+  date: date("date").notNull(),
+  time: time("time", { precision: 0 }).notNull(),
+  vipNumber: varchar("vip_number", { length: 50 }),
+  status: varchar("status", { length: 20 }).default("pending").notNull()
+});
 
 // Create database connection function to ensure fresh connections in serverless environment
 function createDbConnection() {
@@ -19,7 +32,7 @@ function createDbConnection() {
   }
   
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  return drizzle({ client: pool, schema });
+  return drizzle({ client: pool, schema: { bookings } });
 }
 
 export default async function handler(
@@ -44,7 +57,7 @@ export default async function handler(
     }
     
     // Insert booking into database
-    const result = await db.insert(schema.bookings).values({
+    const result = await db.insert(bookings).values({
       name,
       email,
       phone,

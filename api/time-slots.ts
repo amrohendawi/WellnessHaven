@@ -3,7 +3,15 @@ import { config } from 'dotenv';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from "ws";
-import * as schema from "./schema";
+import { pgTable, serial, varchar, date, time, integer } from "drizzle-orm/pg-core";
+
+// Embedded minimal schema for this API route
+const bookings = pgTable("bookings", {
+  id: serial("id").primaryKey(),
+  date: date("date").notNull(),
+  time: time("time", { precision: 0 }).notNull()
+});
+
 import { and, gte, lt } from 'drizzle-orm';
 
 // Ensure environment variables are loaded
@@ -20,7 +28,7 @@ function createDbConnection() {
   }
 
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  return drizzle({ client: pool, schema });
+  return drizzle({ client: pool, schema: { bookings } });
 }
 
 // Available time slots for appointments
@@ -56,8 +64,8 @@ export default async function handler(
     // Find existing bookings for the selected date
     const existingBookings = await db.query.bookings.findMany({
       where: and(
-        gte(schema.bookings.date, selectedDate.toISOString().split('T')[0]),
-        lt(schema.bookings.date, nextDay.toISOString().split('T')[0])
+        gte(bookings.date, selectedDate.toISOString().split('T')[0]),
+        lt(bookings.date, nextDay.toISOString().split('T')[0])
       ),
       columns: {
         time: true

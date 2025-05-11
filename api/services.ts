@@ -3,7 +3,33 @@ import { config } from 'dotenv';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from "ws";
-import * as schema from "./schema";
+import { pgTable, serial, varchar, text, boolean, integer, timestamp, uniqueIndex, index } from "drizzle-orm/pg-core";
+
+// Embedded minimal schema for this API route
+const services = pgTable("services", {
+  id: serial("id").primaryKey(),
+  slug: varchar("slug", { length: 100 }).notNull().unique(),
+  category: varchar("category", { length: 100 }),
+  groupId: integer("group_id").notNull(),
+  nameEn: varchar("name_en", { length: 100 }).notNull(),
+  nameAr: varchar("name_ar", { length: 100 }),
+  nameDe: varchar("name_de", { length: 100 }),
+  nameTr: varchar("name_tr", { length: 100 }),
+  descriptionEn: text("description_en").notNull(),
+  descriptionAr: text("description_ar"),
+  descriptionDe: text("description_de"),
+  descriptionTr: text("description_tr"),
+  longDescriptionEn: text("long_description_en"),
+  longDescriptionAr: text("long_description_ar"),
+  longDescriptionDe: text("long_description_de"),
+  longDescriptionTr: text("long_description_tr"),
+  duration: integer("duration").notNull(),
+  price: integer("price").notNull(),
+  imageUrl: text("image_url"),
+  imageLarge: text("image_large"),
+  isActive: boolean("is_active").default(true)
+});
+
 import { eq } from 'drizzle-orm';
 
 // Ensure environment variables are loaded
@@ -20,7 +46,7 @@ function createDbConnection() {
   }
   
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  return drizzle({ client: pool, schema });
+  return drizzle({ client: pool, schema: { services } });
 }
 
 // Helper function to transform DB service to frontend service format
@@ -79,7 +105,7 @@ export default async function handler(
     if (slug) {
       // Get specific service by slug
       const service = await db.query.services.findFirst({
-        where: (services) => eq(services.slug, String(slug)),
+        where: (servicesTable) => eq(servicesTable.slug, String(slug)),
       });
       
       if (!service) {
@@ -90,7 +116,7 @@ export default async function handler(
     } else {
       // Get all services
       const services = await db.query.services.findMany({
-        where: (services) => eq(services.isActive, true),
+        where: (servicesTable) => eq(servicesTable.isActive, true),
       });
       
       const transformedServices = services.map(transformService);
