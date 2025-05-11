@@ -61,7 +61,7 @@ export default async function handler(
       name,
       email,
       phone,
-      service,
+      service: typeof service === 'number' ? service : parseInt(service, 10), // Ensure it's a number
       date,
       time,
       vipNumber: vipNumber || null,

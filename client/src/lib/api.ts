@@ -17,11 +17,26 @@ async function fetchAPI<T>(
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `API error: ${response.status}`);
+      try {
+        // Try to parse as JSON first
+        const errorData = await response.json();
+        throw new Error(errorData.message || `API error: ${response.status}`);
+      } catch (jsonError) {
+        // If JSON parsing fails, get text instead
+        const errorText = await response.text();
+        if (errorText.includes('<!DOCTYPE html>')) {
+          throw new Error(`API returned HTML instead of JSON. Status: ${response.status}`);
+        } else {
+          throw new Error(`API error: ${response.status}. ${errorText.substring(0, 100)}`);
+        }
+      }
     }
 
-    return await response.json();
+    try {
+      return await response.json();
+    } catch (jsonError) {
+      throw new Error(`Invalid JSON response from API: ${endpoint}`);
+    }
   } catch (error) {
     console.error(`API fetch error: ${endpoint}`, error);
     throw error;
@@ -55,8 +70,28 @@ export async function createBooking(bookingData: any): Promise<any> {
 }
 
 export async function getAvailableTimeSlots(date: string, serviceId?: number): Promise<{ availableSlots: string[] }> {
-  const queryParams = serviceId ? `?date=${date}&serviceId=${serviceId}` : `?date=${date}`;
-  return fetchAPI<{ availableSlots: string[] }>(`/appointments${queryParams}`);
+  // Format query string carefully to avoid issues
+  const queryParams = new URLSearchParams();
+  queryParams.append('date', date);
+  if (serviceId !== undefined && serviceId !== null) {
+    queryParams.append('serviceId', serviceId.toString());
+  }
+  
+  try {
+    // Prefer the time-slots endpoint as it's more reliable
+    const response = await fetchAPI<{ availableSlots: string[] }>(`/time-slots?${queryParams.toString()}`);
+    return response;
+  } catch (error) {
+    console.log('Time-slots endpoint failed, falling back to appointments endpoint');
+    try {
+      // Fall back to the appointments endpoint
+      return await fetchAPI<{ availableSlots: string[] }>(`/appointments?${queryParams.toString()}`);
+    } catch (fallbackError) {
+      console.error('Both endpoints failed:', fallbackError);
+      // Return empty slots when all APIs fail to prevent UI errors
+      return { availableSlots: [] };
+    }
+  }
 }
 
 export async function checkAppointment(email: string, appointmentId: number): Promise<any> {

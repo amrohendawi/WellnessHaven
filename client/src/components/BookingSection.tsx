@@ -41,6 +41,7 @@ const BookingSection = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [serviceModalOpen, setServiceModalOpen] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
   
   // Create a ref for the booking section container
   const bookingSectionRef = useRef<HTMLDivElement>(null);
@@ -165,8 +166,8 @@ const BookingSection = () => {
     // Prepare booking data
     const bookingData = {
       ...data,
-      service: selectedService.slug,
-      serviceId: selectedService.id,
+      service: selectedService.id, // Use ID for the database
+      serviceSlug: selectedService.slug, // Keep slug for reference if needed
       serviceName: selectedService.name[language] || selectedService.name.en,
       date: format(selectedDate, "yyyy-MM-dd"),
       time: selectedTime,
@@ -431,7 +432,7 @@ const BookingSection = () => {
                 {/* Date Selection */}
                 <div>
                   <h4 className="font-medium mb-3">{t('selectDate')}</h4>
-                  <Popover>
+                  <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
@@ -452,7 +453,10 @@ const BookingSection = () => {
                       <Calendar
                         mode="single"
                         selected={selectedDate}
-                        onSelect={setSelectedDate}
+                        onSelect={(date) => {
+                          setSelectedDate(date);
+                          setCalendarOpen(false); // Close the popover when a date is selected
+                        }}
                         initialFocus
                         locale={getDateLocale()}
                       />
@@ -734,13 +738,17 @@ const AvailableTimeSlots = ({ date, serviceId, selectedTime, onSelectTime }: Ava
   const formattedDate = format(date, 'yyyy-MM-dd');
   
   // Fetch available time slots from API
-  const { data, isLoading, error } = useQuery<{ availableSlots: string[] }>({
-    queryKey: ['/api/appointments', formattedDate, serviceId],
+  const { data, isLoading, error, refetch, isFetching } = useQuery<{ availableSlots: string[] }>({
+    queryKey: ['/api/time-slots', formattedDate, serviceId],
     queryFn: () => getAvailableTimeSlots(formattedDate, serviceId),
-    enabled: !!date
+    enabled: !!date,
+    retry: 2,
+    retryDelay: 1000,
+    refetchOnWindowFocus: false,
+    staleTime: 0
   });
   
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return (
       <div className="grid grid-cols-3 gap-2">
         {[1, 2, 3, 4, 5, 6].map(i => (
@@ -754,10 +762,13 @@ const AvailableTimeSlots = ({ date, serviceId, selectedTime, onSelectTime }: Ava
     return (
       <div className="text-center text-gray-500 p-4 border border-red-100 rounded-md bg-red-50">
         {t('errorLoadingTimeSlots')}
+        <div className="text-xs text-gray-500 mt-2 mb-3">
+          {error instanceof Error ? error.message : 'Unknown error'}
+        </div>
         <Button 
           variant="link" 
-          className="block mx-auto mt-2" 
-          onClick={() => window.location.reload()}
+          className="block mx-auto" 
+          onClick={() => refetch()}
         >
           {t('tryAgain')}
         </Button>
