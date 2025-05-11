@@ -1,9 +1,9 @@
 import { config } from "dotenv";
 import { db } from "../server/db";
-import { services, memberships } from "../shared/schema";
+import { services, memberships, serviceGroups } from "../shared/schema";
 import servicesData from "./data/services.json";
 import membershipsData from "./data/memberships.json";
-import { eq } from "drizzle-orm";
+import serviceGroupsData from "./data/service-groups.json" assert { type: 'json' };
 
 // Load environment variables from .env file
 config();
@@ -23,6 +23,7 @@ async function clearData() {
     // Delete in reverse order to respect foreign key constraints
     await db.delete(memberships);
     await db.delete(services);
+    await db.delete(serviceGroups);
     console.log(green("✓ Existing data cleared successfully."));
   } catch (error) {
     console.error(red("✗ Error clearing existing data:"), error);
@@ -37,22 +38,49 @@ async function seedServices() {
   try {
     // Check if services already exist
     const existingServices = await db.query.services.findMany();
-    
+
     if (existingServices.length > 0) {
       return {
-        success: false,
-        message: `Found ${existingServices.length} existing services. Skipping service insertion.`
+        count: existingServices.length,
+        skipped: true
       };
     }
-    
+
     // Insert services
-    await db.insert(services).values(servicesData);
+    const result = await db.insert(services).values(servicesData as any[]);
     return {
-      success: true,
-      message: "Services added successfully!"
+      count: servicesData.length,
+      skipped: false
     };
   } catch (error) {
     console.error(red("✗ Error seeding services:"), error);
+    throw error;
+  }
+}
+
+/**
+ * Seed service groups data
+ */
+async function seedServiceGroups() {
+  try {
+    // Check if service groups already exist
+    const existingGroups = await db.query.serviceGroups.findMany();
+
+    if (existingGroups.length > 0) {
+      return {
+        count: existingGroups.length,
+        skipped: true
+      };
+    }
+
+    // Insert service groups
+    const result = await db.insert(serviceGroups).values(serviceGroupsData as any[]);
+    return {
+      count: serviceGroupsData.length,
+      skipped: false
+    };
+  } catch (error) {
+    console.error(red("✗ Error seeding service groups:"), error);
     throw error;
   }
 }
@@ -64,20 +92,20 @@ async function seedMemberships() {
   try {
     // Check if memberships already exist
     const existingMemberships = await db.query.memberships.findMany();
-    
+
     if (existingMemberships.length > 0) {
       return {
         success: false,
         message: `Found ${existingMemberships.length} existing memberships. Skipping membership insertion.`
       };
     }
-    
+
     // Process memberships data to handle date objects
     const processedMembershipsData = membershipsData.map(membership => ({
       ...membership,
       expiresAt: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
     }));
-    
+
     // Insert memberships
     await db.insert(memberships).values(processedMembershipsData);
     return {
@@ -107,22 +135,28 @@ async function seed() {
         await clearData();
       }
 
+      // Seed service groups first (because services reference them)
+      const serviceGroupsResult = await seedServiceGroups();
+      console.log(serviceGroupsResult.skipped
+        ? yellow(`! Skipped seeding service groups. Found ${serviceGroupsResult.count} existing service groups.`)
+        : green(`✓ Seeded ${serviceGroupsResult.count} service groups successfully.`));
+
       // Seed services
       const servicesResult = await seedServices();
-      console.log(servicesResult.success 
-        ? green(`✓ ${servicesResult.message}`) 
-        : yellow(`! ${servicesResult.message}`));
+      console.log(servicesResult.skipped
+        ? yellow(`! Skipped seeding services. Found ${servicesResult.count} existing services.`)
+        : green(`✓ Seeded ${servicesResult.count} services successfully.`));
 
       // Seed memberships
       const membershipsResult = await seedMemberships();
-      console.log(membershipsResult.success 
-        ? green(`✓ ${membershipsResult.message}`) 
+      console.log(membershipsResult.success
+        ? green(`✓ ${membershipsResult.message}`)
         : yellow(`! ${membershipsResult.message}`));
     };
 
     // Execute all database operations
     await transaction();
-    
+
     console.log(green("✅ Database seeding completed successfully!"));
   } catch (error) {
     console.error(red("❌ Database seeding failed:"), error);

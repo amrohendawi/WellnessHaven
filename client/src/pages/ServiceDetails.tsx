@@ -134,7 +134,7 @@ const ServiceDetails = () => {
                 </div>
                 
                 <Button 
-                  className="w-full bg-gold-dark hover:bg-gold text-white mb-3"
+                  className="w-full bg-gold-dark hover:bg-gold text-white mb-3 hover-lift"
                   onClick={() => {
                     setLocation('/#booking');
                     setTimeout(() => {
@@ -147,7 +147,7 @@ const ServiceDetails = () => {
                 
                 <Button 
                   variant="outline" 
-                  className="w-full"
+                  className="w-full hover-lift"
                   onClick={() => window.location.href = "https://wa.me/971501234567?text=Hello,%20I'm%20interested%20in%20your%20" + service.name.en + "%20service"}
                 >
                   <i className="fab fa-whatsapp mr-2"></i> {t('inquireViaWhatsApp')}

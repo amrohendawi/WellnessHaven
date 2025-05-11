@@ -25,23 +25,9 @@ import {
   DialogFooter 
 } from "@/components/ui/dialog";
 import { useQuery } from '@tanstack/react-query';
-import type { ServiceDisplay } from '@shared/schema';
+import type { ServiceDisplay, ServiceGroupDisplay } from '@shared/schema';
 import { useToast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
-
-// Service categories for booking (matching categories in the database)
-const serviceCategories = [
-  {
-    id: 'beauty',
-    nameKey: 'beautyServices',
-    descriptionKey: 'beautyServicesDesc'
-  },
-  {
-    id: 'skincare',
-    nameKey: 'skincareTreatments', 
-    descriptionKey: 'skincareTreatmentsDesc'
-  }
-];
 
 // Available time slots
 const timeSlots = [
@@ -60,14 +46,22 @@ const BookingSection = () => {
   const [serviceModalOpen, setServiceModalOpen] = useState(false);
 
   // Fetch services from API
-  const { data: services = [], isLoading } = useQuery<ServiceDisplay[]>({
+  const { data: services = [], isLoading: isServicesLoading } = useQuery<ServiceDisplay[]>({
     queryKey: ['/api/services'],
+  });
+  
+  // Fetch service groups from API
+  const { data: serviceGroups = [], isLoading: isGroupsLoading } = useQuery<ServiceGroupDisplay[]>({
+    queryKey: ['/api/service-groups'],
   });
 
   // Filter services by selected category
   const filteredServices = selectedCategory 
     ? services.filter(service => service.category === selectedCategory)
     : [];
+    
+  // Loading state for components
+  const isLoading = isServicesLoading || isGroupsLoading;
 
   // Form setup
   const form = useForm({
@@ -126,7 +120,18 @@ const BookingSection = () => {
   // Handle service selection
   const handleServiceSelect = (service: ServiceDisplay) => {
     setSelectedService(service);
-    setServiceModalOpen(false);
+    
+    // Add a slight delay before closing the modal for a better user experience
+    setTimeout(() => {
+      setServiceModalOpen(false);
+      
+      // Show a success toast when service is selected
+      toast({
+        title: t('serviceSelected'),
+        description: service.name[language] || service.name.en,
+        duration: 2000,
+      });
+    }, 300);
   };
 
   // Toast notification setup
@@ -262,18 +267,36 @@ const BookingSection = () => {
               <h3 className="font-semibold text-xl mb-4">{t('chooseService')}</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                {serviceCategories.map((category) => (
-                  <div 
-                    key={category.id}
-                    onClick={() => handleCategorySelect(category.id)}
-                    className={`border rounded-lg p-4 hover:border-pink cursor-pointer ${
-                      selectedCategory === category.id ? 'border-pink-dark bg-pink-light' : ''
-                    }`}
-                  >
-                    <h4 className="font-medium mb-2">{t(category.nameKey)}</h4>
-                    <div className="text-sm text-gray-600">{t(category.descriptionKey)}</div>
-                  </div>
-                ))}
+                {isLoading ? (
+                  // Loading state
+                  Array(4).fill(0).map((_, index) => (
+                    <div 
+                      key={index}
+                      className="border rounded-lg p-4 animate-pulse"
+                    >
+                      <div className="h-5 bg-gray-200 rounded w-1/2 mb-2"></div>
+                      <div className="h-4 bg-gray-100 rounded w-3/4"></div>
+                    </div>
+                  ))
+                ) : (
+                  // Display service groups
+                  serviceGroups.map((group) => (
+                    <div 
+                      key={group.id}
+                      onClick={() => handleCategorySelect(group.slug)}
+                      className={`border rounded-lg p-4 hover:border-pink cursor-pointer transition-all duration-300 ${
+                        selectedCategory === group.slug 
+                          ? 'border-pink-dark bg-pink-light shadow-md service-selected scale-[1.02] transform-gpu' 
+                          : 'hover:shadow-sm hover:bg-pink-lightest'
+                      }`}
+                    >
+                      <h4 className="font-medium mb-2">{group.name[language]}</h4>
+                      {group.description && (
+                        <div className="text-sm text-gray-600">{group.description[language]}</div>
+                      )}
+                    </div>
+                  ))
+                )}
               </div>
               
               {/* Button to view all services directly */}
@@ -281,7 +304,7 @@ const BookingSection = () => {
                 <Button
                   onClick={() => setServiceModalOpen(true)}
                   variant="outline"
-                  className="w-full md:w-auto"
+                  className="w-full md:w-auto hover-lift"
                 >
                   {t('viewAllServices')}
                 </Button>
@@ -289,33 +312,51 @@ const BookingSection = () => {
               
               {/* Selected Service Display */}
               {selectedService && (
-                <div className="bg-pink-lightest border border-pink rounded-lg p-4 mb-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium">{t('selectedService')}</h4>
-                      <p className="text-md font-semibold text-pink-dark">
-                        {selectedService.name[language] || selectedService.name.en}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        {selectedService.description[language] || selectedService.description.en}
-                      </p>
-                      <div className="flex items-center mt-1 text-sm">
-                        <span className="text-gray-700 mr-4">
-                          <i className="far fa-clock mr-1"></i> {selectedService.duration} {t('minutes')}
-                        </span>
-                        <span className="text-gray-700">
-                          <i className="far fa-money-bill-alt mr-1"></i> {selectedService.price} €
-                        </span>
+                <div className="bg-gradient-to-r from-pink-lightest via-pink-lightest/50 to-white border-2 border-pink rounded-lg overflow-hidden mb-6 shadow-lg transition-all duration-300 animate-fadeIn service-selected">
+                  <div className="p-4">
+                    <div className="flex items-center mb-2">
+                      <div className="w-6 h-6 rounded-full bg-pink-dark flex items-center justify-center mr-3 shadow-sm">
+                        <i className="fas fa-check text-white text-xs"></i>
                       </div>
+                      <h4 className="font-medium text-gray-800">{t('selectedService')}</h4>
                     </div>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => setServiceModalOpen(true)}
-                      className="text-pink-dark hover:text-pink-darker"
-                    >
-                      {t('change')}
-                    </Button>
+                    
+                    <div className="flex">
+                      {selectedService.imageUrl && (
+                        <div className="w-24 h-24 rounded-lg overflow-hidden mr-4 ring-4 ring-pink ring-opacity-30 shadow-inner hidden sm:block pulse-border">
+                          <img 
+                            src={selectedService.imageUrl} 
+                            alt={selectedService.name[language] || selectedService.name.en} 
+                            className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110"
+                          />
+                        </div>
+                      )}
+                      
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold text-pink-dark mb-1">
+                          {selectedService.name[language] || selectedService.name.en}
+                        </h3>
+                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                          {selectedService.description[language] || selectedService.description.en}
+                        </p>
+                        <div className="flex flex-wrap items-center text-sm">
+                          <span className="bg-white/70 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm text-gray-700 mr-3 mb-1 border border-pink/30">
+                            <i className="far fa-clock mr-1"></i> {selectedService.duration} {t('minutes')}
+                          </span>
+                          <span className="bg-white/70 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm text-gray-700 mb-1 border border-pink/30">
+                            <i className="far fa-money-bill-alt mr-1"></i> {selectedService.price} €
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <Button 
+                        onClick={() => setServiceModalOpen(true)}
+                        size="sm"
+                        className="btn-royal text-white ml-4 self-start shadow-md hover-lift"
+                      >
+                        {t('change')}
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )}
@@ -340,17 +381,20 @@ const BookingSection = () => {
                 </div>
               </div>
               
+
+              
               <div className="flex justify-between mt-8">
                 <Button
                   variant="outline"
                   onClick={() => form.reset()}
+                  className="hover-lift"
                 >
                   {t('cancel')}
                 </Button>
                 <Button
                   disabled={!selectedService}
                   onClick={nextStep}
-                  className="bg-pink hover:bg-pink-dark text-gray-800"
+                  className="btn-royal text-white hover-lift"
                 >
                   {t('continue')}
                 </Button>
@@ -421,13 +465,14 @@ const BookingSection = () => {
                 <Button
                   variant="outline"
                   onClick={prevStep}
+                  className="hover-lift"
                 >
                   {t('back')}
                 </Button>
                 <Button
                   disabled={!selectedDate || !selectedTime}
                   onClick={nextStep}
-                  className="bg-pink hover:bg-pink-dark text-gray-800"
+                  className="btn-royal text-white hover-lift"
                 >
                   {t('continue')}
                 </Button>
@@ -482,12 +527,15 @@ const BookingSection = () => {
                   />
                   
                   {/* Booking Summary */}
-                  <div className="bg-beige-light p-4 rounded-lg my-6">
-                    <h4 className="font-medium mb-2">{t('bookingSummary')}</h4>
+                  <div className="bg-beige-light p-4 rounded-lg my-6 shadow-md">
+                    <h4 className="font-medium mb-3">{t('bookingSummary')}</h4>
                     <div className="text-sm">
-                      <div className="grid grid-cols-2 gap-2 mb-1">
-                        <span className="text-gray-600">{t('service')}:</span>
-                        <span className="font-medium">
+                      <div className="grid grid-cols-2 gap-2 mb-2">
+                        <span className="text-gray-600 flex items-center">
+                          <i className="fas fa-check-circle text-pink mr-2"></i>
+                          {t('service')}:
+                        </span>
+                        <span className="font-medium text-pink-dark">
                           {selectedService && (selectedService.name[language] || selectedService.name.en)}
                         </span>
                       </div>
@@ -523,29 +571,28 @@ const BookingSection = () => {
                   </div>
                   
                   <div className="mt-8">
-                    <div className="flex justify-between mb-4">
+                    <div className="flex justify-between mb-6">
                       <Button
                         type="button"
                         variant="outline"
                         onClick={prevStep}
+                        className="hover-lift"
                       >
                         {t('back')}
                       </Button>
-                    </div>
-                    
-                    <div className="border-t pt-6">
+                      
                       <Button
                         type="submit"
-                        className="w-full py-6 bg-pink hover:bg-pink-dark shadow-lg transition-all text-white text-lg font-bold relative"
+                        className="btn-royal shadow-lg transition-all text-white px-8 py-3 font-medium relative hover-lift"
                         disabled={!form.watch('name') || !form.watch('email') || !form.watch('phone')}
                       >
                         {t('confirmBooking')} <i className="ml-2 fas fa-check"></i>
                       </Button>
-                      
-                      {/* Required fields note */}
-                      <div className="text-center mt-2 text-xs text-gray-500">
-                        <span className="text-pink">*</span> {t('requiredFields')}
-                      </div>
+                    </div>
+                    
+                    {/* Required fields note */}
+                    <div className="text-center mt-2 text-xs text-gray-500 border-t pt-3">
+                      <span className="text-pink">*</span> {t('requiredFields')}
                     </div>
                   </div>
                 </form>
@@ -574,26 +621,22 @@ const BookingSection = () => {
                   variant={!selectedCategory ? "default" : "outline"}
                   size="sm"
                   onClick={() => setSelectedCategory(null)}
-                  className="text-xs"
+                  className="text-xs hover-lift"
                 >
                   {t('allServices')}
                 </Button>
                 
-                {services
-                  .map(s => s.category)
-                  .filter((cat, i, arr) => arr.indexOf(cat) === i)
-                  .map(category => (
-                    <Button
-                      key={category}
-                      variant={selectedCategory === category ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setSelectedCategory(category)}
-                      className="text-xs"
-                    >
-                      {t(`${category}Services`) || category}
-                    </Button>
-                  ))
-                }
+                {serviceGroups.map(group => (
+                  <Button
+                    key={group.id}
+                    variant={selectedCategory === group.slug ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSelectedCategory(group.slug)}
+                    className="text-xs hover-lift"
+                  >
+                    {group.name[language]}
+                  </Button>
+                ))}
               </div>
             
               {/* Service list */}
@@ -602,20 +645,23 @@ const BookingSection = () => {
                   <div 
                     key={service.id}
                     onClick={() => handleServiceSelect(service)}
-                    className="p-3 mb-2 border rounded-md hover:bg-pink-lightest cursor-pointer"
+                    className={`p-3 mb-2 border rounded-md cursor-pointer transition-all duration-300 
+                      ${selectedService && selectedService.id === service.id 
+                        ? 'border-pink bg-gradient-to-r from-pink-lightest via-pink-lightest/50 to-white shadow-md scale-[1.02] transform-gpu pulse-border service-selected' 
+                        : 'hover:bg-pink-lightest hover:border-pink-light hover:shadow-sm'}`}
                   >
                     <div className="flex items-start">
                       {service.imageUrl && (
-                        <div className="w-16 h-16 rounded overflow-hidden flex-shrink-0 mr-3">
+                        <div className={`w-16 h-16 rounded overflow-hidden flex-shrink-0 mr-3 ${selectedService && selectedService.id === service.id ? 'ring-2 ring-pink ring-opacity-60' : ''}`}>
                           <img 
                             src={service.imageUrl} 
                             alt={service.name[language] || service.name.en} 
-                            className="w-full h-full object-cover"
+                            className={`w-full h-full object-cover transition-all ${selectedService && selectedService.id === service.id ? 'scale-105' : ''}`}
                           />
                         </div>
                       )}
                       <div className="flex-1">
-                        <h3 className="font-medium text-pink-dark">
+                        <h3 className={`font-medium ${selectedService && selectedService.id === service.id ? 'text-pink-dark font-semibold' : 'text-pink-dark'}`}>
                           {service.name[language] || service.name.en}
                         </h3>
                         <p className="text-sm text-gray-600 mb-1">
@@ -626,6 +672,11 @@ const BookingSection = () => {
                           <span>{service.price} €</span>
                         </div>
                       </div>
+                      {selectedService && selectedService.id === service.id && (
+                        <div className="ml-2 text-pink">
+                          <i className="fas fa-check-circle"></i>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -638,7 +689,7 @@ const BookingSection = () => {
           )}
           
           <DialogFooter>
-            <Button variant="outline" onClick={() => setServiceModalOpen(false)}>
+            <Button variant="outline" onClick={() => setServiceModalOpen(false)} className="hover-lift">
               {t('cancel')}
             </Button>
           </DialogFooter>

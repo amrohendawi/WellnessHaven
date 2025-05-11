@@ -1,5 +1,6 @@
 import { users, type User, type InsertUser, services, type Service, 
-  bookings, type Booking, type InsertBooking, memberships, type Membership } from "@shared/schema";
+  bookings, type Booking, type InsertBooking, memberships, type Membership,
+  serviceGroups, type ServiceGroup } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 
@@ -10,6 +11,8 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   getServices(): Promise<Service[]>;
   getServiceBySlug(slug: string): Promise<Service | undefined>;
+  getServiceGroups(): Promise<ServiceGroup[]>;
+  getServiceGroupBySlug(slug: string): Promise<ServiceGroup | undefined>;
   createBooking(booking: InsertBooking): Promise<Booking>;
   getMembershipByNumber(membershipNumber: string): Promise<Membership | undefined>;
 }
@@ -43,6 +46,15 @@ export class DatabaseStorage implements IStorage {
   async getServiceBySlug(slug: string): Promise<Service | undefined> {
     const [service] = await db.select().from(services).where(eq(services.slug, slug));
     return service || undefined;
+  }
+
+  async getServiceGroups(): Promise<ServiceGroup[]> {
+    return await db.select().from(serviceGroups);
+  }
+
+  async getServiceGroupBySlug(slug: string): Promise<ServiceGroup | undefined> {
+    const [group] = await db.select().from(serviceGroups).where(eq(serviceGroups.slug, slug));
+    return group || undefined;
   }
 
   async createBooking(booking: InsertBooking): Promise<Booking> {

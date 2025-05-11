@@ -2,6 +2,24 @@ import { pgTable, text, serial, integer, boolean, timestamp, json } from "drizzl
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Service groups/categories
+export const serviceGroups = pgTable("service_groups", {
+  id: serial("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  nameEn: text("name_en").notNull(),
+  nameAr: text("name_ar").notNull(),
+  nameDe: text("name_de").notNull(),
+  nameTr: text("name_tr").notNull(),
+  descriptionEn: text("description_en"),
+  descriptionAr: text("description_ar"),
+  descriptionDe: text("description_de"),
+  descriptionTr: text("description_tr"),
+  imageUrl: text("image_url"),
+  displayOrder: integer("display_order").default(0),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow()
+});
+
 // User accounts (for admin access)
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -15,7 +33,8 @@ export const users = pgTable("users", {
 export const services = pgTable("services", {
   id: serial("id").primaryKey(),
   slug: text("slug").notNull().unique(),
-  category: text("category").notNull(),
+  category: text("category").notNull(), // This is the slug of the service group
+  groupId: integer("group_id").references(() => serviceGroups.id),
   nameEn: text("name_en").notNull(),
   nameAr: text("name_ar").notNull(),
   nameDe: text("name_de").notNull(),
@@ -73,6 +92,21 @@ export const contacts = pgTable("contacts", {
 });
 
 // Insert schemas
+export const insertServiceGroupSchema = createInsertSchema(serviceGroups).pick({
+  slug: true,
+  nameEn: true,
+  nameAr: true,
+  nameDe: true,
+  nameTr: true,
+  descriptionEn: true,
+  descriptionAr: true,
+  descriptionDe: true,
+  descriptionTr: true,
+  imageUrl: true,
+  displayOrder: true,
+  isActive: true
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -129,6 +163,9 @@ export const insertContactSchema = createInsertSchema(contacts).pick({
 });
 
 // Types
+export type InsertServiceGroup = z.infer<typeof insertServiceGroupSchema>;
+export type ServiceGroup = typeof serviceGroups.$inferSelect;
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
@@ -144,11 +181,22 @@ export type Booking = typeof bookings.$inferSelect;
 export type InsertContact = z.infer<typeof insertContactSchema>;
 export type Contact = typeof contacts.$inferSelect;
 
+// Service group representation for frontend
+export interface ServiceGroupDisplay {
+  id: number;
+  slug: string;
+  name: Record<string, string>;
+  description?: Record<string, string>;
+  imageUrl?: string;
+  displayOrder: number;
+}
+
 // Service representation for frontend
 export interface ServiceDisplay {
   id: number;
   slug: string;
   category: string;
+  groupId?: number;
   name: Record<string, string>;
   description: Record<string, string>;
   longDescription?: Record<string, string>;

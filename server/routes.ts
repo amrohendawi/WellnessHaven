@@ -180,6 +180,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Get service groups list
+  app.get('/api/service-groups', async (req, res) => {
+    try {
+      // Get language from query parameter, default to English
+      const lang = (req.query.lang as string) || 'en';
+      const validLangs = ['en', 'ar', 'de', 'tr'];
+      const language = validLangs.includes(lang) ? lang : 'en';
+      
+      // Get service groups from storage
+      const groups = await storage.getServiceGroups();
+      
+      // Transform database records to ServiceGroupDisplay format for frontend
+      const formattedGroups = groups.map(group => ({
+        id: group.id,
+        slug: group.slug,
+        name: {
+          en: group.nameEn,
+          ar: group.nameAr,
+          de: group.nameDe,
+          tr: group.nameTr
+        },
+        description: group.descriptionEn ? {
+          en: group.descriptionEn,
+          ar: group.descriptionAr || '',
+          de: group.descriptionDe || '',
+          tr: group.descriptionTr || ''
+        } : undefined,
+        imageUrl: group.imageUrl || undefined,
+        displayOrder: group.displayOrder || 0
+      }));
+      
+      res.status(200).json(formattedGroups);
+    } catch (error) {
+      console.error('Error getting service groups:', error);
+      res.status(500).json({ 
+        message: 'Failed to fetch service groups. Please try again later.' 
+      });
+    }
+  });
+  
   // Get single service by slug
   app.get('/api/services/:slug', async (req, res) => {
     try {

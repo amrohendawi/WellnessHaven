@@ -10,18 +10,19 @@ const HeroSection = () => {
       id="home" 
       className="relative h-[95vh] bg-cover bg-center flex items-center overflow-hidden dubai-pattern" 
       style={{
-        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1582654697936-a635e306ba31?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80')"
+        backgroundImage: "linear-gradient(rgba(164, 120, 125, 0.95), rgba(141, 91, 108, 0.9)), url('https://images.unsplash.com/photo-1582654697936-a635e306ba31?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80')",
+        backgroundColor: "#8D5B6C" /* Fallback color in case image fails to load */
       }}
     >
       {/* Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-        <div className="absolute top-10 left-10 w-96 h-96 rounded-full bg-gold opacity-10 blur-3xl animate-pulse-slow"></div>
-        <div className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-pink opacity-10 blur-3xl animate-pulse-slow animation-delay-2000"></div>
-        <div className="absolute top-1/3 right-1/4 w-64 h-64 rounded-full bg-gold-light opacity-5 blur-3xl animate-pulse-slow animation-delay-1000"></div>
+        <div className="absolute top-10 left-10 w-96 h-96 rounded-full bg-gold opacity-30 blur-3xl animate-pulse-slow"></div>
+        <div className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-pink opacity-20 blur-3xl animate-pulse-slow animation-delay-2000"></div>
+        <div className="absolute top-1/3 right-1/4 w-64 h-64 rounded-full bg-white opacity-30 blur-3xl animate-pulse-slow animation-delay-1000"></div>
       </div>
       
       {/* Golden Border Frame with animated corners */}
-      <div className="absolute top-8 left-8 right-8 bottom-8 border border-gold opacity-30 pointer-events-none">
+      <div className="absolute top-8 left-8 right-8 bottom-8 border border-white opacity-40 pointer-events-none">
         {/* Top left corner */}
         <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-gold"></div>
         {/* Top right corner */}
@@ -43,7 +44,7 @@ const HeroSection = () => {
             {t('heroTitle')}
           </h2>
           
-          <p className="text-xl md:text-2xl mb-10 text-white font-light fade-in animation-delay-1000 max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl mb-10 text-gray-100 font-light fade-in animation-delay-1000 max-w-2xl mx-auto">
             {t('heroSubtitle')}
           </p>
           
@@ -57,24 +58,24 @@ const HeroSection = () => {
           <div className="flex flex-col md:flex-row justify-center gap-6 fade-in animation-delay-1500">
             <a 
               href="#booking" 
-              className="btn-royal px-10 py-4 rounded-md font-medium text-lg hover-lift"
+              className="btn-royal px-10 py-4 rounded-md font-medium text-lg hover-lift shadow-lg"
             >
               {t('bookNow')}
             </a>
             <a 
               href="#services" 
-              className="bg-transparent border-2 border-gold text-white hover:bg-gold/20 hover:border-gold hover:text-white px-10 py-4 rounded-md transition-all duration-300 font-medium text-lg hover-lift"
+              className="bg-transparent border-2 border-gold text-white hover:bg-white/20 hover:border-gold hover:text-white px-10 py-4 rounded-md transition-all duration-300 font-medium text-lg hover-lift shadow-md"
             >
               {t('menuServices')}
             </a>
           </div>
           
           <div className="mt-16 flex items-center justify-center fade-in animation-delay-2000">
-            <div className="px-8 py-3 bg-black/50 backdrop-blur-md rounded-full flex items-center border border-gold shadow-lg">
-              <i className={`fas fa-female ${dir === 'ltr' ? 'mr-3' : 'ml-3'} text-pink text-xl`}></i>
-              <span className="font-medium text-white text-lg">نسواني فقط</span>
+            <div className="px-8 py-3 bg-white/60 backdrop-blur-md rounded-full flex items-center border-2 border-gold shadow-xl">
+              <i className={`fas fa-female ${dir === 'ltr' ? 'mr-3' : 'ml-3'} text-pink-dark text-xl`}></i>
+              <span className="font-medium text-gray-900 text-lg">نسواني فقط</span>
               <span className="mx-3 text-gold">|</span>
-              <span className="font-medium text-white text-lg">{t('womenOnly')}</span>
+              <span className="font-medium text-gray-900 text-lg">{t('womenOnly')}</span>
             </div>
           </div>
           

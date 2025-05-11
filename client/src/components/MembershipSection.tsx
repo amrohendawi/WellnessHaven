@@ -31,7 +31,7 @@ const MembershipSection = () => {
               </div>
               
               <div className="flex justify-between items-start mb-10 relative">
-                <div>
+                <div className="max-w-[70%]">
                   <h3 className="font-display text-3xl font-bold mb-2 flex items-center">
                     <i className="fas fa-crown text-gold-dark mr-3 text-xl"></i>
                     <span>{t('goldCard')}</span>
@@ -40,7 +40,7 @@ const MembershipSection = () => {
                     <span className="text-sm font-medium">Premium VIP</span>
                   </div>
                 </div>
-                <div className="absolute top-0 right-0 w-20 h-20 flex items-center justify-center">
+                <div className="relative w-20 h-20 flex items-center justify-center ml-2 flex-shrink-0">
                   <div className="absolute inset-0 bg-gold-dark opacity-20 rounded-full"></div>
                   <div className="text-5xl text-gold-dark z-10">
                     <i className="fas fa-crown"></i>
@@ -49,10 +49,9 @@ const MembershipSection = () => {
               </div>
               
               <div className="bg-black/5 backdrop-blur-sm border border-gold-dark/20 rounded-xl p-5 mb-8">
-                <div className="text-4xl font-bold mb-1 flex items-center text-gold-dark">
-                  <span>{t('goldDiscount')}</span>
-                  <div className="w-1 h-12 bg-gold-dark/20 mx-4"></div>
-                  <span className="text-base font-normal text-black-gold opacity-80">{t('goldCost')}</span>
+                <div className="flex justify-between items-center text-gold-dark">
+                  <span className="text-4xl font-bold">{t('goldDiscount')}</span>
+                  <span className="text-base font-normal text-black-gold opacity-80 ml-2">{t('goldCost')}</span>
                 </div>
               </div>
               
@@ -95,7 +94,7 @@ const MembershipSection = () => {
               </div>
               
               <div className="flex justify-between items-start mb-10 relative">
-                <div>
+                <div className="max-w-[70%]">
                   <h3 className="font-display text-3xl font-bold mb-2 flex items-center">
                     <i className="fas fa-award text-gray-500 mr-3 text-xl"></i>
                     <span>{t('silverCard')}</span>
@@ -104,7 +103,7 @@ const MembershipSection = () => {
                     <span className="text-sm font-medium">{t('preferredMember')}</span>
                   </div>
                 </div>
-                <div className="absolute top-0 right-0 w-20 h-20 flex items-center justify-center">
+                <div className="relative w-20 h-20 flex items-center justify-center ml-2 flex-shrink-0">
                   <div className="absolute inset-0 bg-gray-400 opacity-20 rounded-full"></div>
                   <div className="text-5xl text-gray-500 z-10">
                     <i className="fas fa-award"></i>
@@ -113,10 +112,9 @@ const MembershipSection = () => {
               </div>
               
               <div className="bg-black/5 backdrop-blur-sm border border-gray-400/20 rounded-xl p-5 mb-8">
-                <div className="text-4xl font-bold mb-1 flex items-center text-gray-700">
-                  <span>{t('silverDiscount')}</span>
-                  <div className="w-1 h-12 bg-gray-400/20 mx-4"></div>
-                  <span className="text-base font-normal text-gray-600 opacity-80">{t('silverCost')}</span>
+                <div className="flex justify-between items-center text-gray-700">
+                  <span className="text-4xl font-bold">{t('silverDiscount')}</span>
+                  <span className="text-base font-normal text-gray-600 opacity-80 ml-2">{t('silverCost')}</span>
                 </div>
               </div>
               

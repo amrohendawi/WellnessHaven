@@ -28,6 +28,8 @@
   --pink-light: 329 40% 95%;
   --pink: 329 40% 75%;
   --pink-dark: 329 40% 55%;
+  --rose-grey: 342 18% 56%;  /* The dark pink/grey color: #A4787D */
+  --rose-mauve: 330 21% 45%;  /* The deeper rose-mauve: #8D5B6C */
   --beige-light: 36 30% 95%;
   --beige: 36 30% 90%;
   --beige-dark: 36 30% 85%;
@@ -347,4 +349,71 @@
 
 .animation-delay-2500 {
   animation-delay: 2500ms;
+}
+
+/* Animation utilities for service selection */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes pulse-border {
+  0% { box-shadow: 0 0 0 0 rgba(252, 185, 212, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(252, 185, 212, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(252, 185, 212, 0); }
+}
+
+.pulse-border {
+  animation: pulse-border 2s infinite;
+}
+
+/* Service selection styling */
+.service-selected {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.service-selected:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(252, 185, 212, 0.4);
+}
+
+.service-selected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(252, 185, 212, 0.3));
+  transform: translateY(-100%);
+  animation: slide-in 0.4s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes slide-in {
+  to { transform: translateY(0); }
+}
+
+/* Selected Service Box styling */
+.selected-service-box {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.selected-service-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(252, 185, 212, 0.4);
+}
+
+/* Gradient effect for service selection */
+.selected-service-gradient {
+  background: linear-gradient(135deg, rgba(252, 185, 212, 0.3) 0%, rgba(255, 255, 255, 0.9) 100%);
+  border-color: rgba(252, 185, 212, 0.5);
 }
