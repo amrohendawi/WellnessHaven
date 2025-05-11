@@ -1,9 +1,7 @@
 import { ServiceDisplay, ServiceGroupDisplay } from '@shared/schema';
 
 // API endpoints
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://dubai-rose-spa.vercel.app/api' // Dubai Rose vercel deployment URL
-  : '/api'; // Use relative paths in development
+const API_BASE_URL = '/api'; // Always use relative API path to avoid CORS
 
 // Generic fetch wrapper with error handling
 async function fetchAPI<T>(
