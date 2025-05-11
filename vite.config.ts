@@ -28,4 +28,6 @@ export default defineConfig({
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
   },
+  // Ensure proper base URL is used in production
+  base: "/",
 });
