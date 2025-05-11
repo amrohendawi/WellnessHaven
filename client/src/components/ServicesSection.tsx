@@ -62,7 +62,7 @@ const ServicesSection = () => {
   useEffect(() => {
     let animationId: number;
     let lastTimestamp = 0;
-    const scrollSpeed = 0.5; // pixels per millisecond
+    const scrollSpeed = 0.2; // pixels per millisecond - slightly slower for better UX
     
     const autoScroll = (timestamp: number) => {
       if (!slideContainerRef.current || autoScrollPaused || isDragging) {
@@ -89,13 +89,15 @@ const ServicesSection = () => {
       // Update position
       let newPosition = (currentPosition + scrollAmount) % scrollWidth;
       
-      // If we've scrolled past the width, loop back to beginning
+      // If we've scrolled to the end, loop back to beginning
       if (newPosition > scrollWidth - clientWidth) {
-        // Add duplicated cards width to make it seamless
+        // Seamless loop back to the beginning
         newPosition = 0;
+        lastTimestamp = timestamp; // Reset timestamp to avoid jump
       } else if (newPosition < 0) {
-        // For RTL support
+        // For RTL support - loop to the end
         newPosition = scrollWidth - clientWidth;
+        lastTimestamp = timestamp; // Reset timestamp to avoid jump
       }
       
       setCurrentPosition(newPosition);
@@ -281,10 +283,8 @@ const ServicesSection = () => {
               onTouchMove={handleTouchMove}
               onTouchEnd={handleDragEnd}
             >
+              {/* Render service cards just once - no duplication */}
               {serviceCards(filteredServices)}
-              
-              {/* Add duplicate cards for infinite scrolling */}
-              {serviceCards(filteredServices.map(service => ({...service, id: service.id + '-duplicate'})))}
             </div>
             
             <button
