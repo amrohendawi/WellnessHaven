@@ -59,6 +59,12 @@ export default async function handler(
   request: VercelRequest,
   response: VercelResponse,
 ) {
+  // Ensure database URL is configured
+  if (!process.env.DATABASE_URL) {
+    console.error('Missing DATABASE_URL environment variable');
+    return response.status(500).json({ message: 'Server misconfiguration: DATABASE_URL not set' });
+  }
+
   // Allow CORS
   response.setHeader('Access-Control-Allow-Credentials', 'true');
   response.setHeader('Access-Control-Allow-Origin', '*');
@@ -103,10 +109,8 @@ export default async function handler(
       
       return response.status(200).json(transformedServices);
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error getting services:', error);
-    return response.status(500).json({ 
-      message: 'Failed to retrieve services. Please try again later.' 
-    });
+    return response.status(500).json({ message: error.message || String(error) });
   }
 }
