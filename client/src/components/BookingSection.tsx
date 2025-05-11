@@ -304,7 +304,7 @@ const BookingSection = () => {
                           <i className="far fa-clock mr-1"></i> {selectedService.duration} {t('minutes')}
                         </span>
                         <span className="text-gray-700">
-                          <i className="far fa-money-bill-alt mr-1"></i> {selectedService.price} AED
+                          <i className="far fa-money-bill-alt mr-1"></i> {selectedService.price} €
                         </span>
                       </div>
                     </div>
@@ -500,7 +500,7 @@ const BookingSection = () => {
                       <div className="grid grid-cols-2 gap-2 mb-1">
                         <span className="text-gray-600">{t('price')}:</span>
                         <span className="font-medium">
-                          {selectedService && `${selectedService.price} AED`}
+                          {selectedService && `${selectedService.price} €`}
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-2 mb-1">
@@ -623,7 +623,7 @@ const BookingSection = () => {
                         </p>
                         <div className="flex text-sm text-gray-500">
                           <span className="mr-3">{service.duration} {t('minutes')}</span>
-                          <span>{service.price} AED</span>
+                          <span>{service.price} €</span>
                         </div>
                       </div>
                     </div>

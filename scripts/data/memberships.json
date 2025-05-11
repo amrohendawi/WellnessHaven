@@ -1,0 +1,16 @@
+[
+  {
+    "membershipNumber": "GOLD0001",
+    "name": "Fatima Al-Maktoum",
+    "email": "fatima@example.com",
+    "phone": "+971 50 123 4567",
+    "type": "gold"
+  },
+  {
+    "membershipNumber": "SILV0001",
+    "name": "Aisha Rahman",
+    "email": "aisha@example.com",
+    "phone": "+971 55 987 6543",
+    "type": "silver"
+  }
+]

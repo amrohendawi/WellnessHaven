@@ -58,7 +58,7 @@ const ServicesSection = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   
                   <div className="absolute bottom-3 right-3 bg-gold/90 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
-                    {service.price} AED
+                    {service.price} €
                   </div>
                 </div>
                 

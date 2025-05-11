@@ -104,12 +104,12 @@ const ServiceDetails = () => {
                   </div>
                   <div className="flex justify-between mb-2">
                     <span className="font-medium">{t('price')}:</span>
-                    <span>{service.price} AED</span>
+                    <span>{service.price} €</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="font-medium">{t('vipPrice')}:</span>
                     <span className="text-gold-dark font-semibold">
-                      {service.vipPrice || `${service.price * 0.6} AED (40% ${t('off')})`}
+                      {service.vipPrice || `${service.price * 0.6} € (40% ${t('off')})`}
                     </span>
                   </div>
                 </div>
