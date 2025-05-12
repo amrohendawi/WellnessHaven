@@ -11,7 +11,7 @@ const bookings = pgTable("bookings", {
   name: varchar("name", { length: 100 }).notNull(),
   email: varchar("email", { length: 100 }).notNull(),
   phone: varchar("phone", { length: 20 }).notNull(),
-  service: integer("service_id").notNull(),
+  service: integer("service").notNull(), // Using service column name as in the database
   date: date("date").notNull(),
   time: time("time", { precision: 0 }).notNull(),
   vipNumber: varchar("vip_number", { length: 50 }),

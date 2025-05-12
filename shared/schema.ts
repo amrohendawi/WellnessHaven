@@ -73,7 +73,7 @@ export const bookings = pgTable("bookings", {
   name: text("name").notNull(),
   email: text("email").notNull(),
   phone: text("phone").notNull(),
-  service: text("service").notNull(),
+  service: integer("service").notNull(), // Using service column name as in the database
   date: text("date").notNull(),
   time: text("time").notNull(),
   vipNumber: text("vip_number"),
