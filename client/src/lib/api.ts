@@ -16,24 +16,41 @@ async function fetchAPI<T>(
       ...options,
     });
 
+    // Clone the response to avoid "body stream already read" errors
+    const responseClone = response.clone();
+
     if (!response.ok) {
-      try {
-        // Try to parse as JSON first
-        const errorData = await response.json();
-        throw new Error(errorData.message || `API error: ${response.status}`);
-      } catch (jsonError) {
-        // If JSON parsing fails, get text instead
-        const errorText = await response.text();
-        if (errorText.includes('<!DOCTYPE html>')) {
-          throw new Error(`API returned HTML instead of JSON. Status: ${response.status}`);
-        } else {
-          throw new Error(`API error: ${response.status}. ${errorText.substring(0, 100)}`);
+      // Get the content type to determine how to process the error
+      const contentType = response.headers.get('content-type');
+
+      if (contentType && contentType.includes('application/json')) {
+        // For JSON error responses
+        try {
+          const errorData = await responseClone.json();
+          throw new Error(errorData.message || `API error: ${response.status}`);
+        } catch (parseError) {
+          // If JSON parsing fails, use a generic error message
+          throw new Error(`API error: ${response.status}`);
+        }
+      } else {
+        // For non-JSON error responses
+        try {
+          const errorText = await responseClone.text();
+          if (errorText.includes('<!DOCTYPE html>')) {
+            throw new Error(`API returned HTML instead of JSON. Status: ${response.status}`);
+          } else {
+            throw new Error(`API error: ${response.status}. ${errorText.substring(0, 100)}`);
+          }
+        } catch (textError) {
+          // If text reading fails, use a generic error message
+          throw new Error(`API error: ${response.status}`);
         }
       }
     }
 
+    // For successful responses
     try {
-      return await response.json();
+      return await responseClone.json();
     } catch (jsonError) {
       throw new Error(`Invalid JSON response from API: ${endpoint}`);
     }
@@ -76,7 +93,7 @@ export async function getAvailableTimeSlots(date: string, serviceId?: number): P
   if (serviceId !== undefined && serviceId !== null) {
     queryParams.append('serviceId', serviceId.toString());
   }
-  
+
   try {
     // Prefer the time-slots endpoint as it's more reliable
     const response = await fetchAPI<{ availableSlots: string[] }>(`/time-slots?${queryParams.toString()}`);

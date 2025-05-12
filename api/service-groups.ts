@@ -18,7 +18,6 @@ const serviceGroups = pgTable("service_groups", {
   descriptionAr: text("description_ar"),
   descriptionDe: text("description_de"),
   descriptionTr: text("description_tr"),
-  icon: varchar("icon", { length: 50 }),
   displayOrder: integer("display_order").default(0)
 });
 
@@ -47,7 +46,7 @@ function createDbConnection() {
       "DATABASE_URL must be set. Did you forget to provision a database?",
     );
   }
-  
+
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
   return drizzle({ client: pool, schema: { serviceGroups, services } });
 }
@@ -59,18 +58,19 @@ function transformServiceGroup(group: any) {
     slug: group.slug,
     name: {
       en: group.nameEn,
-      ar: group.nameAr,
-      de: group.nameDe,
-      tr: group.nameTr
+      ar: group.nameAr || '',
+      de: group.nameDe || '',
+      tr: group.nameTr || ''
     },
     description: {
-      en: group.descriptionEn,
-      ar: group.descriptionAr,
-      de: group.descriptionDe,
-      tr: group.descriptionTr
+      en: group.descriptionEn || '',
+      ar: group.descriptionAr || '',
+      de: group.descriptionDe || '',
+      tr: group.descriptionTr || ''
     },
-    icon: group.icon,
-    displayOrder: group.displayOrder
+    // Add a default icon value since the column doesn't exist in production
+    icon: '',
+    displayOrder: group.displayOrder || 0
   };
 }
 
@@ -78,6 +78,16 @@ export default async function handler(
   request: VercelRequest,
   response: VercelResponse,
 ) {
+  // Set CORS headers to ensure we can access from any origin
+  response.setHeader('Access-Control-Allow-Origin', '*');
+  response.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Handle preflight OPTIONS request
+  if (request.method === 'OPTIONS') {
+    return response.status(200).end();
+  }
+
   // Only GET is supported
   if (request.method !== 'GET') {
     return response.status(405).json({ message: 'Method not allowed' });
@@ -86,7 +96,7 @@ export default async function handler(
   try {
     // Create a new DB connection for this request
     const db = createDbConnection();
-    
+
     const { slug } = request.query;
 
     if (slug) {
@@ -100,19 +110,19 @@ export default async function handler(
       }
 
       // Get all services in this group
-      const services = await db.query.services.findMany({
+      const serviceItems = await db.query.services.findMany({
         where: eq(services.groupId, group.id),
       });
 
       const transformedGroup = transformServiceGroup(group);
-      const transformedServices = services.map(service => ({
+      const transformedServices = serviceItems.map(service => ({
         id: service.id,
         slug: service.slug,
         name: {
           en: service.nameEn,
-          ar: service.nameAr,
-          de: service.nameDe,
-          tr: service.nameTr
+          ar: service.nameAr || '',
+          de: service.nameDe || '',
+          tr: service.nameTr || ''
         },
         duration: service.duration,
         price: service.price,
@@ -130,19 +140,19 @@ export default async function handler(
       });
 
       const result = await Promise.all(groups.map(async (group) => {
-        const services = await db.query.services.findMany({
-          where: (services) => eq(services.groupId, group.id),
+        const serviceItems = await db.query.services.findMany({
+          where: eq(services.groupId, group.id),
         });
 
         const transformedGroup = transformServiceGroup(group);
-        const transformedServices = services.map(service => ({
+        const transformedServices = serviceItems.map(service => ({
           id: service.id,
           slug: service.slug,
           name: {
             en: service.nameEn,
-            ar: service.nameAr,
-            de: service.nameDe,
-            tr: service.nameTr
+            ar: service.nameAr || '',
+            de: service.nameDe || '',
+            tr: service.nameTr || ''
           },
           duration: service.duration,
           price: service.price,
@@ -160,7 +170,8 @@ export default async function handler(
   } catch (error) {
     console.error('Error getting service groups:', error);
     return response.status(500).json({
-      message: 'Failed to retrieve service groups. Please try again later.'
+      message: 'Failed to retrieve service groups. Please try again later.',
+      error: error instanceof Error ? error.message : String(error)
     });
   }
 }
