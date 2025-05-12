@@ -4,7 +4,7 @@ import { ServiceDisplay, ServiceGroupDisplay } from '@shared/schema';
 const API_BASE_URL = '/api'; // Always use relative API path to avoid CORS
 
 // Generic fetch wrapper with error handling
-async function fetchAPI<T>(
+export async function fetchAPI<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {

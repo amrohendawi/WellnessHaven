@@ -7,12 +7,19 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import ServiceDetails from "@/pages/ServiceDetails";
 import { LanguageProvider } from "@/context/LanguageContext";
+import AdminLayout from "@/admin/AdminLayout";
+import LoginPage from "@/admin/LoginPage";
 
 function Router() {
   return (
     <Switch>
+      {/* Admin entry - exact match */}
+      <Route path="/admin" component={AdminLayout} />
+      {/* Admin sub-routes */}
+      <Route path="/admin/:rest*" component={AdminLayout} />
       <Route path="/" component={Home} />
       <Route path="/services/:slug" component={ServiceDetails} />
+      <Route path="/sign-in" component={LoginPage} />
       <Route component={NotFound} />
     </Switch>
   );

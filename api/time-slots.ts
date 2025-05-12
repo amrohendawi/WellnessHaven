@@ -11,6 +11,12 @@ const bookings = pgTable("bookings", {
   date: date("date").notNull(),
   time: time("time", { precision: 0 }).notNull()
 });
+// Blocked slots table
+const blockedTimeSlots = pgTable("blocked_time_slots", {
+  id: serial("id").primaryKey(),
+  date: date("date").notNull(),
+  time: time("time", { precision: 0 }).notNull()
+});
 
 import { and, gte, lt } from 'drizzle-orm';
 
@@ -28,7 +34,7 @@ function createDbConnection() {
   }
 
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  return drizzle({ client: pool, schema: { bookings } });
+  return drizzle({ client: pool, schema: { bookings, blockedTimeSlots } });
 }
 
 // Available time slots for appointments
@@ -94,6 +100,16 @@ export default async function handler(
 
     // Filter out booked slots from available slots
     let availableSlots = ALL_TIME_SLOTS.filter(slot => !bookedTimeSlots.includes(slot));
+    // Fetch blocked slots for the date and filter those out
+    const blockedRecords = await db.query.blockedTimeSlots.findMany({
+      where: and(
+        gte(blockedTimeSlots.date, selectedDate.toISOString().split('T')[0]),
+        lt(blockedTimeSlots.date, nextDay.toISOString().split('T')[0])
+      ),
+      columns: { time: true }
+    });
+    const blockedTimes = blockedRecords.map(b => b.time);
+    availableSlots = availableSlots.filter(slot => !blockedTimes.includes(slot));
     
     // Ensure we always have some time slots for testing purposes
     if (availableSlots.length === 0) {

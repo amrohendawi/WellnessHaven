@@ -3,6 +3,7 @@ import { Link } from 'wouter';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useLanguage } from '@/context/LanguageContext';
+import { Button } from '@/components/ui/button';
 
 const Header = () => {
   const { t } = useTranslation();
@@ -61,6 +62,11 @@ const Header = () => {
             >
               {t('bookNow')}
             </a>
+            
+            {/* Admin Login */}
+            <Link href="/admin">
+              <Button variant="outline" size="sm">Admin</Button>
+            </Link>
           </nav>
           
           {/* Mobile Navigation Toggle */}
@@ -104,6 +110,11 @@ const Header = () => {
           >
             {t('bookNow')}
           </a>
+          
+          {/* Admin Login */}
+          <Link href="/admin" onClick={closeMobileMenu} className="block mx-4 mb-2 text-center">
+            <Button variant="outline" size="sm" className="w-full">Admin</Button>
+          </Link>
         </div>
       </div>
     </header>

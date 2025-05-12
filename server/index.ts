@@ -1,5 +1,8 @@
 import 'dotenv/config'; // This loads the .env file at the start
 import express, { type Request, Response, NextFunction } from "express";
+import { createServer } from 'http';
+import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
+import adminRoutes from './adminRoutes';
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
@@ -38,8 +41,25 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  const server = await registerRoutes(app);
+  await registerRoutes(app);
+  const server = createServer(app);
 
+  // Protect admin routes: require auth and restrict to single admin user
+  app.use(
+    '/api/admin',
+    ClerkExpressRequireAuth(),
+    (req: Request, res: Response, next: NextFunction) => {
+      // ClerkExpressRequireAuth populates req.auth.userId
+      const currentUser = (req as any).auth?.userId;
+      const allowed = process.env.CLERK_ADMIN_USER_ID;
+      if (!currentUser || currentUser !== allowed) {
+        return res.status(403).json({ message: 'Forbidden' });
+      }
+      next();
+    },
+    adminRoutes
+  );
+  
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";

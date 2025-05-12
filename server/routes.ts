@@ -1,8 +1,8 @@
 import type { Express } from "express";
-import { createServer, type Server } from "http";
+// import { createServer, type Server } from "http";
 import { storage } from "./storage";
 
-export async function registerRoutes(app: Express): Promise<Server> {
+export async function registerRoutes(app: Express): Promise<void> {
   // API routes for Dubai Rose beauty center
   
   // Contact form submission
@@ -284,7 +284,5 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  const httpServer = createServer(app);
-
-  return httpServer;
+  // No return value; routes registered directly on `app`
 }

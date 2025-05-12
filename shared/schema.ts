@@ -91,6 +91,14 @@ export const contacts = pgTable("contacts", {
   createdAt: timestamp("created_at").defaultNow()
 });
 
+// Blocked time slots for availability management
+export const blockedTimeSlots = pgTable("blocked_time_slots", {
+  id: serial("id").primaryKey(),
+  date: text("date").notNull(),
+  time: text("time").notNull(),
+  createdAt: timestamp("created_at").defaultNow()
+});
+
 // Insert schemas
 export const insertServiceGroupSchema = createInsertSchema(serviceGroups).pick({
   slug: true,
@@ -162,6 +170,11 @@ export const insertContactSchema = createInsertSchema(contacts).pick({
   message: true
 });
 
+export const insertBlockedTimeSlotSchema = createInsertSchema(blockedTimeSlots).pick({
+  date: true,
+  time: true
+});
+
 // Types
 export type InsertServiceGroup = z.infer<typeof insertServiceGroupSchema>;
 export type ServiceGroup = typeof serviceGroups.$inferSelect;
@@ -180,6 +193,9 @@ export type Booking = typeof bookings.$inferSelect;
 
 export type InsertContact = z.infer<typeof insertContactSchema>;
 export type Contact = typeof contacts.$inferSelect;
+
+export type InsertBlockedTimeSlot = z.infer<typeof insertBlockedTimeSlotSchema>;
+export type BlockedTimeSlot = typeof blockedTimeSlots.$inferSelect;
 
 // Service group representation for frontend
 export interface ServiceGroupDisplay {
