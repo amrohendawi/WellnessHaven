@@ -42,6 +42,11 @@ const ServiceDetails = () => {
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     if (service && service.name) {
       const serviceName = service.name[language as keyof typeof service.name] || service.name.en || t('service');
@@ -225,7 +230,8 @@ const ServiceDetails = () => {
                   className="w-full bg-white border border-gold hover:bg-gold/10 mb-3 rounded-md py-3 px-4 font-medium shadow-md flex items-center justify-center transition-colors duration-200"
                   style={{ color: '#333' }}
                   onClick={() => {
-                    setLocation('/#booking');
+                    // Include the service slug in the URL
+                    setLocation(`/#booking?service=${service.slug}`);
                     setTimeout(() => {
                       document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
                     }, 100);

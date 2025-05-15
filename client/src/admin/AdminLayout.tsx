@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Switch, Route, Link, useLocation } from 'wouter';
-import { useAuth } from '@clerk/clerk-react';
+import { useAuth, SignIn } from '@clerk/clerk-react';
 import DashboardPage from './DashboardPage';
 import BookingsPage from './BookingsPage';
 import BookingDetailPage from './BookingDetailPage';
@@ -12,12 +12,8 @@ export default function AdminLayout() {
   const [location, setLocation] = useLocation();
   const { isLoaded, isSignedIn, signOut } = useAuth();
 
-  // Redirect to sign-in if not authenticated
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      setLocation('/sign-in');
-    }
-  }, [isLoaded, isSignedIn, setLocation]);
+  // No longer redirecting to sign-in, we'll render the SignIn component directly
+  // This comment is preserved to show the change in approach
 
   // Redirect base /admin to /admin/dashboard
   useEffect(() => {
@@ -26,7 +22,23 @@ export default function AdminLayout() {
     }
   }, [location, setLocation]);
 
-  if (!isLoaded || !isSignedIn) return null;
+  // Show loading state while Clerk is initializing
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
+
+  // Show sign-in directly if not authenticated
+  if (!isSignedIn) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <SignIn />
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen">

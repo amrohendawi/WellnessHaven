@@ -96,6 +96,40 @@ const BookingSection = () => {
     }
   }, [selectedCategory]);
 
+  // Handle service auto-selection from URL parameters
+  useEffect(() => {
+    if (services.length === 0) return; // Wait until services are loaded
+    
+    // Get the service slug from URL if present
+    const hash = window.location.hash;
+    if (hash && hash.includes('?service=')) {
+      const serviceSlug = hash.split('?service=')[1];
+      
+      // Find the service by slug
+      const serviceToSelect = services.find(s => s.slug === serviceSlug);
+      
+      if (serviceToSelect) {
+        // Set the category first
+        setSelectedCategory(serviceToSelect.category);
+        
+        // Then select the service
+        setSelectedService(serviceToSelect);
+        
+        // Show a success toast for better UX
+        toast({
+          title: t('serviceSelected'),
+          description: serviceToSelect.name[language] || serviceToSelect.name.en,
+          duration: 2000,
+        });
+        
+        // Clean the URL to prevent reselection on refresh
+        if (window.history.replaceState) {
+          window.history.replaceState(null, '', '#booking');
+        }
+      }
+    }
+  }, [services, language, t]);
+
   // Helper function to maintain scroll position when changing steps
   const changeStepWithoutJump = (newStep: number) => {
     // Get the current container position
