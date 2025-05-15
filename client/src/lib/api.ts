@@ -195,19 +195,38 @@ export async function fetchAdminAPI<T>(
       }
     }
     
-    // Form the admin endpoint path - keep it simple just like regular API calls
+    // Form the admin endpoint path - we need to be careful how we construct this
+    // Since fetchAPI will add API_BASE_URL (/api) to the path, we must NOT include /api here
+    // adminPath should be just the relative path after /api
     const adminPath = `/admin/${trimmedEndpoint}`;
     
-    // Debug logging
+    // Debug logging - show the actual final URL that will be used
     if (typeof window !== 'undefined') {
       console.log(`📡 Admin API request to: ${API_BASE_URL}${adminPath}`);
       console.log(`🔑 Auth header present: ${headers['Authorization'] ? 'Yes' : 'No'}`);
     }
     
-    // Use the standard fetchAPI function with our custom auth headers
-    // This ensures consistency with the working API calls
+    // CRITICAL FIX: Do NOT use the standard fetchAPI function for admin endpoints
+    // The problem is that the server routes are configured differently
     try {
-      return await fetchAPI<T>(adminPath, { ...options, headers });
+      // Make a direct fetch call instead - this gives us complete control over the URL
+      const response = await fetch(`${API_BASE_URL}${adminPath}`, {
+        ...options,
+        headers,
+      });
+      
+      // Process the response manually
+      if (!response.ok) {
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || `Admin API error: ${response.status}`);
+        } else {
+          throw new Error(`Admin API error: ${response.status}`);
+        }
+      }
+      
+      return await response.json() as T;
     } catch (error) {
       // Add specific logging for production debugging
       if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
