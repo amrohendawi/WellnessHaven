@@ -83,12 +83,29 @@ function transformServiceGroup(group: any) {
 }
 
 export default async function handler(request: VercelRequest, response: VercelResponse) {
-  // Set CORS headers to ensure we can access from any origin
-  response.setHeader('Access-Control-Allow-Origin', '*');
+  // Handle CORS
+  const origin = request.headers.origin;
+  
+  // Allow these origins
+  const allowedOrigins = [
+    'https://dubai-rose.vercel.app',
+    'https://dubai-rose-spa.vercel.app',
+    'http://localhost:3000',
+    'http://localhost:5173'
+  ];
+  
+  // Allow Vercel preview URLs
+  const isVercelPreview = origin && origin.endsWith('vercel.app');
+  
+  if (origin && (allowedOrigins.includes(origin) || isVercelPreview)) {
+    response.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  
+  // Set CORS headers
   response.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  // Handle preflight OPTIONS request
+  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  // Handle preflight requests
   if (request.method === 'OPTIONS') {
     return response.status(200).end();
   }
