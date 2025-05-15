@@ -194,14 +194,14 @@ export async function fetchAdminAPI<T>(
       }
     }
     
-    // Form the admin endpoint path - use relative URL like the regular API functions
-    // This is critical to avoid CORS issues and ensure requests go to the right domain
-    const adminPath = `/admin/${trimmedEndpoint}`;
+    // Form the admin endpoint path - critical to match the server routes
+    // The server mounts admin routes at '/api/admin' so we need to include '/api'
+    const adminPath = `/api/admin/${trimmedEndpoint}`;
     
-    // In production, add explicit debugging
-    if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
-      console.log(`Admin API request to: ${API_BASE_URL}${adminPath}`);
-      console.log(`Auth header present: ${headers['Authorization'] ? 'Yes' : 'No'}`);
+    // Debug logging for both development and production
+    if (typeof window !== 'undefined') {
+      console.log(`📡 Admin API request to: ${adminPath}`);
+      console.log(`🔑 Auth header present: ${headers['Authorization'] ? 'Yes' : 'No'}`);
     }
     
     // Use the standard fetchAPI function with our custom auth headers
