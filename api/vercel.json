@@ -1,25 +1,18 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/public",
-  "framework": "vite",
   "routes": [
     {
-      "src": "/api/admin/(.*)",
+      "src": "/admin/(.*)",
       "dest": "/api/admin/$1"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/api/$1"
     }
   ],
   "headers": [
     {
-      "source": "/api/(.*)",
+      "source": "/(.*)",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
