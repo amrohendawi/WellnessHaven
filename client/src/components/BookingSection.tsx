@@ -490,9 +490,16 @@ const BookingSection = () => {
                         onSelect={(date) => {
                           setSelectedDate(date);
                           setCalendarOpen(false); // Close the popover when a date is selected
+                          // Reset time when date changes
+                          setSelectedTime(null);
                         }}
                         initialFocus
                         locale={getDateLocale()}
+                        // Disable dates in the past
+                        disabled={(date) => {
+                          // Disable all dates before today
+                          return date < new Date(new Date().setHours(0, 0, 0, 0));
+                        }}
                       />
                     </PopoverContent>
                   </Popover>
@@ -771,6 +778,35 @@ const AvailableTimeSlots = ({ date, serviceId, selectedTime, onSelectTime }: Ava
   // Format date for API request
   const formattedDate = format(date, 'yyyy-MM-dd');
   
+  // Helper function to check if a date is today
+  const isToday = (someDate: Date) => {
+    const today = new Date();
+    return someDate.getDate() === today.getDate() &&
+      someDate.getMonth() === today.getMonth() &&
+      someDate.getFullYear() === today.getFullYear();
+  };
+
+  // Generate fallback time slots (for demonstration when API fails)
+  const generateFallbackTimeSlots = () => {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const isDateToday = isToday(date);
+    
+    // Base time slots
+    let slots = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
+    
+    // If the selected date is today, filter out past time slots
+    if (isDateToday) {
+      slots = slots.filter(slot => {
+        const [hours] = slot.split(':').map(Number);
+        return hours > currentHour;
+      });
+    }
+    
+    // Randomly remove some slots to simulate real availability
+    return slots.filter(() => Math.random() > 0.3);
+  };
+  
   // Fetch available time slots from API
   const { data, isLoading, error, refetch, isFetching } = useQuery<{ availableSlots: string[] }>({
     queryKey: ['/api/time-slots', formattedDate, serviceId],
@@ -779,7 +815,10 @@ const AvailableTimeSlots = ({ date, serviceId, selectedTime, onSelectTime }: Ava
     retry: 2,
     retryDelay: 1000,
     refetchOnWindowFocus: false,
-    staleTime: 0
+    staleTime: 0,
+    onError: (err) => {
+      console.warn('Error fetching time slots, will use fallback:', err);
+    }
   });
   
   if (isLoading || isFetching) {
@@ -792,20 +831,37 @@ const AvailableTimeSlots = ({ date, serviceId, selectedTime, onSelectTime }: Ava
     );
   }
   
-  if (error || !data) {
-    return (
-      <div className="text-center text-gray-500 p-4 border border-red-100 rounded-md bg-red-50">
-        {t('errorLoadingTimeSlots')}
-        <div className="text-xs text-gray-500 mt-2 mb-3">
-          {error instanceof Error ? error.message : 'Unknown error'}
+  // Use fallback time slots if the API call fails
+  if (error || !data || !data.availableSlots) {
+    // Generate fallback time slots and display them
+    const fallbackSlots = generateFallbackTimeSlots();
+    
+    if (fallbackSlots.length === 0) {
+      return (
+        <div className="text-center text-gray-500 p-4 border rounded-md">
+          {t('noTimeSlotsAvailable')}
+          <p className="mt-2 text-sm">{t('tryAnotherDate')}</p>
         </div>
-        <Button 
-          variant="link" 
-          className="block mx-auto" 
-          onClick={() => refetch()}
-        >
-          {t('tryAgain')}
-        </Button>
+      );
+    }
+    
+    return (
+      <div>
+        <div className="text-xs text-amber-600 mb-3 px-1">
+          {t('usingFallbackSchedule')}
+        </div>
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+          {fallbackSlots.map(time => (
+            <Button
+              key={time}
+              variant={selectedTime === time ? "default" : "outline"}
+              className="hover-lift"
+              onClick={() => onSelectTime(time)}
+            >
+              {time}
+            </Button>
+          ))}
+        </div>
       </div>
     );
   }

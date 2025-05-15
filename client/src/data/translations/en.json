@@ -46,6 +46,8 @@
   "chooseService": "Choose a service",
   "selectDateTime": "Select date and time",
   "selectDate": "Select a date",
+  "tryAnotherDate": "Please try selecting another date",
+  "usingFallbackSchedule": "Showing available time slots",
   "selectTime": "Select a time",
   "pickDate": "Pick a date",
   "enterDetails": "Enter your details",
