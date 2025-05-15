@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { fetchAPI } from '@/lib/api';
+import { fetchAdminAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
 interface DashboardSummary {
@@ -18,7 +18,7 @@ export default function DashboardPage() {
   useEffect(() => {
     async function loadSummary() {
       try {
-        const data = await fetchAPI<DashboardSummary>('/admin/dashboard-summary');
+        const data = await fetchAdminAPI<DashboardSummary>('dashboard-summary');
         setSummary(data);
       } catch (error) {
         toast({ title: 'Error', description: 'Failed to load dashboard summary', variant: 'destructive' });

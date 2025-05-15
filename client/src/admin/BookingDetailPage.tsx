@@ -3,7 +3,7 @@ import { useRoute, useLocation } from 'wouter';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
-import { fetchAPI } from '@/lib/api';
+import { fetchAdminAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import type { Booking } from '@shared/schema';
 
@@ -18,7 +18,7 @@ export default function BookingDetailPage() {
 
   useEffect(() => {
     if (!bookingId) return;
-    fetchAPI<Booking>(`/api/admin/bookings/${bookingId}`)
+    fetchAdminAPI<Booking>(`bookings/${bookingId}`)
       .then(data => {
         setBooking(data);
         setStatus(data.status);
@@ -31,7 +31,7 @@ export default function BookingDetailPage() {
   const updateStatus = async () => {
     if (!booking) return;
     try {
-      await fetchAPI(`/api/admin/bookings/${booking.id}`, { method: 'PUT', body: JSON.stringify({ status }) });
+      await fetchAdminAPI(`bookings/${booking.id}`, { method: 'PUT', body: JSON.stringify({ status }) });
       setBooking({ ...booking, status });
       toast({ title: 'Updated', description: 'Status updated.' });
     } catch {

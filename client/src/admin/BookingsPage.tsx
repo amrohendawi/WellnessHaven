@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
 import { Link } from 'wouter';
 import { useToast } from '@/hooks/use-toast';
-import { fetchAPI } from '@/lib/api';
+import { fetchAdminAPI } from '@/lib/api';
 import type { Booking } from '@shared/schema';
 
 const STATUS_OPTIONS = ['pending', 'confirmed', 'completed', 'cancelled'] as const;
@@ -22,7 +22,7 @@ export default function BookingsPage() {
 
   async function loadBookings() {
     try {
-      const data = await fetchAPI<Booking[]>('/admin/bookings');
+      const data = await fetchAdminAPI<Booking[]>('bookings');
       setBookings(data);
     } catch {
       toast({ title: 'Error', description: 'Failed to fetch bookings', variant: 'destructive' });
@@ -31,7 +31,7 @@ export default function BookingsPage() {
 
   async function updateStatus(id: number, status: string) {
     try {
-      await fetchAPI(`/admin/bookings/${id}`, { method: 'PUT', body: JSON.stringify({ status }) });
+      await fetchAdminAPI(`bookings/${id}`, { method: 'PUT', body: JSON.stringify({ status }) });
       setBookings(prev => prev.map(b => b.id === id ? { ...b, status } : b));
       toast({ title: 'Updated', description: 'Booking status updated.' });
     } catch {

@@ -141,3 +141,15 @@ export async function getMemberships(): Promise<any[]> {
 export async function getMembershipByTier(tier: string): Promise<any> {
   return fetchAPI<any>(`/memberships?tier=${tier}`);
 }
+
+// ----- Admin API -----
+// Helper function for admin endpoints to ensure correct URL structure
+export async function fetchAdminAPI<T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<T> {
+  // Remove any leading slash from the endpoint
+  const trimmedEndpoint = endpoint.startsWith('/') ? endpoint.substring(1) : endpoint;
+  // Construct the proper admin API path - '/api' is already added by fetchAPI
+  return fetchAPI<T>(`/admin/${trimmedEndpoint}`, options);
+}

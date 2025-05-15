@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
-import { fetchAPI } from '@/lib/api';
+import { fetchAdminAPI } from '@/lib/api';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -31,7 +31,7 @@ export default function ServicesPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchAPI<Service[]>('/admin/services')
+    fetchAdminAPI<Service[]>('services')
       .then(setServices)
       .catch(() => {
         toast({ title: 'Error', description: 'Failed to fetch services', variant: 'destructive' });
@@ -41,11 +41,11 @@ export default function ServicesPage() {
   // Create handler
   async function onCreate(values: ServiceFormValues) {
     try {
-      await fetchAPI<Service>('/admin/services', { method: 'POST', body: JSON.stringify(values) });
+      await fetchAdminAPI<Service>('services', { method: 'POST', body: JSON.stringify(values) });
       setIsCreateOpen(false);
       createForm.reset();
       // refresh list
-      const list = await fetchAPI<Service[]>('/admin/services'); 
+      const list = await fetchAdminAPI<Service[]>('services'); 
       setServices(list);
       toast({ title: 'Created', description: 'Service created successfully.' });
     } catch {
@@ -57,10 +57,10 @@ export default function ServicesPage() {
   async function onEdit(values: ServiceFormValues) {
     if (!current) return;
     try {
-      await fetchAPI<Service>(`/admin/services/${current.id}`, { method: 'PUT', body: JSON.stringify(values) });
+      await fetchAdminAPI<Service>(`services/${current.id}`, { method: 'PUT', body: JSON.stringify(values) });
       setIsEditOpen(false);
       editForm.reset();
-      const list = await fetchAPI<Service[]>('/admin/services'); 
+      const list = await fetchAdminAPI<Service[]>('services'); 
       setServices(list);
       toast({ title: 'Updated', description: 'Service updated successfully.' });
     } catch {
@@ -169,7 +169,7 @@ export default function ServicesPage() {
                 <Button variant="ghost" size="sm" className="ml-2" onClick={async () => {
                   if (!confirm('Delete this service?')) return;
                   try {
-                    await fetchAPI(`/admin/services/${s.id}`, { method: 'DELETE' });
+                    await fetchAdminAPI(`services/${s.id}`, { method: 'DELETE' });
                     setServices(prev => prev.filter(item => item.id !== s.id));
                     toast({ title: 'Deleted', description: 'Service removed.' });
                   } catch {
