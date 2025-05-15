@@ -169,86 +169,62 @@ export async function fetchAdminAPI<T>(
       ...(options.headers as Record<string, string> || {}),
     };
     
-    try {
-      // First, directly access the active Clerk session if available
-      // This should be the most reliable method
-      if (typeof window !== 'undefined') {
-        // Try the modern Clerk API first
-        if (window.Clerk?.session) {
-          try {
-            const token = await window.Clerk.session.getToken();
-            if (token) {
-              headers['Authorization'] = `Bearer ${token}`;
-              console.log('Auth token retrieved from Clerk.session');
-            }
-          } catch (sessionError) {
-            console.warn('Error accessing Clerk.session:', sessionError);
-          }
-        } 
-        // Fallback to the internal API if necessary
-        else if (window.__clerk_frontend_api?.getToken) {
-          try {
-            const token = await window.__clerk_frontend_api.getToken();
-            if (token) {
-              headers['Authorization'] = `Bearer ${token}`;
-              console.log('Auth token retrieved from internal API');
-            }
-          } catch (internalError) {
-            console.warn('Error accessing internal Clerk API:', internalError);
+    // Get authentication token - simplify and focus on the most reliable approach
+    if (typeof window !== 'undefined') {
+      try {
+        // Modern approach - import Clerk directly
+        const Clerk = window.Clerk;
+        
+        // Check if Clerk is available and user is signed in
+        if (Clerk && Clerk.session) {
+          console.log('Clerk session found, getting token...');
+          const token = await Clerk.session.getToken();
+          
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+            console.log('✅ Auth token successfully retrieved');
+          } else {
+            console.warn('⚠️ Token is null or empty');
           }
         } else {
-          console.warn('No Clerk session available. Authentication will fail for admin routes.');
+          console.warn('⚠️ No active Clerk session found - user may not be logged in');
         }
+      } catch (err) {
+        console.error('❌ Error getting auth token:', err);
       }
-    } catch (tokenError) {
-      console.error('Failed to get auth token:', tokenError);
     }
     
-    // Form the admin endpoint - ALWAYS use the standard relative path approach
-    // This ensures your API requests stay on the same domain
-    const fullEndpoint = `/api/admin/${trimmedEndpoint}`;
+    // Form the admin endpoint path - use relative URL like the regular API functions
+    // This is critical to avoid CORS issues and ensure requests go to the right domain
+    const adminPath = `/admin/${trimmedEndpoint}`;
     
     // In production, add explicit debugging
     if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
-      console.log(`Admin API request to: ${fullEndpoint}`);
+      console.log(`Admin API request to: ${API_BASE_URL}${adminPath}`);
       console.log(`Auth header present: ${headers['Authorization'] ? 'Yes' : 'No'}`);
     }
     
-    // Make a direct fetch request with our custom headers instead of using fetchAPI
-    // This gives us more control over the exact request configuration
-    const response = await fetch(fullEndpoint, {
-      ...options,
-      headers,
-    });
-    
-    // Handle response manually (similar to fetchAPI but with more debug info)
-    if (!response.ok) {
-      // Try to get more diagnostic information
-      const contentType = response.headers.get('content-type');
-      
-      if (contentType && contentType.includes('application/json')) {
-        // For JSON error responses, get the error details
-        const errorData = await response.json();
-        throw new Error(errorData.message || `Admin API error: ${response.status}`);
-      } else {
-        // For non-JSON responses, log more details in production
-        try {
-          const errorText = await response.text();
-          console.error(`Admin API returned non-JSON response: ${errorText.substring(0, 200)}`);
-          throw new Error(`Admin API error: ${response.status} - Non-JSON response`);
-        } catch (textError) {
-          throw new Error(`Admin API error: ${response.status}`);
+    // Use the standard fetchAPI function with our custom auth headers
+    // This ensures consistency with the working API calls
+    try {
+      return await fetchAPI<T>(adminPath, { ...options, headers });
+    } catch (error) {
+      // Add specific logging for production debugging
+      if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
+        console.error(`Admin API call failed for: ${adminPath}`);
+        console.error(`Error details:`, error);
+        
+        // Provide more specific error messages in production
+        if (error instanceof Error) {
+          if (error.message.includes('Invalid JSON')) {
+            console.error('This may indicate an authentication issue or server error');
+            if (!headers['Authorization']) {
+              console.error('IMPORTANT: No authentication token was provided. Check if you are logged in.');
+            }
+          }
         }
       }
-    }
-    
-    // For successful responses
-    try {
-      const data = await response.json();
-      return data as T;
-    } catch (jsonError) {
-      console.error('Failed to parse JSON response:', jsonError);
-      throw new Error(`Invalid JSON response from Admin API: ${trimmedEndpoint}`);
+      throw error;
     }
   } catch (error) {
     console.error(`Admin API fetch error (${endpoint}):`, error);

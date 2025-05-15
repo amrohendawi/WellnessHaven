@@ -191,51 +191,59 @@ export default function AdminLayout() {
         {/* Navigation Links */}
         <ul className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
           <li>
-            <Link href="/admin/dashboard">
-              <a className={cn(
+            <Link 
+              href="/admin/dashboard"
+              onClick={() => setMobileOpen(false)}
+              className={cn(
                 "flex items-center py-2 px-3 rounded-md transition-colors",
                 location === '/admin/dashboard' ? 'bg-pink-50 text-pink-dark font-medium' : 'text-gray-700 hover:bg-pink-50/50',
                 mobileOpen ? "" : collapsed ? "justify-center" : ""
-              )} onClick={() => setMobileOpen(false)}>
-                <Home className="h-5 w-5 text-gold flex-shrink-0" />
-                {(mobileOpen || !collapsed) && <span className="ml-3">Dashboard</span>}
-              </a>
+              )}
+            >
+              <Home className="h-5 w-5 text-gold flex-shrink-0" />
+              {(mobileOpen || !collapsed) && <span className="ml-3">Dashboard</span>}
             </Link>
           </li>
           <li>
-            <Link href="/admin/bookings">
-              <a className={cn(
+            <Link 
+              href="/admin/bookings"
+              onClick={() => setMobileOpen(false)}
+              className={cn(
                 "flex items-center py-2 px-3 rounded-md transition-colors",
                 location.startsWith('/admin/bookings') ? 'bg-pink-50 text-pink-dark font-medium' : 'text-gray-700 hover:bg-pink-50/50',
                 mobileOpen ? "" : collapsed ? "justify-center" : ""
-              )} onClick={() => setMobileOpen(false)}>
-                <Calendar className="h-5 w-5 text-gold flex-shrink-0" />
-                {(mobileOpen || !collapsed) && <span className="ml-3">Bookings</span>}
-              </a>
+              )}
+            >
+              <Calendar className="h-5 w-5 text-gold flex-shrink-0" />
+              {(mobileOpen || !collapsed) && <span className="ml-3">Bookings</span>}
             </Link>
           </li>
           <li>
-            <Link href="/admin/blocked-slots">
-              <a className={cn(
+            <Link 
+              href="/admin/blocked-slots"
+              onClick={() => setMobileOpen(false)}
+              className={cn(
                 "flex items-center py-2 px-3 rounded-md transition-colors",
                 location === '/admin/blocked-slots' ? 'bg-pink-50 text-pink-dark font-medium' : 'text-gray-700 hover:bg-pink-50/50',
                 mobileOpen ? "" : collapsed ? "justify-center" : ""
-              )} onClick={() => setMobileOpen(false)}>
-                <Clock className="h-5 w-5 text-gold flex-shrink-0" />
-                {(mobileOpen || !collapsed) && <span className="ml-3">Availability</span>}
-              </a>
+              )}
+            >
+              <Clock className="h-5 w-5 text-gold flex-shrink-0" />
+              {(mobileOpen || !collapsed) && <span className="ml-3">Availability</span>}
             </Link>
           </li>
           <li>
-            <Link href="/admin/services">
-              <a className={cn(
+            <Link 
+              href="/admin/services"
+              onClick={() => setMobileOpen(false)}
+              className={cn(
                 "flex items-center py-2 px-3 rounded-md transition-colors",
                 location === '/admin/services' ? 'bg-pink-50 text-pink-dark font-medium' : 'text-gray-700 hover:bg-pink-50/50',
                 mobileOpen ? "" : collapsed ? "justify-center" : ""
-              )} onClick={() => setMobileOpen(false)}>
-                <Package className="h-5 w-5 text-gold flex-shrink-0" />
-                {(mobileOpen || !collapsed) && <span className="ml-3">Services</span>}
-              </a>
+              )}
+            >
+              <Package className="h-5 w-5 text-gold flex-shrink-0" />
+              {(mobileOpen || !collapsed) && <span className="ml-3">Services</span>}
             </Link>
           </li>
         </ul>
