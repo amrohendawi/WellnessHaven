@@ -16,7 +16,7 @@ export async function apiRequest(
   // Base API URL for Vercel deployment
   const API_BASE_URL =
     process.env.NODE_ENV === 'production'
-      ? 'https://dubai-rose-spa.vercel.app' // Dubai Rose vercel deployment URL
+      ? 'https://dubai-rose-git-main-amrohendawis-projects.vercel.app' // Dubai Rose vercel deployment URL
       : '';
 
   // Prepare the full URL for the fetch request

@@ -74,7 +74,7 @@ export const environment = {
       // This resolves cross-origin issues identified in past deployments
       const host = typeof window !== 'undefined' ? window.location.host : '';
       if (host.includes('dubai-rose.vercel.app')) {
-        return 'https://dubai-rose-spa.vercel.app/api';
+        return 'https://dubai-rose.vercel.app/api';
       } else {
         return '/api'; // Default fallback
       }
@@ -665,7 +665,7 @@ export async function fetchAdminAPI<T>(
 
       if (host.includes('dubai-rose.vercel.app')) {
         // Handle frontend domain pointing to backend domain
-        apiUrl = `https://dubai-rose-spa.vercel.app/api/admin/${trimmedEndpoint}`;
+        apiUrl = `https://dubai-rose.vercel.app/api/admin/${trimmedEndpoint}`;
         logger.debug(`Using absolute API URL for cross-origin request: ${apiUrl}`);
       } else {
         // Handle same-domain scenario

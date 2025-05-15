@@ -19,7 +19,7 @@
 
 ### 3. Production Deployment
 
-- Updated API base URLs to point to the production Vercel domain (dubai-rose-spa.vercel.app)
+- Updated API base URLs to point to the production Vercel domain (dubai-rose.vercel.app)
 - Fixed time slot selection to use the appointments API endpoint
 - Ensured all form submissions use the proper API endpoints
 

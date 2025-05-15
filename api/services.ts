@@ -96,7 +96,6 @@ export default async function handler(request: VercelRequest, response: VercelRe
   // Allow these origins
   const allowedOrigins = [
     'https://dubai-rose.vercel.app',
-    'https://dubai-rose-spa.vercel.app',
     'http://localhost:3000',
     'http://localhost:5173'
   ];
