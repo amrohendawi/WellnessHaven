@@ -169,35 +169,87 @@ export async function fetchAdminAPI<T>(
       ...(options.headers as Record<string, string> || {}),
     };
     
-    // Get auth token from Clerk if it's available in the window object
-    if (window.__clerk_frontend_api && typeof window.__clerk_frontend_api.getToken === 'function') {
-      try {
-        // This tries to get the session token from Clerk's internal API
-        const token = await window.__clerk_frontend_api.getToken({ template: 'sesame' });
-        if (token) {
-          // Add the token to our headers
-          headers['Authorization'] = `Bearer ${token}`;
+    try {
+      // First, directly access the active Clerk session if available
+      // This should be the most reliable method
+      if (typeof window !== 'undefined') {
+        // Try the modern Clerk API first
+        if (window.Clerk?.session) {
+          try {
+            const token = await window.Clerk.session.getToken();
+            if (token) {
+              headers['Authorization'] = `Bearer ${token}`;
+              console.log('Auth token retrieved from Clerk.session');
+            }
+          } catch (sessionError) {
+            console.warn('Error accessing Clerk.session:', sessionError);
+          }
+        } 
+        // Fallback to the internal API if necessary
+        else if (window.__clerk_frontend_api?.getToken) {
+          try {
+            const token = await window.__clerk_frontend_api.getToken();
+            if (token) {
+              headers['Authorization'] = `Bearer ${token}`;
+              console.log('Auth token retrieved from internal API');
+            }
+          } catch (internalError) {
+            console.warn('Error accessing internal Clerk API:', internalError);
+          }
+        } else {
+          console.warn('No Clerk session available. Authentication will fail for admin routes.');
         }
-      } catch (tokenError) {
-        console.warn('Failed to get auth token:', tokenError);
-        // Continue without token, the server will handle unauthorized requests
+      }
+    } catch (tokenError) {
+      console.error('Failed to get auth token:', tokenError);
+    }
+    
+    // Form the admin endpoint - ALWAYS use the standard relative path approach
+    // This ensures your API requests stay on the same domain
+    const fullEndpoint = `/api/admin/${trimmedEndpoint}`;
+    
+    // In production, add explicit debugging
+    if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
+      console.log(`Admin API request to: ${fullEndpoint}`);
+      console.log(`Auth header present: ${headers['Authorization'] ? 'Yes' : 'No'}`);
+    }
+    
+    // Make a direct fetch request with our custom headers instead of using fetchAPI
+    // This gives us more control over the exact request configuration
+    const response = await fetch(fullEndpoint, {
+      ...options,
+      headers,
+    });
+    
+    // Handle response manually (similar to fetchAPI but with more debug info)
+    if (!response.ok) {
+      // Try to get more diagnostic information
+      const contentType = response.headers.get('content-type');
+      
+      if (contentType && contentType.includes('application/json')) {
+        // For JSON error responses, get the error details
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Admin API error: ${response.status}`);
+      } else {
+        // For non-JSON responses, log more details in production
+        try {
+          const errorText = await response.text();
+          console.error(`Admin API returned non-JSON response: ${errorText.substring(0, 200)}`);
+          throw new Error(`Admin API error: ${response.status} - Non-JSON response`);
+        } catch (textError) {
+          throw new Error(`Admin API error: ${response.status}`);
+        }
       }
     }
     
-    // Use absolute URLs in production to ensure we hit the right API domain
-    let fullEndpoint = `/admin/${trimmedEndpoint}`;
-    
-    // IMPORTANT: In previous version, we were using absolute URLs in production, which was causing CORS issues
-    // Instead, now we always use relative URLs like the regular API calls, which avoids CORS problems
-    
-    // Add debugging for production environment
-    if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
-      console.log(`Admin API request: ${fullEndpoint} with auth: ${headers['Authorization'] ? 'Yes' : 'No'}`);
+    // For successful responses
+    try {
+      const data = await response.json();
+      return data as T;
+    } catch (jsonError) {
+      console.error('Failed to parse JSON response:', jsonError);
+      throw new Error(`Invalid JSON response from Admin API: ${trimmedEndpoint}`);
     }
-    
-    // Use the standard fetchAPI function with our admin-specific headers
-    // This ensures consistency with the working API calls and avoids CORS issues
-    return fetchAPI<T>(fullEndpoint, { ...options, headers });
   } catch (error) {
     console.error(`Admin API fetch error (${endpoint}):`, error);
     throw error;
