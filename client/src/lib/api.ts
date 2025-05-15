@@ -187,33 +187,16 @@ export async function fetchAdminAPI<T>(
     // Use absolute URLs in production to ensure we hit the right API domain
     let fullEndpoint = `/admin/${trimmedEndpoint}`;
     
-    // In production, determine if we need to use the absolute API URL
+    // IMPORTANT: In previous version, we were using absolute URLs in production, which was causing CORS issues
+    // Instead, now we always use relative URLs like the regular API calls, which avoids CORS problems
+    
+    // Add debugging for production environment
     if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
-      // Extract the project name from the current domain
-      const projectName = window.location.hostname.split('.')[0];
-      // Construct the API domain (adjust this if your API subdomain follows a different pattern)
-      const apiDomain = `${projectName}-spa.vercel.app`; 
-      const protocol = window.location.protocol;
-      
-      // Use absolute URL with the API domain
-      fullEndpoint = `${protocol}//${apiDomain}/api/admin/${trimmedEndpoint}`;
-      
-      // When using absolute URLs, we make the request directly (not via fetchAPI)
-      const response = await fetch(fullEndpoint, {
-        ...options,
-        headers,
-        credentials: 'include', // This ensures cookies are sent with the request
-      });
-      
-      if (!response.ok) {
-        const error = await response.text();
-        throw new Error(`API error (${response.status}): ${error}`);
-      }
-      
-      return await response.json();
+      console.log(`Admin API request: ${fullEndpoint} with auth: ${headers['Authorization'] ? 'Yes' : 'No'}`);
     }
     
-    // For local development, use the relative path with fetchAPI
+    // Use the standard fetchAPI function with our admin-specific headers
+    // This ensures consistency with the working API calls and avoids CORS issues
     return fetchAPI<T>(fullEndpoint, { ...options, headers });
   } catch (error) {
     console.error(`Admin API fetch error (${endpoint}):`, error);
