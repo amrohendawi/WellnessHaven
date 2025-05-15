@@ -11,7 +11,7 @@ declare global {
 }
 
 // API endpoints
-const API_BASE_URL = '/api'; // Always use relative API path to avoid CORS
+const API_BASE_URL = '/api'; // Always use relative API path - works for both admin and regular endpoints
 
 // Generic fetch wrapper with error handling
 export async function fetchAPI<T>(
@@ -172,8 +172,9 @@ export async function fetchAdminAPI<T>(
     // Get authentication token - simplify and focus on the most reliable approach
     if (typeof window !== 'undefined') {
       try {
-        // Modern approach - import Clerk directly
-        const Clerk = window.Clerk;
+        // Modern approach - access Clerk from window with proper typing
+        // Using type assertion since TypeScript doesn't know about Clerk on window by default
+        const Clerk = (window as any).Clerk;
         
         // Check if Clerk is available and user is signed in
         if (Clerk && Clerk.session) {
@@ -194,13 +195,12 @@ export async function fetchAdminAPI<T>(
       }
     }
     
-    // Form the admin endpoint path - critical to match the server routes
-    // The server mounts admin routes at '/api/admin' so we need to include '/api'
-    const adminPath = `/api/admin/${trimmedEndpoint}`;
+    // Form the admin endpoint path - keep it simple just like regular API calls
+    const adminPath = `/admin/${trimmedEndpoint}`;
     
-    // Debug logging for both development and production
+    // Debug logging
     if (typeof window !== 'undefined') {
-      console.log(`📡 Admin API request to: ${adminPath}`);
+      console.log(`📡 Admin API request to: ${API_BASE_URL}${adminPath}`);
       console.log(`🔑 Auth header present: ${headers['Authorization'] ? 'Yes' : 'No'}`);
     }
     
