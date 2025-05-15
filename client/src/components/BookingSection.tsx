@@ -1,29 +1,23 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
-import { 
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { format } from 'date-fns';
 import { ar, de, tr, enUS } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogTitle, 
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
   DialogHeader,
-  DialogFooter 
-} from "@/components/ui/dialog";
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { useQuery } from '@tanstack/react-query';
 import type { ServiceDisplay, ServiceGroupDisplay } from '@shared/schema';
 import { useToast } from '@/hooks/use-toast';
@@ -42,7 +36,7 @@ const BookingSection = () => {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [serviceModalOpen, setServiceModalOpen] = useState(false);
   const [calendarOpen, setCalendarOpen] = useState(false);
-  
+
   // Create a ref for the booking section container
   const bookingSectionRef = useRef<HTMLDivElement>(null);
 
@@ -50,18 +44,18 @@ const BookingSection = () => {
   const { data: services = [], isLoading: isServicesLoading } = useQuery<ServiceDisplay[]>({
     queryKey: ['/api/services'],
   });
-  
+
   // Fetch service groups from API
   const { data: serviceGroups = [], isLoading: isGroupsLoading } = useQuery<ServiceGroupDisplay[]>({
     queryKey: ['/api/service-groups'],
-    queryFn: getServiceGroups
+    queryFn: getServiceGroups,
   });
-  
+
   // Filter services by selected category
-  const filteredServices = selectedCategory 
+  const filteredServices = selectedCategory
     ? services.filter(service => service.category === selectedCategory)
     : [];
-    
+
   // Loading state for components
   const isLoading = isServicesLoading || isGroupsLoading;
 
@@ -72,16 +66,20 @@ const BookingSection = () => {
       email: '',
       phone: '',
       vipNumber: '',
-    }
+    },
   });
 
   // Get correct date locale based on selected language
   const getDateLocale = () => {
     switch (language) {
-      case 'ar': return ar;
-      case 'de': return de;
-      case 'tr': return tr;
-      default: return enUS;
+      case 'ar':
+        return ar;
+      case 'de':
+        return de;
+      case 'tr':
+        return tr;
+      default:
+        return enUS;
     }
   };
 
@@ -91,7 +89,7 @@ const BookingSection = () => {
       const timer = setTimeout(() => {
         setServiceModalOpen(true);
       }, 100);
-      
+
       return () => clearTimeout(timer);
     }
   }, [selectedCategory]);
@@ -99,29 +97,29 @@ const BookingSection = () => {
   // Handle service auto-selection from URL parameters
   useEffect(() => {
     if (services.length === 0) return; // Wait until services are loaded
-    
+
     // Get the service slug from URL if present
     const hash = window.location.hash;
     if (hash && hash.includes('?service=')) {
       const serviceSlug = hash.split('?service=')[1];
-      
+
       // Find the service by slug
       const serviceToSelect = services.find(s => s.slug === serviceSlug);
-      
+
       if (serviceToSelect) {
         // Set the category first
         setSelectedCategory(serviceToSelect.category);
-        
+
         // Then select the service
         setSelectedService(serviceToSelect);
-        
+
         // Show a success toast for better UX
         toast({
           title: t('serviceSelected'),
           description: serviceToSelect.name[language] || serviceToSelect.name.en,
           duration: 2000,
         });
-        
+
         // Clean the URL to prevent reselection on refresh
         if (window.history.replaceState) {
           window.history.replaceState(null, '', '#booking');
@@ -135,15 +133,15 @@ const BookingSection = () => {
     // Get the current container position
     const containerTop = bookingSectionRef.current?.getBoundingClientRect().top || 0;
     const scrollTop = window.scrollY + containerTop;
-    
+
     // Change step
     setBookingStep(newStep);
-    
+
     // Maintain position after render
     setTimeout(() => {
       window.scrollTo({
         top: scrollTop,
-        behavior: "instant" // More modern alternative to "auto", prevents any animation
+        behavior: 'instant', // More modern alternative to "auto", prevents any animation
       });
     }, 0);
   };
@@ -165,7 +163,7 @@ const BookingSection = () => {
   // Handle category selection
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(categoryId);
-    
+
     if (!selectedService || selectedService.category !== categoryId) {
       setSelectedService(null);
     }
@@ -174,11 +172,11 @@ const BookingSection = () => {
   // Handle service selection
   const handleServiceSelect = (service: ServiceDisplay) => {
     setSelectedService(service);
-    
+
     // Add a slight delay before closing the modal for a better user experience
     setTimeout(() => {
       setServiceModalOpen(false);
-      
+
       // Show a success toast when service is selected
       toast({
         title: t('serviceSelected'),
@@ -190,31 +188,31 @@ const BookingSection = () => {
 
   // Toast notification setup
   const { toast } = useToast();
-  
+
   // Handle form submission
   const onSubmit = async (data: any) => {
     if (!selectedService || !selectedDate || !selectedTime) {
       return;
     }
-    
+
     // Prepare booking data
     const bookingData = {
       ...data,
       service: selectedService.id, // Use ID for the database
       serviceSlug: selectedService.slug, // Keep slug for reference if needed
       serviceName: selectedService.name[language] || selectedService.name.en,
-      date: format(selectedDate, "yyyy-MM-dd"),
+      date: format(selectedDate, 'yyyy-MM-dd'),
       time: selectedTime,
       price: selectedService.price,
-      duration: selectedService.duration
+      duration: selectedService.duration,
     };
-    
+
     console.log('Booking submitted:', bookingData);
-    
+
     try {
       // Submit to server using the API function from our centralized client
       const result = await createBooking(bookingData);
-      
+
       if (result.success) {
         // Show success toast notification
         toast({
@@ -222,7 +220,7 @@ const BookingSection = () => {
           description: t('bookingConfirmation'),
           duration: 5000,
         });
-        
+
         // Reset form
         form.reset();
         setSelectedService(null);
@@ -234,18 +232,18 @@ const BookingSection = () => {
         toast({
           title: t('bookingError'),
           description: result.message || t('bookingErrorMsg'),
-          variant: "destructive",
+          variant: 'destructive',
           duration: 5000,
         });
       }
     } catch (error) {
       console.error('Booking error:', error);
-      
+
       // Show error toast
       toast({
         title: t('bookingError'),
         description: t('bookingErrorMsg'),
-        variant: "destructive",
+        variant: 'destructive',
         duration: 5000,
       });
     }
@@ -255,105 +253,121 @@ const BookingSection = () => {
     <section ref={bookingSectionRef} id="booking" className="py-16 bg-pink-light">
       {/* Add Toaster component for toast notifications */}
       <Toaster />
-      
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="royal-heading text-3xl md:text-4xl mb-8">
-            {t('bookingTitle')}
-          </h2>
+          <h2 className="royal-heading text-3xl md:text-4xl mb-8">{t('bookingTitle')}</h2>
           <div className="fancy-divider mb-4">
             <i className="fas fa-calendar-alt fancy-divider-icon text-gold mx-2"></i>
           </div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            {t('bookingSubtitle')}
-          </p>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t('bookingSubtitle')}</p>
         </div>
-        
+
         <div className="bg-white rounded-xl shadow-lg overflow-hidden max-w-4xl mx-auto">
           {/* Booking Steps */}
           <div className="flex border-b">
-            <div 
+            <div
               className={`booking-step flex-1 py-4 text-center border-r border-gray-200 cursor-pointer ${bookingStep === 1 ? 'active' : ''}`}
               onClick={() => changeStepWithoutJump(1)}
             >
               <div className="flex flex-col items-center">
-                <div className={`w-8 h-8 rounded-full ${bookingStep === 1 ? 'bg-[rgb(141,91,108)]' : 'bg-gray-200'} flex items-center justify-center mb-1 transition-all duration-300`}>
-                  <i className={`fas fa-spa ${bookingStep === 1 ? 'text-white' : 'text-gray-500'}`}></i>
+                <div
+                  className={`w-8 h-8 rounded-full ${bookingStep === 1 ? 'bg-[rgb(141,91,108)]' : 'bg-gray-200'} flex items-center justify-center mb-1 transition-all duration-300`}
+                >
+                  <i
+                    className={`fas fa-spa ${bookingStep === 1 ? 'text-white' : 'text-gray-500'}`}
+                  ></i>
                 </div>
-                <span 
+                <span
                   className="text-sm font-medium transition-all duration-300"
                   style={{ color: bookingStep === 1 ? 'white' : 'inherit' }}
-                >1. {t('selectService')}</span>
+                >
+                  1. {t('selectService')}
+                </span>
               </div>
             </div>
-            <div 
+            <div
               className={`booking-step flex-1 py-4 text-center border-r border-gray-200 cursor-pointer ${bookingStep === 2 ? 'active' : ''}`}
               onClick={() => selectedService && changeStepWithoutJump(2)}
             >
               <div className="flex flex-col items-center">
-                <div className={`w-8 h-8 rounded-full ${bookingStep === 2 ? 'bg-[rgb(141,91,108)]' : 'bg-gray-200'} flex items-center justify-center mb-1 transition-all duration-300`}>
-                  <i className={`fas fa-calendar-alt ${bookingStep === 2 ? 'text-white' : 'text-gray-500'}`}></i>
+                <div
+                  className={`w-8 h-8 rounded-full ${bookingStep === 2 ? 'bg-[rgb(141,91,108)]' : 'bg-gray-200'} flex items-center justify-center mb-1 transition-all duration-300`}
+                >
+                  <i
+                    className={`fas fa-calendar-alt ${bookingStep === 2 ? 'text-white' : 'text-gray-500'}`}
+                  ></i>
                 </div>
-                <span 
+                <span
                   className="text-sm font-medium transition-all duration-300"
                   style={{ color: bookingStep === 2 ? 'white' : 'inherit' }}
-                >2. {t('dateTime')}</span>
+                >
+                  2. {t('dateTime')}
+                </span>
               </div>
             </div>
-            <div 
+            <div
               className={`booking-step flex-1 py-4 text-center cursor-pointer ${bookingStep === 3 ? 'active' : ''}`}
-              onClick={() => (selectedDate && selectedTime) && changeStepWithoutJump(3)}
+              onClick={() => selectedDate && selectedTime && changeStepWithoutJump(3)}
             >
               <div className="flex flex-col items-center">
-                <div className={`w-8 h-8 rounded-full ${bookingStep === 3 ? 'bg-[rgb(141,91,108)]' : 'bg-gray-200'} flex items-center justify-center mb-1 transition-all duration-300`}>
-                  <i className={`fas fa-user ${bookingStep === 3 ? 'text-white' : 'text-gray-500'}`}></i>
+                <div
+                  className={`w-8 h-8 rounded-full ${bookingStep === 3 ? 'bg-[rgb(141,91,108)]' : 'bg-gray-200'} flex items-center justify-center mb-1 transition-all duration-300`}
+                >
+                  <i
+                    className={`fas fa-user ${bookingStep === 3 ? 'text-white' : 'text-gray-500'}`}
+                  ></i>
                 </div>
-                <span 
+                <span
                   className="text-sm font-medium transition-all duration-300"
                   style={{ color: bookingStep === 3 ? 'white' : 'inherit' }}
-                >3. {t('yourDetails')}</span>
+                >
+                  3. {t('yourDetails')}
+                </span>
               </div>
             </div>
           </div>
-          
+
           {/* Step 1: Service Selection */}
           {bookingStep === 1 && (
             <div className="p-6">
               <h3 className="font-semibold text-xl mb-4">{t('chooseService')}</h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                {isLoading ? (
-                  // Loading state
-                  Array(4).fill(0).map((_, index) => (
-                    <div 
-                      key={index}
-                      className="border rounded-lg p-4 animate-pulse"
-                    >
-                      <div className="h-5 bg-gray-200 rounded w-1/2 mb-2"></div>
-                      <div className="h-4 bg-gray-100 rounded w-3/4"></div>
-                    </div>
-                  ))
-                ) : (
-                  // Display service groups
-                  serviceGroups.map((group) => (
-                    <div 
-                      key={group.id}
-                      onClick={() => handleCategorySelect(group.slug)}
-                      className={`border rounded-lg p-4 hover:border-pink cursor-pointer transition-all duration-300 ${
-                        selectedCategory === group.slug 
-                          ? 'border-pink-dark bg-pink-light shadow-md service-selected scale-[1.02] transform-gpu' 
-                          : 'hover:shadow-sm hover:bg-pink-lightest'
-                      }`}
-                    >
-                      <h4 className="font-medium mb-2">{group.name[language as keyof typeof group.name] || group.name.en}</h4>
-                      {group.description && (
-                        <div className="text-sm text-gray-600">{group.description[language as keyof typeof group.description] || group.description.en}</div>
-                      )}
-                    </div>
-                  ))
-                )}
+                {isLoading
+                  ? // Loading state
+                    Array(4)
+                      .fill(0)
+                      .map((_, index) => (
+                        <div key={index} className="border rounded-lg p-4 animate-pulse">
+                          <div className="h-5 bg-gray-200 rounded w-1/2 mb-2"></div>
+                          <div className="h-4 bg-gray-100 rounded w-3/4"></div>
+                        </div>
+                      ))
+                  : // Display service groups
+                    serviceGroups.map(group => (
+                      <div
+                        key={group.id}
+                        onClick={() => handleCategorySelect(group.slug)}
+                        className={`border rounded-lg p-4 hover:border-pink cursor-pointer transition-all duration-300 ${
+                          selectedCategory === group.slug
+                            ? 'border-pink-dark bg-pink-light shadow-md service-selected scale-[1.02] transform-gpu'
+                            : 'hover:shadow-sm hover:bg-pink-lightest'
+                        }`}
+                      >
+                        <h4 className="font-medium mb-2">
+                          {group.name[language as keyof typeof group.name] || group.name.en}
+                        </h4>
+                        {group.description && (
+                          <div className="text-sm text-gray-600">
+                            {group.description[language as keyof typeof group.description] ||
+                              group.description.en}
+                          </div>
+                        )}
+                      </div>
+                    ))}
               </div>
-              
+
               {/* Button to view all services directly */}
               <div className="text-center mb-6">
                 <Button
@@ -364,7 +378,7 @@ const BookingSection = () => {
                   {t('viewAllServices')}
                 </Button>
               </div>
-              
+
               {/* Selected Service Display */}
               {selectedService && (
                 <div className="bg-gradient-to-r from-pink-lightest via-pink-lightest/50 to-white border-2 border-pink rounded-lg overflow-hidden mb-6 shadow-lg transition-all duration-300 animate-fadeIn service-selected">
@@ -375,18 +389,18 @@ const BookingSection = () => {
                       </div>
                       <h4 className="font-medium text-gray-800">{t('selectedService')}</h4>
                     </div>
-                    
+
                     <div className="flex">
                       {selectedService.imageUrl && (
                         <div className="w-24 h-24 rounded-lg overflow-hidden mr-4 ring-4 ring-pink ring-opacity-30 shadow-inner hidden sm:block pulse-border">
-                          <img 
-                            src={selectedService.imageUrl} 
-                            alt={selectedService.name[language] || selectedService.name.en} 
+                          <img
+                            src={selectedService.imageUrl}
+                            alt={selectedService.name[language] || selectedService.name.en}
                             className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110"
                           />
                         </div>
                       )}
-                      
+
                       <div className="flex-1">
                         <h3 className="text-lg font-bold text-pink-dark mb-1">
                           {selectedService.name[language] || selectedService.name.en}
@@ -396,15 +410,16 @@ const BookingSection = () => {
                         </p>
                         <div className="flex flex-wrap items-center text-sm">
                           <span className="bg-white/70 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm text-gray-700 mr-3 mb-1 border border-pink/30">
-                            <i className="far fa-clock mr-1"></i> {selectedService.duration} {t('minutes')}
+                            <i className="far fa-clock mr-1"></i> {selectedService.duration}{' '}
+                            {t('minutes')}
                           </span>
                           <span className="bg-white/70 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm text-gray-700 mb-1 border border-pink/30">
                             <i className="far fa-money-bill-alt mr-1"></i> {selectedService.price} €
                           </span>
                         </div>
                       </div>
-                      
-                      <Button 
+
+                      <Button
                         onClick={() => setServiceModalOpen(true)}
                         size="sm"
                         className="btn-royal text-white ml-4 self-start shadow-md hover-lift"
@@ -415,7 +430,7 @@ const BookingSection = () => {
                   </div>
                 </div>
               )}
-              
+
               {/* VIP Member Section */}
               <div className="bg-beige-light rounded-lg p-4 flex flex-col md:flex-row items-center mb-6">
                 <div className={`${dir === 'rtl' ? 'ml-4' : 'mr-4'} text-xl text-gold-dark`}>
@@ -431,19 +446,13 @@ const BookingSection = () => {
                     placeholder={t('membershipPlaceholder')}
                     className="border rounded-md px-3 py-2 text-sm w-full md:w-40"
                     value={form.watch('vipNumber')}
-                    onChange={(e) => form.setValue('vipNumber', e.target.value)}
+                    onChange={e => form.setValue('vipNumber', e.target.value)}
                   />
                 </div>
               </div>
-              
 
-              
               <div className="flex justify-between mt-8">
-                <Button
-                  variant="outline"
-                  onClick={() => form.reset()}
-                  className="hover-lift"
-                >
+                <Button variant="outline" onClick={() => form.reset()} className="hover-lift">
                   {t('cancel')}
                 </Button>
                 <Button
@@ -456,12 +465,12 @@ const BookingSection = () => {
               </div>
             </div>
           )}
-          
+
           {/* Step 2: Date & Time Selection */}
           {bookingStep === 2 && (
             <div className="p-6">
               <h3 className="font-semibold text-xl mb-4">{t('selectDateTime')}</h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Date Selection */}
                 <div>
@@ -471,13 +480,13 @@ const BookingSection = () => {
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal",
-                          !selectedDate && "text-muted-foreground"
+                          'w-full justify-start text-left font-normal',
+                          !selectedDate && 'text-muted-foreground'
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {selectedDate ? (
-                          format(selectedDate, "PPP", { locale: getDateLocale() })
+                          format(selectedDate, 'PPP', { locale: getDateLocale() })
                         ) : (
                           <span>{t('pickDate')}</span>
                         )}
@@ -487,7 +496,7 @@ const BookingSection = () => {
                       <Calendar
                         mode="single"
                         selected={selectedDate}
-                        onSelect={(date) => {
+                        onSelect={date => {
                           setSelectedDate(date);
                           setCalendarOpen(false); // Close the popover when a date is selected
                           // Reset time when date changes
@@ -496,7 +505,7 @@ const BookingSection = () => {
                         initialFocus
                         locale={getDateLocale()}
                         // Disable dates in the past
-                        disabled={(date) => {
+                        disabled={date => {
                           // Disable all dates before today
                           return date < new Date(new Date().setHours(0, 0, 0, 0));
                         }}
@@ -504,15 +513,15 @@ const BookingSection = () => {
                     </PopoverContent>
                   </Popover>
                 </div>
-                
+
                 {/* Time Selection */}
                 <div>
                   <h4 className="font-medium mb-3">{t('selectTime')}</h4>
-                  
+
                   {/* Fetch available time slots for the selected date */}
                   {selectedDate ? (
-                    <AvailableTimeSlots 
-                      date={selectedDate} 
+                    <AvailableTimeSlots
+                      date={selectedDate}
                       serviceId={selectedService?.id}
                       selectedTime={selectedTime}
                       onSelectTime={setSelectedTime}
@@ -524,13 +533,9 @@ const BookingSection = () => {
                   )}
                 </div>
               </div>
-              
+
               <div className="flex justify-between mt-8">
-                <Button
-                  variant="outline"
-                  onClick={prevStep}
-                  className="hover-lift"
-                >
+                <Button variant="outline" onClick={prevStep} className="hover-lift">
                   {t('back')}
                 </Button>
                 <Button
@@ -543,12 +548,12 @@ const BookingSection = () => {
               </div>
             </div>
           )}
-          
+
           {/* Step 3: Personal Details */}
           {bookingStep === 3 && (
             <div className="p-6">
               <h3 className="font-semibold text-xl mb-4">{t('enterDetails')}</h3>
-              
+
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <FormField
@@ -556,40 +561,46 @@ const BookingSection = () => {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('formName')} <span className="text-pink">*</span></FormLabel>
+                        <FormLabel>
+                          {t('formName')} <span className="text-pink">*</span>
+                        </FormLabel>
                         <FormControl>
                           <Input placeholder={t('yourName')} {...field} required />
                         </FormControl>
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('formEmail')} <span className="text-pink">*</span></FormLabel>
+                        <FormLabel>
+                          {t('formEmail')} <span className="text-pink">*</span>
+                        </FormLabel>
                         <FormControl>
                           <Input type="email" placeholder={t('yourEmail')} {...field} required />
                         </FormControl>
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('formPhone')} <span className="text-pink">*</span></FormLabel>
+                        <FormLabel>
+                          {t('formPhone')} <span className="text-pink">*</span>
+                        </FormLabel>
                         <FormControl>
                           <Input type="tel" placeholder={t('yourPhone')} {...field} required />
                         </FormControl>
                       </FormItem>
                     )}
                   />
-                  
+
                   {/* Booking Summary */}
                   <div className="bg-beige-light p-4 rounded-lg my-6 shadow-md">
                     <h4 className="font-medium mb-3">{t('bookingSummary')}</h4>
@@ -600,7 +611,8 @@ const BookingSection = () => {
                           {t('service')}:
                         </span>
                         <span className="font-medium text-pink-dark">
-                          {selectedService && (selectedService.name[language] || selectedService.name.en)}
+                          {selectedService &&
+                            (selectedService.name[language] || selectedService.name.en)}
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-2 mb-1">
@@ -618,7 +630,7 @@ const BookingSection = () => {
                       <div className="grid grid-cols-2 gap-2 mb-1">
                         <span className="text-gray-600">{t('date')}:</span>
                         <span className="font-medium">
-                          {selectedDate && format(selectedDate, "PPP", { locale: getDateLocale() })}
+                          {selectedDate && format(selectedDate, 'PPP', { locale: getDateLocale() })}
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-2 mb-1">
@@ -633,7 +645,7 @@ const BookingSection = () => {
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="mt-8">
                     <div className="flex justify-between mb-6">
                       <Button
@@ -644,16 +656,18 @@ const BookingSection = () => {
                       >
                         {t('back')}
                       </Button>
-                      
+
                       <Button
                         type="submit"
                         className="btn-royal shadow-lg transition-all text-white px-8 py-3 font-medium relative hover-lift"
-                        disabled={!form.watch('name') || !form.watch('email') || !form.watch('phone')}
+                        disabled={
+                          !form.watch('name') || !form.watch('email') || !form.watch('phone')
+                        }
                       >
                         {t('confirmBooking')} <i className="ml-2 fas fa-check"></i>
                       </Button>
                     </div>
-                    
+
                     {/* Required fields note */}
                     <div className="text-center mt-2 text-xs text-gray-500 border-t pt-3">
                       <span className="text-pink">*</span> {t('requiredFields')}
@@ -672,7 +686,7 @@ const BookingSection = () => {
           <DialogHeader>
             <DialogTitle>{t('selectSpecificService')}</DialogTitle>
           </DialogHeader>
-          
+
           {isLoading ? (
             <div className="flex justify-center p-6">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink"></div>
@@ -681,19 +695,19 @@ const BookingSection = () => {
             <div className="space-y-4">
               {/* Category filter buttons */}
               <div className="flex flex-wrap gap-2 px-1">
-                <Button 
-                  variant={!selectedCategory ? "default" : "outline"}
+                <Button
+                  variant={!selectedCategory ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setSelectedCategory(null)}
                   className="text-xs hover-lift"
                 >
                   {t('allServices')}
                 </Button>
-                
+
                 {serviceGroups.map(group => (
                   <Button
                     key={group.id}
-                    variant={selectedCategory === group.slug ? "default" : "outline"}
+                    variant={selectedCategory === group.slug ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setSelectedCategory(group.slug)}
                     className="text-xs hover-lift"
@@ -702,37 +716,45 @@ const BookingSection = () => {
                   </Button>
                 ))}
               </div>
-            
+
               {/* Service list */}
               <div className="max-h-[400px] overflow-y-auto">
                 {(selectedCategory ? filteredServices : services).map(service => (
-                  <div 
+                  <div
                     key={service.id}
                     onClick={() => handleServiceSelect(service)}
                     className={`p-3 mb-2 border rounded-md cursor-pointer transition-all duration-300 
-                      ${selectedService && selectedService.id === service.id 
-                        ? 'border-pink bg-gradient-to-r from-pink-lightest via-pink-lightest/50 to-white shadow-md scale-[1.02] transform-gpu pulse-border service-selected' 
-                        : 'hover:bg-pink-lightest hover:border-pink-light hover:shadow-sm'}`}
+                      ${
+                        selectedService && selectedService.id === service.id
+                          ? 'border-pink bg-gradient-to-r from-pink-lightest via-pink-lightest/50 to-white shadow-md scale-[1.02] transform-gpu pulse-border service-selected'
+                          : 'hover:bg-pink-lightest hover:border-pink-light hover:shadow-sm'
+                      }`}
                   >
                     <div className="flex items-start">
                       {service.imageUrl && (
-                        <div className={`w-16 h-16 rounded overflow-hidden flex-shrink-0 mr-3 ${selectedService && selectedService.id === service.id ? 'ring-2 ring-pink ring-opacity-60' : ''}`}>
-                          <img 
-                            src={service.imageUrl} 
-                            alt={service.name[language] || service.name.en} 
+                        <div
+                          className={`w-16 h-16 rounded overflow-hidden flex-shrink-0 mr-3 ${selectedService && selectedService.id === service.id ? 'ring-2 ring-pink ring-opacity-60' : ''}`}
+                        >
+                          <img
+                            src={service.imageUrl}
+                            alt={service.name[language] || service.name.en}
                             className={`w-full h-full object-cover transition-all ${selectedService && selectedService.id === service.id ? 'scale-105' : ''}`}
                           />
                         </div>
                       )}
                       <div className="flex-1">
-                        <h3 className={`font-medium ${selectedService && selectedService.id === service.id ? 'text-pink-dark font-semibold' : 'text-pink-dark'}`}>
+                        <h3
+                          className={`font-medium ${selectedService && selectedService.id === service.id ? 'text-pink-dark font-semibold' : 'text-pink-dark'}`}
+                        >
                           {service.name[language] || service.name.en}
                         </h3>
                         <p className="text-sm text-gray-600 mb-1">
                           {service.description[language] || service.description.en}
                         </p>
                         <div className="flex text-sm text-gray-500">
-                          <span className="mr-3">{service.duration} {t('minutes')}</span>
+                          <span className="mr-3">
+                            {service.duration} {t('minutes')}
+                          </span>
                           <span>{service.price} €</span>
                         </div>
                       </div>
@@ -747,13 +769,15 @@ const BookingSection = () => {
               </div>
             </div>
           ) : (
-            <div className="py-6 text-center text-gray-500">
-              {t('noServicesAvailable')}
-            </div>
+            <div className="py-6 text-center text-gray-500">{t('noServicesAvailable')}</div>
           )}
-          
+
           <DialogFooter>
-            <Button variant="outline" onClick={() => setServiceModalOpen(false)} className="hover-lift">
+            <Button
+              variant="outline"
+              onClick={() => setServiceModalOpen(false)}
+              className="hover-lift"
+            >
               {t('cancel')}
             </Button>
           </DialogFooter>
@@ -771,19 +795,26 @@ interface AvailableTimeSlotsProps {
   onSelectTime: (time: string) => void;
 }
 
-const AvailableTimeSlots = ({ date, serviceId, selectedTime, onSelectTime }: AvailableTimeSlotsProps) => {
+const AvailableTimeSlots = ({
+  date,
+  serviceId,
+  selectedTime,
+  onSelectTime,
+}: AvailableTimeSlotsProps) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
-  
+
   // Format date for API request
   const formattedDate = format(date, 'yyyy-MM-dd');
-  
+
   // Helper function to check if a date is today
   const isToday = (someDate: Date) => {
     const today = new Date();
-    return someDate.getDate() === today.getDate() &&
+    return (
+      someDate.getDate() === today.getDate() &&
       someDate.getMonth() === today.getMonth() &&
-      someDate.getFullYear() === today.getFullYear();
+      someDate.getFullYear() === today.getFullYear()
+    );
   };
 
   // Generate fallback time slots (for demonstration when API fails)
@@ -791,10 +822,21 @@ const AvailableTimeSlots = ({ date, serviceId, selectedTime, onSelectTime }: Ava
     const now = new Date();
     const currentHour = now.getHours();
     const isDateToday = isToday(date);
-    
+
     // Base time slots
-    let slots = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
-    
+    let slots = [
+      '10:00',
+      '11:00',
+      '12:00',
+      '13:00',
+      '14:00',
+      '15:00',
+      '16:00',
+      '17:00',
+      '18:00',
+      '19:00',
+    ];
+
     // If the selected date is today, filter out past time slots
     if (isDateToday) {
       slots = slots.filter(slot => {
@@ -802,11 +844,11 @@ const AvailableTimeSlots = ({ date, serviceId, selectedTime, onSelectTime }: Ava
         return hours > currentHour;
       });
     }
-    
+
     // Randomly remove some slots to simulate real availability
     return slots.filter(() => Math.random() > 0.3);
   };
-  
+
   // Fetch available time slots from API
   const { data, isLoading, error, refetch, isFetching } = useQuery<{ availableSlots: string[] }>({
     queryKey: ['/api/time-slots', formattedDate, serviceId],
@@ -816,11 +858,11 @@ const AvailableTimeSlots = ({ date, serviceId, selectedTime, onSelectTime }: Ava
     retryDelay: 1000,
     refetchOnWindowFocus: false,
     staleTime: 0,
-    onError: (err) => {
+    onError: err => {
       console.warn('Error fetching time slots, will use fallback:', err);
-    }
+    },
   });
-  
+
   if (isLoading || isFetching) {
     return (
       <div className="grid grid-cols-3 gap-2">
@@ -830,12 +872,12 @@ const AvailableTimeSlots = ({ date, serviceId, selectedTime, onSelectTime }: Ava
       </div>
     );
   }
-  
+
   // Use fallback time slots if the API call fails
   if (error || !data || !data.availableSlots) {
     // Generate fallback time slots and display them
     const fallbackSlots = generateFallbackTimeSlots();
-    
+
     if (fallbackSlots.length === 0) {
       return (
         <div className="text-center text-gray-500 p-4 border rounded-md">
@@ -844,17 +886,15 @@ const AvailableTimeSlots = ({ date, serviceId, selectedTime, onSelectTime }: Ava
         </div>
       );
     }
-    
+
     return (
       <div>
-        <div className="text-xs text-amber-600 mb-3 px-1">
-          {t('usingFallbackSchedule')}
-        </div>
+        <div className="text-xs text-amber-600 mb-3 px-1">{t('usingFallbackSchedule')}</div>
         <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
           {fallbackSlots.map(time => (
             <Button
               key={time}
-              variant={selectedTime === time ? "default" : "outline"}
+              variant={selectedTime === time ? 'default' : 'outline'}
               className="hover-lift"
               onClick={() => onSelectTime(time)}
             >
@@ -865,7 +905,7 @@ const AvailableTimeSlots = ({ date, serviceId, selectedTime, onSelectTime }: Ava
       </div>
     );
   }
-  
+
   if (data.availableSlots.length === 0) {
     return (
       <div className="text-center text-gray-500 p-4 border rounded-md">
@@ -874,13 +914,13 @@ const AvailableTimeSlots = ({ date, serviceId, selectedTime, onSelectTime }: Ava
       </div>
     );
   }
-  
+
   return (
     <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
       {data.availableSlots.map(time => (
         <Button
           key={time}
-          variant={selectedTime === time ? "default" : "outline"}
+          variant={selectedTime === time ? 'default' : 'outline'}
           className="hover-lift"
           onClick={() => onSelectTime(time)}
         >

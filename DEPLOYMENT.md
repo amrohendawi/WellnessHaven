@@ -24,6 +24,7 @@ The following environment variables need to be set in the Vercel dashboard:
 - `NODE_ENV`: Set to `production` for production builds
 
 To add these variables:
+
 1. Go to your project settings in Vercel
 2. Click on "Environment Variables"
 3. Add each variable key and value
@@ -34,6 +35,7 @@ To add these variables:
 Vercel should automatically detect the project as a Vite project based on the `vercel.json` configuration.
 
 Deployment settings:
+
 - Build Command: `npm run build`
 - Output Directory: `dist/public`
 - Install Command: `npm install`
@@ -42,6 +44,7 @@ Deployment settings:
 ### 4. Deploy
 
 Click the "Deploy" button to start the deployment process. Vercel will:
+
 1. Clone your repository
 2. Install dependencies
 3. Build the application
@@ -50,6 +53,7 @@ Click the "Deploy" button to start the deployment process. Vercel will:
 ### 5. Custom Domain (Optional)
 
 To use a custom domain:
+
 1. Go to your project settings
 2. Click on "Domains"
 3. Add your domain and follow the instructions to verify
@@ -57,6 +61,7 @@ To use a custom domain:
 ### 6. Monitor Deployment
 
 After deployment, you can:
+
 1. View build logs to debug any issues
 2. Check the deployment preview
 3. Monitor performance in the Vercel dashboard
@@ -64,16 +69,19 @@ After deployment, you can:
 ## Troubleshooting
 
 ### Database Connection Issues
+
 - Make sure your DATABASE_URL is correctly formatted
 - Ensure your database allows connections from Vercel's IP addresses
 - Check your database logs for connection attempts
 
 ### Build Failures
+
 - Examine the build logs in Vercel
 - Try running the build locally with `npm run build`
 - Make sure all dependencies are correctly listed in package.json
 
 ### API Routes Not Working
+
 - Check the Vercel function logs for errors
 - Ensure your API routes follow Vercel's serverless function format
 - Test API endpoints locally before deployment
@@ -81,7 +89,9 @@ After deployment, you can:
 ## Maintenance
 
 ### Updating Your Site
+
 Any changes pushed to the main branch will automatically trigger a new deployment.
 
 ### Preview Deployments
+
 Vercel creates preview deployments for pull requests, allowing you to test changes before merging to production.

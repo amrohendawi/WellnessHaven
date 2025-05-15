@@ -13,27 +13,27 @@ i18n
   .init({
     resources: {
       en: {
-        translation: enTranslation
+        translation: enTranslation,
       },
       ar: {
-        translation: arTranslation
+        translation: arTranslation,
       },
       de: {
-        translation: deTranslation
+        translation: deTranslation,
       },
       tr: {
-        translation: trTranslation
-      }
+        translation: trTranslation,
+      },
     },
     fallbackLng: 'en',
     supportedLngs: ['en', 'ar', 'de', 'tr'],
     interpolation: {
-      escapeValue: false
+      escapeValue: false,
     },
     detection: {
       order: ['localStorage', 'navigator'],
-      caches: ['localStorage']
-    }
+      caches: ['localStorage'],
+    },
   });
 
 export default i18n;

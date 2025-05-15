@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+  CardFooter,
+} from '@/components/ui/card';
 import { fetchAdminAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { CircleEllipsis } from 'lucide-react';
@@ -10,7 +17,7 @@ import {
   PackageOpen,
   Users,
   CheckCircle,
-  HelpCircle
+  HelpCircle,
 } from 'lucide-react';
 
 interface DashboardSummary {
@@ -31,7 +38,11 @@ export default function DashboardPage() {
         const data = await fetchAdminAPI<DashboardSummary>('dashboard-summary');
         setSummary(data);
       } catch (error) {
-        toast({ title: 'Error', description: 'Failed to load dashboard summary', variant: 'destructive' });
+        toast({
+          title: 'Error',
+          description: 'Failed to load dashboard summary',
+          variant: 'destructive',
+        });
       }
     }
     loadSummary();
@@ -46,17 +57,21 @@ export default function DashboardPage() {
   }
 
   // Calculate ratio for visual indicators
-  const confirmedRatio = summary.totalBookings > 0 ? (summary.confirmed / summary.totalBookings) * 100 : 0;
-  const pendingRatio = summary.totalBookings > 0 ? (summary.pending / summary.totalBookings) * 100 : 0;
-  
+  const confirmedRatio =
+    summary.totalBookings > 0 ? (summary.confirmed / summary.totalBookings) * 100 : 0;
+  const pendingRatio =
+    summary.totalBookings > 0 ? (summary.pending / summary.totalBookings) * 100 : 0;
+
   return (
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-wrap items-center gap-2 md:gap-3">
-        <h1 className="text-xl md:text-2xl font-display font-bold text-gray-800">Dashboard Overview</h1>
+        <h1 className="text-xl md:text-2xl font-display font-bold text-gray-800">
+          Dashboard Overview
+        </h1>
         <div className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse"></div>
         <span className="text-xs md:text-sm text-muted-foreground mt-0.5">Live Data</span>
       </div>
-      
+
       {/* Main Stats */}
       <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         <Card className="border-gold/10 shadow-sm hover:shadow-md transition-shadow duration-200">
@@ -74,7 +89,7 @@ export default function DashboardPage() {
             <div className="text-xs text-muted-foreground">Lifetime total</div>
           </CardFooter>
         </Card>
-        
+
         <Card className="border-gold/10 shadow-sm hover:shadow-md transition-shadow duration-200">
           <CardHeader className="pb-1 md:pb-2 px-4 pt-4">
             <CardTitle className="text-base md:text-lg flex items-center gap-2 text-pink-dark">
@@ -87,18 +102,20 @@ export default function DashboardPage() {
             <div className="flex flex-col gap-1">
               <div className="text-2xl md:text-3xl font-bold">{summary.confirmed}</div>
               <div className="w-full h-2 rounded-full bg-gray-100 overflow-hidden">
-                <div 
-                  className="h-full bg-green-400 rounded-full" 
+                <div
+                  className="h-full bg-green-400 rounded-full"
                   style={{ width: `${confirmedRatio}%` }}
                 ></div>
               </div>
             </div>
           </CardContent>
           <CardFooter className="pt-0 px-4 pb-4">
-            <div className="text-xs text-muted-foreground">{confirmedRatio.toFixed(0)}% of total</div>
+            <div className="text-xs text-muted-foreground">
+              {confirmedRatio.toFixed(0)}% of total
+            </div>
           </CardFooter>
         </Card>
-        
+
         <Card className="border-gold/10 shadow-sm hover:shadow-md transition-shadow duration-200">
           <CardHeader className="pb-1 md:pb-2 px-4 pt-4">
             <CardTitle className="text-base md:text-lg flex items-center gap-2 text-pink-dark">
@@ -111,8 +128,8 @@ export default function DashboardPage() {
             <div className="flex flex-col gap-1">
               <div className="text-2xl md:text-3xl font-bold">{summary.pending}</div>
               <div className="w-full h-2 rounded-full bg-gray-100 overflow-hidden">
-                <div 
-                  className="h-full bg-amber-400 rounded-full" 
+                <div
+                  className="h-full bg-amber-400 rounded-full"
                   style={{ width: `${pendingRatio}%` }}
                 ></div>
               </div>
@@ -122,7 +139,7 @@ export default function DashboardPage() {
             <div className="text-xs text-muted-foreground">{pendingRatio.toFixed(0)}% of total</div>
           </CardFooter>
         </Card>
-        
+
         <Card className="border-gold/10 shadow-sm hover:shadow-md transition-shadow duration-200 bg-gradient-to-br from-beige-light/30 to-white">
           <CardHeader className="pb-1 md:pb-2 px-4 pt-4">
             <CardTitle className="text-base md:text-lg flex items-center gap-2 text-pink-dark">
@@ -139,7 +156,7 @@ export default function DashboardPage() {
           </CardFooter>
         </Card>
       </div>
-      
+
       {/* Secondary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
         <Card className="md:col-span-2 border-gold/10 shadow-sm hover:shadow-md transition-shadow duration-200">
@@ -160,7 +177,7 @@ export default function DashboardPage() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="border-gold/10 shadow-sm hover:shadow-md transition-shadow duration-200">
           <CardHeader className="pb-1 md:pb-2 px-4 pt-4">
             <CardTitle className="text-base md:text-lg flex items-center gap-2 text-pink-dark">
@@ -173,8 +190,8 @@ export default function DashboardPage() {
             <div className="text-2xl md:text-3xl font-bold">{summary.blockedSlotsCount}</div>
             <div className="flex justify-between items-center mt-4 md:mt-6 text-sm">
               <div className="text-xs md:text-sm text-muted-foreground">Manage</div>
-              <a 
-                href="/admin/blocked-slots" 
+              <a
+                href="/admin/blocked-slots"
                 className="text-xs md:text-sm text-gold hover:text-gold-dark transition-colors duration-200"
               >
                 View →

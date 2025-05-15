@@ -9,7 +9,7 @@ const languages: LanguageOption[] = [
   { code: 'en', label: 'EN' },
   { code: 'ar', label: 'عربي' },
   { code: 'de', label: 'DE' },
-  { code: 'tr', label: 'TR' }
+  { code: 'tr', label: 'TR' },
 ];
 
 interface LanguageSwitcherProps {
@@ -18,7 +18,7 @@ interface LanguageSwitcherProps {
 
 const LanguageSwitcher = ({ variant = 'header' }: LanguageSwitcherProps) => {
   const { language, setLanguage } = useLanguage();
-  
+
   const getButtonClass = (langCode: string) => {
     if (variant === 'header') {
       return `text-sm hover:text-gold-dark transition-colors ${
@@ -30,10 +30,12 @@ const LanguageSwitcher = ({ variant = 'header' }: LanguageSwitcherProps) => {
       }`;
     }
   };
-  
+
   return (
-    <div className={`flex items-center ${variant === 'header' ? 'space-x-3 rtl:space-x-reverse' : 'space-x-2 rtl:space-x-reverse'}`}>
-      {languages.map((lang) => (
+    <div
+      className={`flex items-center ${variant === 'header' ? 'space-x-3 rtl:space-x-reverse' : 'space-x-2 rtl:space-x-reverse'}`}
+    >
+      {languages.map(lang => (
         <button
           key={lang.code}
           onClick={() => setLanguage(lang.code)}

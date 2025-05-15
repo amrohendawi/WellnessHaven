@@ -1,17 +1,17 @@
 {
   "siteName": "Dubai Rose",
   "siteTagline": "Women Only Beauty & Aesthetics Center",
-  
+
   "menuHome": "Home",
   "menuServices": "Services",
   "menuMembership": "VIP Membership",
   "menuContact": "Contact",
-  
+
   "heroTitle": "Elevate Your Beauty",
   "heroSubtitle": "Dubai's Premier Women-Only Beauty & Aesthetics Center",
   "bookNow": "Book Now",
   "womenOnly": "Women Only Center",
-  
+
   "servicesTitle": "Our Services",
   "servicesSubtitle": "Luxury treatments tailored for you",
   "viewAllServices": "View All Services",
@@ -20,7 +20,7 @@
   "exploreMore": "Explore More",
   "skincareTreatments": "Skincare Treatments",
   "skincareTreatmentsDesc": "Rejuvenating and revitalizing treatments",
-  
+
   "membershipTitle": "Exclusive VIP Membership",
   "membershipSubtitle": "Experience exceptional benefits and personalized care",
   "goldCard": "Golden Kundenkarte",
@@ -37,7 +37,7 @@
   "specialOffers": "Special offers access",
   "prioritySupport": "Priority support",
   "byInvitationOnly": "By invitation only",
-  
+
   "bookingTitle": "Book Your Treatment",
   "bookingSubtitle": "Schedule your visit to Dubai Rose",
   "selectService": "Select Service",
@@ -52,7 +52,7 @@
   "pickDate": "Pick a date",
   "enterDetails": "Enter your details",
   "serviceSelected": "Selected Service",
-  
+
   "facialTreatments": "Facial Treatments",
   "facialTreatmentsDesc": "Cleanings, peels, masks and more",
   "laserTreatments": "Laser Treatments",
@@ -61,7 +61,7 @@
   "hairServicesDesc": "Styling, coloring and extensions",
   "beautyServices": "Beauty Services",
   "beautyServicesDesc": "Makeup, lashes and brows",
-  
+
   "vipMember": "VIP Member?",
   "enterMembershipNumber": "Enter your membership number to receive your discount",
   "membershipPlaceholder": "Membership #",
@@ -86,18 +86,18 @@
   "noServicesInCategory": "No services found in this category",
   "noServicesAvailable": "No services available",
   "allServices": "All Services",
-  
+
   "facialService": "Facial Treatments",
   "laserService": "Laser Treatments",
   "hairService": "Hair Services",
   "beautyService": "Beauty Services",
-  
+
   "aboutUs": "About Us",
   "aboutText": "Dubai Rose is an exclusive women-only beauty center offering premium aesthetic treatments in a luxurious environment.",
   "aboutTextAdditional": "Our team of highly-qualified professionals uses advanced techniques and premium products to provide exceptional beauty services tailored to your individual needs.",
   "certifiedExperts": "Certified Experts",
   "premiumService": "Premium Service",
-  
+
   "contactTitle": "Contact Us",
   "address": "Address",
   "contactAddress": "Karl-Marx-Straße 45, 12043 Berlin",
@@ -123,16 +123,16 @@
   "error": "Error",
   "messageFailed": "Failed to send message. Please try again.",
   "connectSocial": "Or connect with us on social media",
-  
+
   "footerTagline": "Dubai's premier women-only beauty and aesthetics center, providing luxury treatments and exceptional service.",
   "quickLinks": "Quick Links",
   "footerHours": "10am - 8pm (Sat - Thu)",
   "footerRights": "All Rights Reserved",
   "viewAll": "View All",
-  
+
   "laserHairRemoval": "Laser Hair Removal",
   "skinTightening": "Skin Tightening",
-  
+
   "aboutThisService": "About This Service",
   "benefits": "Benefits",
   "procedure": "Procedure",
@@ -147,7 +147,7 @@
   "inquireViaWhatsApp": "Inquire via WhatsApp",
   "relatedServices": "Related Services",
   "loading": "Loading...",
-  
+
   "breadcrumbHome": "Home",
   "breadcrumbServices": "Services"
 }

@@ -2,14 +2,14 @@ import fetch from 'node-fetch';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
 
-eas  interpret functions for an admin user (using Clerk service key and JWK) is outside scope. Provide placeholder.
-(async ()=>{
+// Helper function to interpret admin user data with Clerk
+(async () => {
   console.log('=== Admin API Smoke Tests ===');
   const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
   const token = process.env.CLERK_JWT || 'YOUR_ADMIN_JWT';
   const headers = {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`
+    Authorization: `Bearer ${token}`,
   };
   try {
     // Test GET bookings

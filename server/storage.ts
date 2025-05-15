@@ -1,8 +1,23 @@
-import { users, type User, type InsertUser, services, type Service, 
-  type InsertService, bookings, type Booking, type InsertBooking, memberships, type Membership,
-  serviceGroups, type ServiceGroup, blockedTimeSlots, type BlockedTimeSlot, type InsertBlockedTimeSlot } from "@shared/schema";
-import { db } from "./db";
-import { eq } from "drizzle-orm";
+import {
+  users,
+  type User,
+  type InsertUser,
+  services,
+  type Service,
+  type InsertService,
+  bookings,
+  type Booking,
+  type InsertBooking,
+  memberships,
+  type Membership,
+  serviceGroups,
+  type ServiceGroup,
+  blockedTimeSlots,
+  type BlockedTimeSlot,
+  type InsertBlockedTimeSlot,
+} from '@shared/schema';
+import { db } from './db';
+import { eq } from 'drizzle-orm';
 
 // modify the interface with any CRUD methods you might need
 export interface IStorage {
@@ -26,7 +41,10 @@ export interface IStorage {
   updateService(id: number, service: Partial<InsertService>): Promise<Service | undefined>;
   deleteService(id: number): Promise<void>;
   getBookingById(id: number): Promise<Booking | undefined>;
-  updateBooking(id: number, update: Partial<InsertBooking> & { status?: string }): Promise<Booking | undefined>;
+  updateBooking(
+    id: number,
+    update: Partial<InsertBooking> & { status?: string }
+  ): Promise<Booking | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -45,7 +63,7 @@ export class DatabaseStorage implements IStorage {
       .insert(users)
       .values({
         ...insertUser,
-        createdAt: new Date()
+        createdAt: new Date(),
       })
       .returning();
     return user;
@@ -70,10 +88,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createBooking(booking: InsertBooking): Promise<Booking> {
-    const [newBooking] = await db
-      .insert(bookings)
-      .values(booking)
-      .returning();
+    const [newBooking] = await db.insert(bookings).values(booking).returning();
     return newBooking;
   }
 
@@ -108,11 +123,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateService(id: number, service: Partial<InsertService>): Promise<Service | undefined> {
-    const [updated] = await db
-      .update(services)
-      .set(service)
-      .where(eq(services.id, id))
-      .returning();
+    const [updated] = await db.update(services).set(service).where(eq(services.id, id)).returning();
     return updated;
   }
 
@@ -125,12 +136,11 @@ export class DatabaseStorage implements IStorage {
     return booking;
   }
 
-  async updateBooking(id: number, update: Partial<InsertBooking> & { status?: string }): Promise<Booking | undefined> {
-    const [booking] = await db
-      .update(bookings)
-      .set(update)
-      .where(eq(bookings.id, id))
-      .returning();
+  async updateBooking(
+    id: number,
+    update: Partial<InsertBooking> & { status?: string }
+  ): Promise<Booking | undefined> {
+    const [booking] = await db.update(bookings).set(update).where(eq(bookings.id, id)).returning();
     return booking;
   }
 }

@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { fetchAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 
-interface Slot { id: number; date: string; time: string; }
+interface Slot {
+  id: number;
+  date: string;
+  time: string;
+}
 
 export default function AvailabilityPage() {
   const [slots, setSlots] = useState<Slot[]>([]);
@@ -21,7 +32,11 @@ export default function AvailabilityPage() {
       const data = await fetchAPI<Slot[]>('/admin/blocked-slots');
       setSlots(data);
     } catch {
-      toast({ title: 'Error', description: 'Failed to load blocked slots', variant: 'destructive' });
+      toast({
+        title: 'Error',
+        description: 'Failed to load blocked slots',
+        variant: 'destructive',
+      });
     }
   }
 
@@ -29,7 +44,7 @@ export default function AvailabilityPage() {
     try {
       const newSlot = await fetchAPI<Slot>('/admin/blocked-slots', {
         method: 'POST',
-        body: JSON.stringify({ date, time })
+        body: JSON.stringify({ date, time }),
       });
       setSlots(prev => [...prev, newSlot]);
       setDate('');

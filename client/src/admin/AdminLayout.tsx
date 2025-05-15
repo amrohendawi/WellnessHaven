@@ -13,7 +13,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 
 // Icons
-import { Home, Calendar, Clock, Package, LogOut, ChevronRight, ChevronLeft, Menu, X } from 'lucide-react';
+import {
+  Home,
+  Calendar,
+  Clock,
+  Package,
+  LogOut,
+  ChevronRight,
+  ChevronLeft,
+  Menu,
+  X,
+} from 'lucide-react';
 
 export default function AdminLayout() {
   const [location, setLocation] = useLocation();
@@ -21,7 +31,7 @@ export default function AdminLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const sidebarRef = useRef<HTMLElement>(null);
-  
+
   // Handle clicks outside sidebar on mobile to close it
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -29,13 +39,13 @@ export default function AdminLayout() {
         setMobileOpen(false);
       }
     }
-    
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [mobileOpen]);
-  
+
   // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (mobileOpen) {
@@ -43,7 +53,7 @@ export default function AdminLayout() {
     } else {
       document.body.style.overflow = '';
     }
-    
+
     return () => {
       document.body.style.overflow = '';
     };
@@ -79,7 +89,7 @@ export default function AdminLayout() {
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-pink-50 to-beige-light">
         <div className="mb-8 text-center">
           <h1 className="font-display text-3xl font-bold mb-2">
-            <span className="text-gold">Dubai</span> 
+            <span className="text-gold">Dubai</span>
             <span className="text-pink-dark">Rose</span>
           </h1>
           <h2 className="text-lg text-gray-700">Admin Dashboard</h2>
@@ -95,24 +105,22 @@ export default function AdminLayout() {
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-beige-light/30 relative">
       {/* Mobile Overlay */}
-      {mobileOpen && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 lg:hidden" />
-      )}
-      
+      {mobileOpen && <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 lg:hidden" />}
+
       {/* Mobile Header */}
       <header className="lg:hidden sticky top-0 z-20 flex items-center px-4 h-14 bg-white border-b border-gold/10 shadow-sm">
-        <Button 
-          variant="ghost" 
-          size="icon" 
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={() => setMobileOpen(true)}
           className="mr-3"
           aria-label="Open menu"
         >
           <Menu className="h-5 w-5 text-gold" />
         </Button>
-        
+
         <h2 className="text-lg font-display font-bold">
-          <span className="text-gold">Dubai</span> 
+          <span className="text-gold">Dubai</span>
           <span className="text-pink-dark">Rose</span>
         </h2>
 
@@ -125,15 +133,15 @@ export default function AdminLayout() {
           </Avatar>
         </div>
       </header>
-      
+
       {/* Sidebar */}
-      <nav 
+      <nav
         ref={sidebarRef}
         className={cn(
           // Base styling
-          "bg-white border-r border-gold/10 flex flex-col shadow-lg z-40 transition-all duration-300",
+          'bg-white border-r border-gold/10 flex flex-col shadow-lg z-40 transition-all duration-300',
           // Desktop sizing
-          "hidden lg:flex",
+          'hidden lg:flex',
           collapsed ? 'lg:w-20' : 'lg:w-64',
           // Mobile positioning
           mobileOpen ? 'fixed inset-y-0 left-0 w-[280px] flex' : 'hidden'
@@ -143,39 +151,49 @@ export default function AdminLayout() {
         <div className="p-4 flex items-center justify-between border-b border-pink/5">
           {(!collapsed || mobileOpen) && (
             <h2 className="text-xl font-display font-bold">
-              <span className="text-gold">Dubai</span> 
+              <span className="text-gold">Dubai</span>
               <span className="text-pink-dark">Rose</span>
             </h2>
           )}
-          
+
           {/* Mobile close button */}
           {mobileOpen && (
-            <Button 
-              variant="ghost" 
-              size="icon" 
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => setMobileOpen(false)}
               className="lg:hidden h-8 w-8 rounded-full hover:bg-pink-50"
             >
               <X className="h-4 w-4 text-gold" />
             </Button>
           )}
-          
+
           {/* Desktop collapse button */}
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setCollapsed(!collapsed)}
             className="hidden lg:flex h-8 w-8 rounded-full hover:bg-pink-50"
           >
-            {collapsed ? <ChevronRight className="h-4 w-4 text-gold" /> : <ChevronLeft className="h-4 w-4 text-gold" />}
+            {collapsed ? (
+              <ChevronRight className="h-4 w-4 text-gold" />
+            ) : (
+              <ChevronLeft className="h-4 w-4 text-gold" />
+            )}
           </Button>
         </div>
-        
+
         {/* Admin user info - Only show on desktop if not collapsed, always show on mobile */}
-        <div className={cn(
-          "p-4 border-b border-pink/5",
-          mobileOpen ? "flex items-center gap-3" : collapsed ? "hidden" : "hidden lg:flex lg:items-center lg:gap-3"
-        )}>
+        <div
+          className={cn(
+            'p-4 border-b border-pink/5',
+            mobileOpen
+              ? 'flex items-center gap-3'
+              : collapsed
+                ? 'hidden'
+                : 'hidden lg:flex lg:items-center lg:gap-3'
+          )}
+        >
           <Avatar className="h-10 w-10 ring-2 ring-gold/30 ring-offset-2 ring-offset-white">
             <AvatarImage src={user?.imageUrl} />
             <AvatarFallback className="bg-gold/20 text-gold-dark">
@@ -184,20 +202,24 @@ export default function AdminLayout() {
           </Avatar>
           <div className="space-y-1">
             <p className="text-sm font-medium leading-none">{user?.firstName || 'Admin'}</p>
-            <p className="text-xs text-muted-foreground truncate">{user?.emailAddresses?.[0]?.emailAddress || ''}</p>
+            <p className="text-xs text-muted-foreground truncate">
+              {user?.emailAddresses?.[0]?.emailAddress || ''}
+            </p>
           </div>
         </div>
-        
+
         {/* Navigation Links */}
         <ul className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
           <li>
-            <Link 
+            <Link
               href="/admin/dashboard"
               onClick={() => setMobileOpen(false)}
               className={cn(
-                "flex items-center py-2 px-3 rounded-md transition-colors",
-                location === '/admin/dashboard' ? 'bg-pink-50 text-pink-dark font-medium' : 'text-gray-700 hover:bg-pink-50/50',
-                mobileOpen ? "" : collapsed ? "justify-center" : ""
+                'flex items-center py-2 px-3 rounded-md transition-colors',
+                location === '/admin/dashboard'
+                  ? 'bg-pink-50 text-pink-dark font-medium'
+                  : 'text-gray-700 hover:bg-pink-50/50',
+                mobileOpen ? '' : collapsed ? 'justify-center' : ''
               )}
             >
               <Home className="h-5 w-5 text-gold flex-shrink-0" />
@@ -205,13 +227,15 @@ export default function AdminLayout() {
             </Link>
           </li>
           <li>
-            <Link 
+            <Link
               href="/admin/bookings"
               onClick={() => setMobileOpen(false)}
               className={cn(
-                "flex items-center py-2 px-3 rounded-md transition-colors",
-                location.startsWith('/admin/bookings') ? 'bg-pink-50 text-pink-dark font-medium' : 'text-gray-700 hover:bg-pink-50/50',
-                mobileOpen ? "" : collapsed ? "justify-center" : ""
+                'flex items-center py-2 px-3 rounded-md transition-colors',
+                location.startsWith('/admin/bookings')
+                  ? 'bg-pink-50 text-pink-dark font-medium'
+                  : 'text-gray-700 hover:bg-pink-50/50',
+                mobileOpen ? '' : collapsed ? 'justify-center' : ''
               )}
             >
               <Calendar className="h-5 w-5 text-gold flex-shrink-0" />
@@ -219,13 +243,15 @@ export default function AdminLayout() {
             </Link>
           </li>
           <li>
-            <Link 
+            <Link
               href="/admin/blocked-slots"
               onClick={() => setMobileOpen(false)}
               className={cn(
-                "flex items-center py-2 px-3 rounded-md transition-colors",
-                location === '/admin/blocked-slots' ? 'bg-pink-50 text-pink-dark font-medium' : 'text-gray-700 hover:bg-pink-50/50',
-                mobileOpen ? "" : collapsed ? "justify-center" : ""
+                'flex items-center py-2 px-3 rounded-md transition-colors',
+                location === '/admin/blocked-slots'
+                  ? 'bg-pink-50 text-pink-dark font-medium'
+                  : 'text-gray-700 hover:bg-pink-50/50',
+                mobileOpen ? '' : collapsed ? 'justify-center' : ''
               )}
             >
               <Clock className="h-5 w-5 text-gold flex-shrink-0" />
@@ -233,13 +259,15 @@ export default function AdminLayout() {
             </Link>
           </li>
           <li>
-            <Link 
+            <Link
               href="/admin/services"
               onClick={() => setMobileOpen(false)}
               className={cn(
-                "flex items-center py-2 px-3 rounded-md transition-colors",
-                location === '/admin/services' ? 'bg-pink-50 text-pink-dark font-medium' : 'text-gray-700 hover:bg-pink-50/50',
-                mobileOpen ? "" : collapsed ? "justify-center" : ""
+                'flex items-center py-2 px-3 rounded-md transition-colors',
+                location === '/admin/services'
+                  ? 'bg-pink-50 text-pink-dark font-medium'
+                  : 'text-gray-700 hover:bg-pink-50/50',
+                mobileOpen ? '' : collapsed ? 'justify-center' : ''
               )}
             >
               <Package className="h-5 w-5 text-gold flex-shrink-0" />
@@ -247,14 +275,14 @@ export default function AdminLayout() {
             </Link>
           </li>
         </ul>
-        
+
         {/* Sign out button */}
         <div className="p-4 border-t border-pink/5">
           <Button
             variant="ghost"
             className={cn(
-              "text-gray-700 hover:bg-pink-50/50 hover:text-pink-dark w-full",
-              mobileOpen ? "justify-start" : collapsed ? "justify-center" : "justify-start"
+              'text-gray-700 hover:bg-pink-50/50 hover:text-pink-dark w-full',
+              mobileOpen ? 'justify-start' : collapsed ? 'justify-center' : 'justify-start'
             )}
             onClick={async () => {
               await signOut();
@@ -267,7 +295,7 @@ export default function AdminLayout() {
           </Button>
         </div>
       </nav>
-      
+
       {/* Main content */}
       <main className="flex-1 p-4 pt-6 md:p-6 lg:p-8">
         <div className="bg-white rounded-xl shadow-sm border border-gold/5 p-4 md:p-6 overflow-auto">

@@ -3,35 +3,45 @@ import { config } from 'dotenv';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import { eq } from 'drizzle-orm';
-import ws from "ws";
-import { pgTable, serial, varchar, text, boolean, integer, timestamp, uniqueIndex, index } from "drizzle-orm/pg-core";
+import ws from 'ws';
+import {
+  pgTable,
+  serial,
+  varchar,
+  text,
+  boolean,
+  integer,
+  timestamp,
+  uniqueIndex,
+  index,
+} from 'drizzle-orm/pg-core';
 
 // Embedded minimal schema for this API route
-const serviceGroups = pgTable("service_groups", {
-  id: serial("id").primaryKey(),
-  slug: varchar("slug", { length: 100 }).notNull().unique(),
-  nameEn: varchar("name_en", { length: 100 }).notNull(),
-  nameAr: varchar("name_ar", { length: 100 }),
-  nameDe: varchar("name_de", { length: 100 }),
-  nameTr: varchar("name_tr", { length: 100 }),
-  descriptionEn: text("description_en"),
-  descriptionAr: text("description_ar"),
-  descriptionDe: text("description_de"),
-  descriptionTr: text("description_tr"),
-  displayOrder: integer("display_order").default(0)
+const serviceGroups = pgTable('service_groups', {
+  id: serial('id').primaryKey(),
+  slug: varchar('slug', { length: 100 }).notNull().unique(),
+  nameEn: varchar('name_en', { length: 100 }).notNull(),
+  nameAr: varchar('name_ar', { length: 100 }),
+  nameDe: varchar('name_de', { length: 100 }),
+  nameTr: varchar('name_tr', { length: 100 }),
+  descriptionEn: text('description_en'),
+  descriptionAr: text('description_ar'),
+  descriptionDe: text('description_de'),
+  descriptionTr: text('description_tr'),
+  displayOrder: integer('display_order').default(0),
 });
 
-const services = pgTable("services", {
-  id: serial("id").primaryKey(),
-  slug: varchar("slug", { length: 100 }).notNull(),
-  groupId: integer("group_id").notNull(),
-  nameEn: varchar("name_en", { length: 100 }).notNull(),
-  nameAr: varchar("name_ar", { length: 100 }),
-  nameDe: varchar("name_de", { length: 100 }),
-  nameTr: varchar("name_tr", { length: 100 }),
-  duration: integer("duration").notNull(),
-  price: integer("price").notNull(),
-  imageUrl: text("image_url")
+const services = pgTable('services', {
+  id: serial('id').primaryKey(),
+  slug: varchar('slug', { length: 100 }).notNull(),
+  groupId: integer('group_id').notNull(),
+  nameEn: varchar('name_en', { length: 100 }).notNull(),
+  nameAr: varchar('name_ar', { length: 100 }),
+  nameDe: varchar('name_de', { length: 100 }),
+  nameTr: varchar('name_tr', { length: 100 }),
+  duration: integer('duration').notNull(),
+  price: integer('price').notNull(),
+  imageUrl: text('image_url'),
 });
 
 // Ensure environment variables are loaded
@@ -42,9 +52,7 @@ neonConfig.webSocketConstructor = ws;
 // Create database connection function to ensure fresh connections in serverless environment
 function createDbConnection() {
   if (!process.env.DATABASE_URL) {
-    throw new Error(
-      "DATABASE_URL must be set. Did you forget to provision a database?",
-    );
+    throw new Error('DATABASE_URL must be set. Did you forget to provision a database?');
   }
 
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -60,24 +68,21 @@ function transformServiceGroup(group: any) {
       en: group.nameEn,
       ar: group.nameAr || '',
       de: group.nameDe || '',
-      tr: group.nameTr || ''
+      tr: group.nameTr || '',
     },
     description: {
       en: group.descriptionEn || '',
       ar: group.descriptionAr || '',
       de: group.descriptionDe || '',
-      tr: group.descriptionTr || ''
+      tr: group.descriptionTr || '',
     },
     // Add a default icon value since the column doesn't exist in production
     icon: '',
-    displayOrder: group.displayOrder || 0
+    displayOrder: group.displayOrder || 0,
   };
 }
 
-export default async function handler(
-  request: VercelRequest,
-  response: VercelResponse,
-) {
+export default async function handler(request: VercelRequest, response: VercelResponse) {
   // Set CORS headers to ensure we can access from any origin
   response.setHeader('Access-Control-Allow-Origin', '*');
   response.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -122,48 +127,50 @@ export default async function handler(
           en: service.nameEn,
           ar: service.nameAr || '',
           de: service.nameDe || '',
-          tr: service.nameTr || ''
+          tr: service.nameTr || '',
         },
         duration: service.duration,
         price: service.price,
-        imageUrl: service.imageUrl
+        imageUrl: service.imageUrl,
       }));
 
       return response.status(200).json({
         ...transformedGroup,
-        services: transformedServices
+        services: transformedServices,
       });
     } else {
       // Get all service groups with their associated services
       const groups = await db.query.serviceGroups.findMany({
-        orderBy: (serviceGroups, { asc }) => [asc(serviceGroups.displayOrder)]
+        orderBy: (serviceGroups, { asc }) => [asc(serviceGroups.displayOrder)],
       });
 
-      const result = await Promise.all(groups.map(async (group) => {
-        const serviceItems = await db.query.services.findMany({
-          where: eq(services.groupId, group.id),
-        });
+      const result = await Promise.all(
+        groups.map(async group => {
+          const serviceItems = await db.query.services.findMany({
+            where: eq(services.groupId, group.id),
+          });
 
-        const transformedGroup = transformServiceGroup(group);
-        const transformedServices = serviceItems.map(service => ({
-          id: service.id,
-          slug: service.slug,
-          name: {
-            en: service.nameEn,
-            ar: service.nameAr || '',
-            de: service.nameDe || '',
-            tr: service.nameTr || ''
-          },
-          duration: service.duration,
-          price: service.price,
-          imageUrl: service.imageUrl
-        }));
+          const transformedGroup = transformServiceGroup(group);
+          const transformedServices = serviceItems.map(service => ({
+            id: service.id,
+            slug: service.slug,
+            name: {
+              en: service.nameEn,
+              ar: service.nameAr || '',
+              de: service.nameDe || '',
+              tr: service.nameTr || '',
+            },
+            duration: service.duration,
+            price: service.price,
+            imageUrl: service.imageUrl,
+          }));
 
-        return {
-          ...transformedGroup,
-          services: transformedServices
-        };
-      }));
+          return {
+            ...transformedGroup,
+            services: transformedServices,
+          };
+        })
+      );
 
       return response.status(200).json(result);
     }
@@ -171,7 +178,7 @@ export default async function handler(
     console.error('Error getting service groups:', error);
     return response.status(500).json({
       message: 'Failed to retrieve service groups. Please try again later.',
-      error: error instanceof Error ? error.message : String(error)
+      error: error instanceof Error ? error.message : String(error),
     });
   }
 }

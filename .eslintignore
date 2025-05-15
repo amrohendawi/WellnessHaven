@@ -1,0 +1,8 @@
+node_modules
+dist
+build
+coverage
+public
+.vercel
+drizzle
+*.d.ts

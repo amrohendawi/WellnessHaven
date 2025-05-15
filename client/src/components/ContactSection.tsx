@@ -1,19 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
-import { submitContactForm } from "@/lib/api";
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { toast } from '@/hooks/use-toast';
+import { submitContactForm } from '@/lib/api';
 
 const ContactSection = () => {
   const { t } = useTranslation();
@@ -27,7 +21,7 @@ const ContactSection = () => {
       email: '',
       phone: '',
       message: '',
-    }
+    },
   });
 
   // Handle form submission
@@ -46,7 +40,7 @@ const ContactSection = () => {
       form.reset();
     } catch (error) {
       toast({
-        variant: "destructive",
+        variant: 'destructive',
         title: t('error'),
         description: t('messageFailed'),
       });
@@ -59,15 +53,15 @@ const ContactSection = () => {
     <section id="contact" className="py-16 bg-beige-light">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="royal-heading text-3xl md:text-4xl mb-8">
-            {t('contactTitle')}
-          </h2>
+          <h2 className="royal-heading text-3xl md:text-4xl mb-8">{t('contactTitle')}</h2>
           <div className="fancy-divider mb-4">
             <i className="fas fa-envelope fancy-divider-icon text-gold mx-2"></i>
           </div>
         </div>
 
-        <div className={`flex flex-col ${dir === 'rtl' ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-12 max-w-6xl mx-auto`}>
+        <div
+          className={`flex flex-col ${dir === 'rtl' ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-12 max-w-6xl mx-auto`}
+        >
           <div className="lg:w-1/2">
             {/* Map */}
             <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8 h-64 md:h-80">
@@ -102,10 +96,16 @@ const ContactSection = () => {
                   <h4 className="font-medium mb-1">{t('phone')}</h4>
                   <p className="text-gray-600">{t('contactPhone')}</p>
                   <div className="flex mt-2 space-x-2 rtl:space-x-reverse">
-                    <a href={"tel:+491784423645"} className="bg-pink-light hover:bg-pink text-gray-800 px-3 py-1 rounded-full text-sm transition-colors">
+                    <a
+                      href={'tel:+491784423645'}
+                      className="bg-pink-light hover:bg-pink text-gray-800 px-3 py-1 rounded-full text-sm transition-colors"
+                    >
                       <i className="fas fa-phone-alt mr-1 rtl:ml-1 rtl:mr-0"></i> {t('call')}
                     </a>
-                    <a href={`https://wa.me/491784423645`} className="bg-[#25D366] hover:bg-[#128C7E] text-white px-3 py-1 rounded-full text-sm transition-colors">
+                    <a
+                      href={`https://wa.me/491784423645`}
+                      className="bg-[#25D366] hover:bg-[#128C7E] text-white px-3 py-1 rounded-full text-sm transition-colors"
+                    >
                       <i className="fab fa-whatsapp mr-1 rtl:ml-1 rtl:mr-0"></i> WhatsApp
                     </a>
                   </div>

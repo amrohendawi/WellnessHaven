@@ -1,24 +1,24 @@
 {
   "siteName": "دبي روز",
   "siteTagline": "مركز الجمال والتجميل للنساء فقط",
-  
+
   "menuHome": "الرئيسية",
   "menuServices": "الخدمات",
   "menuMembership": "العضوية المميزة",
   "menuContact": "اتصل بنا",
-  
+
   "heroTitle": "ارتقي بجمالك",
   "heroSubtitle": "المركز الرائد للنساء فقط للعناية بالجمال في دبي",
   "bookNow": "احجزي الآن",
   "womenOnly": "مركز للنساء فقط",
-  
+
   "servicesTitle": "خدماتنا",
   "servicesSubtitle": "علاجات فاخرة مصممة خصيصًا لك",
   "viewAllServices": "عرض جميع الخدمات",
   "all": "الكل",
   "exploreServiceRange": "استكشفي مجموعة علاجاتنا الكاملة",
   "exploreMore": "استكشفي المزيد",
-  
+
   "membershipTitle": "العضوية المميزة الحصرية",
   "membershipSubtitle": "استمتعي بمزايا استثنائية ورعاية شخصية",
   "goldCard": "البطاقة الذهبية",
@@ -35,7 +35,7 @@
   "specialOffers": "الوصول إلى العروض الخاصة",
   "prioritySupport": "دعم ذو أولوية",
   "byInvitationOnly": "بالدعوة فقط",
-  
+
   "bookingTitle": "احجزي علاجك",
   "bookingSubtitle": "جدولة زيارتك لدبي روز",
   "selectService": "اختر الخدمة",
@@ -48,7 +48,7 @@
   "pickDate": "اختاري تاريخًا",
   "enterDetails": "أدخلي بياناتك",
   "serviceSelected": "الخدمة المختارة",
-  
+
   "facialTreatments": "علاجات الوجه",
   "facialTreatmentsDesc": "تنظيف، تقشير، أقنعة والمزيد",
   "laserTreatments": "علاجات الليزر",
@@ -57,7 +57,7 @@
   "hairServicesDesc": "تصفيف، صبغ وإكستنشن",
   "beautyServices": "خدمات التجميل",
   "beautyServicesDesc": "مكياج، رموش وحواجب",
-  
+
   "vipMember": "عضو VIP؟",
   "enterMembershipNumber": "أدخلي رقم عضويتك للحصول على الخصم",
   "membershipPlaceholder": "رقم العضوية",
@@ -72,18 +72,18 @@
   "vipDiscount": "خصم VIP",
   "applied": "مطبق",
   "bookingConfirmation": "تم تأكيد حجزك! سنرسل لك رسالة تأكيد قريبًا.",
-  
+
   "facialService": "علاجات الوجه",
   "laserService": "علاجات الليزر",
   "hairService": "خدمات الشعر",
   "beautyService": "خدمات التجميل",
-  
+
   "aboutUs": "من نحن",
   "aboutText": "دبي روز هو مركز جمال حصري للنساء فقط يقدم علاجات تجميلية ممتازة في بيئة فاخرة.",
   "aboutTextAdditional": "يستخدم فريقنا من المتخصصين المؤهلين تأهيلا عاليا تقنيات متقدمة ومنتجات متميزة لتقديم خدمات جمالية استثنائية مصممة خصيصا لاحتياجاتك الفردية.",
   "certifiedExperts": "خبراء معتمدون",
   "premiumService": "خدمة متميزة",
-  
+
   "contactTitle": "اتصل بنا",
   "address": "العنوان",
   "contactAddress": "Karl-Marx-Straße 45, 12043 Berlin",
@@ -105,16 +105,16 @@
   "error": "خطأ",
   "messageFailed": "فشل في إرسال الرسالة. يرجى المحاولة مرة أخرى.",
   "connectSocial": "أو تواصلي معنا على وسائل التواصل الاجتماعي",
-  
+
   "footerTagline": "مركز دبي روز الرائد للنساء فقط للعناية بالجمال والتجميل، يوفر علاجات فاخرة وخدمة استثنائية.",
   "quickLinks": "روابط سريعة",
   "footerHours": "10 صباحًا - 8 مساءً (السبت - الخميس)",
   "footerRights": "جميع الحقوق محفوظة",
   "viewAll": "عرض الكل",
-  
+
   "laserHairRemoval": "إزالة الشعر بالليزر",
   "skinTightening": "شد البشرة",
-  
+
   "aboutThisService": "عن هذه الخدمة",
   "benefits": "الفوائد",
   "procedure": "الإجراء",
@@ -129,7 +129,7 @@
   "inquireViaWhatsApp": "استفسري عبر واتساب",
   "relatedServices": "خدمات ذات صلة",
   "loading": "جاري التحميل...",
-  
+
   "breadcrumbHome": "الرئيسية",
   "breadcrumbServices": "الخدمات"
 }

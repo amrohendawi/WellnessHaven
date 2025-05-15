@@ -40,23 +40,25 @@ export const environment = {
     // Check multiple environment indicators
     return (
       // Standard environment variables
-      process.env.NODE_ENV === 'development' || 
+      process.env.NODE_ENV === 'development' ||
       // Hostname checks
-      (typeof window !== 'undefined' && (
-        window.location.hostname === 'localhost' || 
-        window.location.hostname === '127.0.0.1' ||
-        window.location.hostname.includes('.local')))
+      (typeof window !== 'undefined' &&
+        (window.location.hostname === 'localhost' ||
+          window.location.hostname === '127.0.0.1' ||
+          window.location.hostname.includes('.local')))
     );
   },
-  
+
   isProduction: (): boolean => {
-    return process.env.NODE_ENV === 'production' || 
-      (typeof window !== 'undefined' && 
-       (window.location.hostname.includes('dubai-rose.vercel.app') || 
-        window.location.hostname.includes('dubai-rose-spa.vercel.app') ||
-        !environment.isDevelopment()));
+    return (
+      process.env.NODE_ENV === 'production' ||
+      (typeof window !== 'undefined' &&
+        (window.location.hostname.includes('dubai-rose.vercel.app') ||
+          window.location.hostname.includes('dubai-rose-spa.vercel.app') ||
+          !environment.isDevelopment()))
+    );
   },
-  
+
   // Get the current domain for absolute URL construction when needed
   getCurrentDomain: (): string => {
     if (typeof window === 'undefined') return '';
@@ -77,7 +79,7 @@ export const environment = {
         return '/api'; // Default fallback
       }
     }
-  }
+  },
 };
 
 // API endpoints base URL - dynamically determined based on environment
@@ -93,19 +95,19 @@ export const logger = {
       console.log(`🔍 ${message}`, ...args);
     }
   },
-  
+
   // Info logging - used in both production and development
   info: (message: string, ...args: any[]): void => {
     if (environment.isDevelopment() || localStorage.getItem('enableDetailedLogs') === 'true') {
       console.info(`ℹ️ ${message}`, ...args);
     }
   },
-  
+
   // Warning logs - used in both environments but limited in production
   warn: (message: string, ...args: any[]): void => {
     console.warn(`⚠️ ${message}`, ...args);
   },
-  
+
   // Error logs - always shown but with different detail levels
   error: (message: string, error?: any): void => {
     if (environment.isDevelopment()) {
@@ -114,7 +116,7 @@ export const logger = {
       // In production, limit error details to avoid leaking sensitive info
       console.error(`❌ ${message}`, error instanceof Error ? error.message : 'An error occurred');
     }
-  }
+  },
 };
 
 /**
@@ -124,14 +126,14 @@ export class ApiError extends Error {
   status: number;
   endpoint: string;
   details?: any;
-  
+
   constructor(message: string, status: number, endpoint: string, details?: any) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
     this.endpoint = endpoint;
     this.details = details;
-    
+
     // Maintains proper stack trace in V8 engines
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, ApiError);
@@ -152,26 +154,26 @@ export async function fetchAPI<T>(
   // Extract and remove custom options
   const { retry = 0, retryDelay = 1000, ...fetchOptions } = options;
   const retryCount = Math.max(0, Math.min(retry, 3)); // Limit retries between 0-3
-  
+
   try {
     // Always add security headers for all requests
     const headers = new Headers(fetchOptions.headers);
     if (!headers.has('Content-Type')) {
       headers.set('Content-Type', 'application/json');
     }
-    
+
     // Add CSRF protection as needed
     const csrfToken = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
     if (csrfToken && csrfToken[1]) {
       headers.set('X-XSRF-TOKEN', csrfToken[1]);
     }
-    
+
     // Log request in development only
     logger.debug(`API Request to: ${API_BASE_URL}${endpoint}`);
-    
+
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...fetchOptions,
-      headers
+      headers,
     });
 
     // Clone the response to avoid "body stream already read" errors
@@ -211,22 +213,22 @@ export async function fetchAPI<T>(
 
       // Create a custom error with additional metadata
       const apiError = new ApiError(errorMessage, response.status, endpoint, errorDetails);
-      
+
       // If we should retry and have retries left
       if (retryCount > 0 && [408, 429, 500, 502, 503, 504].includes(response.status)) {
         logger.warn(`Retrying failed request to ${endpoint}. Attempts left: ${retryCount}`);
-        
+
         // Wait before retrying
         await new Promise(resolve => setTimeout(resolve, retryDelay));
-        
+
         // Retry with one less retry attempt
         return fetchAPI<T>(endpoint, {
           ...options,
           retry: retryCount - 1,
-          retryDelay: retryDelay * 1.5 // Exponential backoff
+          retryDelay: retryDelay * 1.5, // Exponential backoff
         });
       }
-      
+
       throw apiError;
     }
 
@@ -279,7 +281,7 @@ export async function getServices(): Promise<ServiceDisplay[]> {
     logger.debug('Using cached services');
     return cachedServices;
   }
-  
+
   try {
     // Fetch fresh data with retries enabled
     const services = await fetchAPI<ServiceDisplay[]>('/services', { retry: 2 });
@@ -309,7 +311,7 @@ export async function getServiceBySlug(slug: string): Promise<ServiceDisplay> {
       return cached;
     }
   }
-  
+
   return fetchAPI<ServiceDisplay>(`/services?slug=${encodeURIComponent(slug)}`, { retry: 1 });
 }
 
@@ -327,7 +329,7 @@ export async function getServiceGroups(): Promise<ServiceGroupDisplay[]> {
     logger.debug('Using cached service groups');
     return cachedServiceGroups;
   }
-  
+
   try {
     const groups = await fetchAPI<ServiceGroupDisplay[]>('/service-groups', { retry: 2 });
     cachedServiceGroups = groups;
@@ -345,10 +347,14 @@ export async function getServiceGroups(): Promise<ServiceGroupDisplay[]> {
 /**
  * Get service group by slug with included services
  */
-export async function getServiceGroupBySlug(slug: string): Promise<ServiceGroupDisplay & { services: ServiceDisplay[] }> {
+export async function getServiceGroupBySlug(
+  slug: string
+): Promise<ServiceGroupDisplay & { services: ServiceDisplay[] }> {
   // Could add caching optimization here too
-  return fetchAPI<ServiceGroupDisplay & { services: ServiceDisplay[] }>
-    (`/service-groups?slug=${encodeURIComponent(slug)}`, { retry: 1 });
+  return fetchAPI<ServiceGroupDisplay & { services: ServiceDisplay[] }>(
+    `/service-groups?slug=${encodeURIComponent(slug)}`,
+    { retry: 1 }
+  );
 }
 
 // ----- Booking API -----
@@ -360,7 +366,7 @@ export async function createBooking(bookingData: BookingData): Promise<BookingRe
     method: 'POST',
     body: JSON.stringify(bookingData),
     retry: 2, // Important endpoint, add retry logic
-    retryDelay: 1500 // Longer delay for this critical operation
+    retryDelay: 1500, // Longer delay for this critical operation
   });
 }
 
@@ -373,10 +379,21 @@ function generateMockTimeSlots(dateString: string): string[] {
   const today = new Date();
   const isToday = date.toDateString() === today.toDateString();
   const currentHour = today.getHours();
-  
+
   // Base set of time slots
-  let slots = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
-  
+  let slots = [
+    '10:00',
+    '11:00',
+    '12:00',
+    '13:00',
+    '14:00',
+    '15:00',
+    '16:00',
+    '17:00',
+    '18:00',
+    '19:00',
+  ];
+
   // If today, filter out past time slots
   if (isToday) {
     slots = slots.filter(slot => {
@@ -384,16 +401,16 @@ function generateMockTimeSlots(dateString: string): string[] {
       return hours > currentHour;
     });
   }
-  
+
   // Use date components for deterministic "random" removal
   // This ensures the same date always shows the same slots
   const day = date.getDate();
   const month = date.getMonth() + 1;
-  
+
   // Create a pattern of availability that's consistent for the same date
   return slots.filter((_, index) => {
     // Use a hash-like approach for deterministic filtering
-    const shouldKeep = ((index * day + month) % 10) > 3; // Keep ~70% of slots
+    const shouldKeep = (index * day + month) % 10 > 3; // Keep ~70% of slots
     return shouldKeep;
   });
 }
@@ -401,7 +418,10 @@ function generateMockTimeSlots(dateString: string): string[] {
 /**
  * Custom fetchAPI wrapper for time slots specifically to reduce error logging
  */
-async function fetchTimeSlotsAPI<T>(endpoint: string, options: RequestInit & { retry?: number; retryDelay?: number } = {}): Promise<T> {
+async function fetchTimeSlotsAPI<T>(
+  endpoint: string,
+  options: RequestInit & { retry?: number; retryDelay?: number } = {}
+): Promise<T> {
   try {
     return await fetchAPI<T>(endpoint, options);
   } catch (error) {
@@ -419,7 +439,10 @@ async function fetchTimeSlotsAPI<T>(endpoint: string, options: RequestInit & { r
  * Get available time slots for a date and optional service
  * Gracefully handle API failures with fallbacks
  */
-export async function getAvailableTimeSlots(date: string, serviceId?: number): Promise<TimeSlotResponse> {
+export async function getAvailableTimeSlots(
+  date: string,
+  serviceId?: number
+): Promise<TimeSlotResponse> {
   // Format query string carefully to avoid issues and potential injection
   const queryParams = new URLSearchParams();
   queryParams.append('date', date);
@@ -429,34 +452,41 @@ export async function getAvailableTimeSlots(date: string, serviceId?: number): P
 
   // Use deterministic approach for development mode to avoid random behavior
   // This helps with consistent testing
-  const useRealAPI = environment.isProduction() || 
-                      (environment.isDevelopment() && localStorage.getItem('forceRealAPI') === 'true');
+  const useRealAPI =
+    environment.isProduction() ||
+    (environment.isDevelopment() && localStorage.getItem('forceRealAPI') === 'true');
 
   // For development, sometimes use mock data immediately if the API is known to be unavailable
   if (!useRealAPI && Math.random() > 0.3) {
     logger.debug('Using mock time slots directly (development mode)');
     return { availableSlots: generateMockTimeSlots(date) };
   }
-  
+
   // Try real API endpoints with graceful fallback
   try {
     // Try the time-slots endpoint first with retry logic
     logger.debug(`Fetching time slots for date: ${date}, service: ${serviceId || 'any'}`);
     try {
-      const response = await fetchTimeSlotsAPI<TimeSlotResponse>(`/time-slots?${queryParams.toString()}`, {
-        retry: 1,
-        retryDelay: 800
-      });
+      const response = await fetchTimeSlotsAPI<TimeSlotResponse>(
+        `/time-slots?${queryParams.toString()}`,
+        {
+          retry: 1,
+          retryDelay: 800,
+        }
+      );
       return response;
     } catch (error) {
       // Quietly log without console error noise
       logger.info('Time-slots endpoint failed, falling back to appointments endpoint');
-      
+
       try {
         // Fall back to the appointments endpoint, also with retry
-        const fallbackResponse = await fetchTimeSlotsAPI<TimeSlotResponse>(`/appointments?${queryParams.toString()}`, {
-          retry: 1
-        });
+        const fallbackResponse = await fetchTimeSlotsAPI<TimeSlotResponse>(
+          `/appointments?${queryParams.toString()}`,
+          {
+            retry: 1,
+          }
+        );
         return fallbackResponse;
       } catch (fallbackError) {
         // Both endpoints failed, which is expected in development
@@ -494,19 +524,26 @@ export interface AppointmentResponse extends ApiResponse {
   };
 }
 
-export async function checkAppointment(email: string, appointmentId: number): Promise<AppointmentResponse> {
+export async function checkAppointment(
+  email: string,
+  appointmentId: number
+): Promise<AppointmentResponse> {
   return fetchAPI<AppointmentResponse>('/appointments', {
     method: 'POST',
     body: JSON.stringify({ email, appointmentId, action: 'check' } as AppointmentCheckRequest),
-    retry: 1
+    retry: 1,
   });
 }
 
-export async function updateAppointment(id: number, email: string, status: string): Promise<AppointmentResponse> {
+export async function updateAppointment(
+  id: number,
+  email: string,
+  status: string
+): Promise<AppointmentResponse> {
   return fetchAPI<AppointmentResponse>('/appointments', {
     method: 'PUT',
     body: JSON.stringify({ id, email, status } as AppointmentUpdateRequest),
-    retry: 1
+    retry: 1,
   });
 }
 
@@ -523,7 +560,7 @@ export async function submitContactForm(contactData: ContactData): Promise<ApiRe
   return fetchAPI<ApiResponse>('/contact', {
     method: 'POST',
     body: JSON.stringify(contactData),
-    retry: 1
+    retry: 1,
   });
 }
 
@@ -573,14 +610,14 @@ export async function fetchAdminAPI<T>(
   try {
     // Remove any leading slash from the endpoint for consistency
     const trimmedEndpoint = endpoint.startsWith('/') ? endpoint.substring(1) : endpoint;
-    
+
     // Prepare headers with security and content-type settings
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      ...(fetchOptions.headers as Record<string, string> || {}),
+      Accept: 'application/json',
+      ...((fetchOptions.headers as Record<string, string>) || {}),
     };
-    
+
     // Get authentication token using a more robust approach
     if (typeof window !== 'undefined') {
       try {
@@ -588,14 +625,14 @@ export async function fetchAdminAPI<T>(
         if (window.Clerk && window.Clerk.session) {
           logger.debug('Using Clerk global for authentication');
           const token = await window.Clerk.session.getToken();
-          
+
           if (token) {
             headers['Authorization'] = `Bearer ${token}`;
             logger.debug('Auth token successfully retrieved');
           } else {
             logger.warn('Token is null or empty');
           }
-        } 
+        }
         // Legacy approach as fallback
         else if (window.__clerk_frontend_api) {
           logger.debug('Using __clerk_frontend_api for authentication');
@@ -615,17 +652,17 @@ export async function fetchAdminAPI<T>(
         logger.error('Error getting auth token', err);
       }
     }
-    
+
     // Handle cross-origin API URLs based on the deployment configuration
     // This addresses the issue identified in the CORS memory where admin API calls
     // needed to use absolute URLs in production environments
     let apiUrl: string;
-    
+
     if (environment.isProduction()) {
       // In production, ensure we use absolute URLs to the API domain
       // This resolves the cross-origin issues identified in past deployments
       const host = typeof window !== 'undefined' ? window.location.host : '';
-      
+
       if (host.includes('dubai-rose.vercel.app')) {
         // Handle frontend domain pointing to backend domain
         apiUrl = `https://dubai-rose-spa.vercel.app/api/admin/${trimmedEndpoint}`;
@@ -639,27 +676,27 @@ export async function fetchAdminAPI<T>(
       // In development, use relative paths
       apiUrl = `${API_BASE_URL}/admin/${trimmedEndpoint}`;
     }
-    
+
     // Debug logging for API requests
     logger.debug(`Admin API request to: ${apiUrl}`);
     logger.debug(`Auth header present: ${headers['Authorization'] ? 'Yes' : 'No'}`);
-    
+
     try {
       // Make a direct fetch call with proper CORS settings
       const response = await fetch(apiUrl, {
         ...fetchOptions,
         headers,
         // Ensure CORS credentials are included for cross-origin requests
-        credentials: 'include'
+        credentials: 'include',
       });
-      
+
       // Process the response
       if (!response.ok) {
         // Handle error response
         const contentType = response.headers.get('content-type');
         let errorMessage: string;
         let errorDetails: any = null;
-        
+
         if (contentType && contentType.includes('application/json')) {
           try {
             const errorData = await response.json();
@@ -674,7 +711,9 @@ export async function fetchAdminAPI<T>(
             if (errorText.includes('<!DOCTYPE html>')) {
               // HTML error typically means routing/authentication issue
               errorMessage = `Admin API returned HTML instead of JSON. Status: ${response.status}`;
-              logger.error('Received HTML instead of JSON. This suggests a routing or authentication issue.');
+              logger.error(
+                'Received HTML instead of JSON. This suggests a routing or authentication issue.'
+              );
             } else {
               errorMessage = `Admin API error: ${response.status}. ${errorText.substring(0, 100)}`;
             }
@@ -682,44 +721,47 @@ export async function fetchAdminAPI<T>(
             errorMessage = `Admin API error: ${response.status}`;
           }
         }
-        
+
         // Create custom error with metadata
         const apiError = new ApiError(errorMessage, response.status, endpoint, errorDetails);
-        
+
         // Handle retry for specific status codes
         if (retryCount > 0 && [401, 403, 408, 429, 500, 502, 503, 504].includes(response.status)) {
           logger.warn(`Retrying failed admin request to ${endpoint}. Attempts left: ${retryCount}`);
-          
+
           // For auth errors, refresh token before retry
           if ([401, 403].includes(response.status) && typeof window !== 'undefined') {
             logger.info('Authentication error, refreshing token before retry');
             try {
               if (window.Clerk && window.Clerk.session) {
                 // Force token refresh
-                await window.Clerk.session.getToken({ template: 'dubai-rose-api', skipCache: true });
+                await window.Clerk.session.getToken({
+                  template: 'dubai-rose-api',
+                  skipCache: true,
+                });
               }
             } catch (tokenError) {
               logger.warn('Failed to refresh token', tokenError);
             }
           }
-          
+
           // Wait before retrying
           await new Promise(resolve => setTimeout(resolve, retryDelay));
-          
+
           // Retry with one less retry attempt
           return fetchAdminAPI<T>(endpoint, {
             ...options,
             retry: retryCount - 1,
-            retryDelay: retryDelay * 1.5 // Exponential backoff
+            retryDelay: retryDelay * 1.5, // Exponential backoff
           });
         }
-        
+
         throw apiError;
       }
-      
+
       // Process successful response
       try {
-        return await response.json() as T;
+        return (await response.json()) as T;
       } catch (jsonError) {
         throw new ApiError(`Invalid JSON response from Admin API: ${endpoint}`, 0, endpoint);
       }
@@ -727,15 +769,15 @@ export async function fetchAdminAPI<T>(
       // Add specific diagnostics for production debugging
       if (environment.isProduction()) {
         logger.error(`Admin API call failed for: ${trimmedEndpoint}`);
-        
+
         if (fetchError instanceof ApiError) {
           if (fetchError.message.includes('HTML instead of JSON')) {
             logger.error(
               'Received HTML instead of JSON suggests a routing issue or authentication failure. ' +
-              'This typically happens when the API gateway serves the frontend instead of the API.'
+                'This typically happens when the API gateway serves the frontend instead of the API.'
             );
           }
-          
+
           if (!headers['Authorization']) {
             logger.error('No authentication token was found. User may not be logged in.');
           }

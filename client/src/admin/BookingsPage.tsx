@@ -1,8 +1,21 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from '@/components/ui/select';
 import { Link } from 'wouter';
 import { useToast } from '@/hooks/use-toast';
 import { fetchAdminAPI } from '@/lib/api';
@@ -32,7 +45,7 @@ export default function BookingsPage() {
   async function updateStatus(id: number, status: string) {
     try {
       await fetchAdminAPI(`bookings/${id}`, { method: 'PUT', body: JSON.stringify({ status }) });
-      setBookings(prev => prev.map(b => b.id === id ? { ...b, status } : b));
+      setBookings(prev => prev.map(b => (b.id === id ? { ...b, status } : b)));
       toast({ title: 'Updated', description: 'Booking status updated.' });
     } catch {
       toast({ title: 'Error', description: 'Failed to update status', variant: 'destructive' });
@@ -56,7 +69,9 @@ export default function BookingsPage() {
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
             {STATUS_OPTIONS.map(opt => (
-              <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+              <SelectItem key={opt} value={opt}>
+                {opt}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -75,39 +90,46 @@ export default function BookingsPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {useMemo(() => bookings
-            .filter(b => (
-              b.name.toLowerCase().includes(search.toLowerCase()) ||
-              b.email.toLowerCase().includes(search.toLowerCase())
-            ))
-            .filter(b => statusFilter === 'all' ? true : b.status === statusFilter)
-            .map(b => (
-              <TableRow key={b.id}>
-                <TableCell>{b.id}</TableCell>
-                <TableCell>{b.name}</TableCell>
-                <TableCell>{b.email}</TableCell>
-                <TableCell>{b.service}</TableCell>
-                <TableCell>{b.date}</TableCell>
-                <TableCell>{b.time}</TableCell>
-                <TableCell>
-                  <Select value={b.status} onValueChange={val => updateStatus(b.id, val)}>
-                    <SelectTrigger className="w-[120px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {STATUS_OPTIONS.map(opt => (
-                        <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </TableCell>
-                <TableCell>
-                  <Link href={`/admin/bookings/${b.id}`}>
-                    <Button size="sm">View</Button>
-                  </Link>
-                </TableCell>
-              </TableRow>
-            )), [bookings, search, statusFilter])}
+          {useMemo(
+            () =>
+              bookings
+                .filter(
+                  b =>
+                    b.name.toLowerCase().includes(search.toLowerCase()) ||
+                    b.email.toLowerCase().includes(search.toLowerCase())
+                )
+                .filter(b => (statusFilter === 'all' ? true : b.status === statusFilter))
+                .map(b => (
+                  <TableRow key={b.id}>
+                    <TableCell>{b.id}</TableCell>
+                    <TableCell>{b.name}</TableCell>
+                    <TableCell>{b.email}</TableCell>
+                    <TableCell>{b.service}</TableCell>
+                    <TableCell>{b.date}</TableCell>
+                    <TableCell>{b.time}</TableCell>
+                    <TableCell>
+                      <Select value={b.status} onValueChange={val => updateStatus(b.id, val)}>
+                        <SelectTrigger className="w-[120px]">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {STATUS_OPTIONS.map(opt => (
+                            <SelectItem key={opt} value={opt}>
+                              {opt}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell>
+                      <Link href={`/admin/bookings/${b.id}`}>
+                        <Button size="sm">View</Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                )),
+            [bookings, search, statusFilter]
+          )}
         </TableBody>
       </Table>
     </div>

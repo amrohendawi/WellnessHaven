@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useRoute, useLocation } from 'wouter';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
 import { fetchAdminAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import type { Booking } from '@shared/schema';
@@ -24,14 +30,21 @@ export default function BookingDetailPage() {
         setStatus(data.status);
       })
       .catch(() => {
-        toast({ title: 'Error', description: 'Failed to fetch booking details', variant: 'destructive' });
+        toast({
+          title: 'Error',
+          description: 'Failed to fetch booking details',
+          variant: 'destructive',
+        });
       });
   }, [bookingId]);
 
   const updateStatus = async () => {
     if (!booking) return;
     try {
-      await fetchAdminAPI(`bookings/${booking.id}`, { method: 'PUT', body: JSON.stringify({ status }) });
+      await fetchAdminAPI(`bookings/${booking.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ status }),
+      });
       setBooking({ ...booking, status });
       toast({ title: 'Updated', description: 'Status updated.' });
     } catch {
@@ -83,14 +96,18 @@ export default function BookingDetailPage() {
             </SelectTrigger>
             <SelectContent>
               {STATUS_OPTIONS.map(opt => (
-                <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                <SelectItem key={opt} value={opt}>
+                  {opt}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline" onClick={() => navigate('/admin/bookings')}>Back</Button>
+        <Button variant="outline" onClick={() => navigate('/admin/bookings')}>
+          Back
+        </Button>
         <Button onClick={updateStatus}>Save Changes</Button>
       </CardFooter>
     </Card>

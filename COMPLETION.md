@@ -31,6 +31,7 @@ All components have been successfully updated and are working with the serverles
 
 1. Deploy the application to Vercel
 2. Configure environment variables on Vercel:
+
    - DATABASE_URL: Your Neon PostgreSQL connection string
    - Any other environment variables used in the application
 

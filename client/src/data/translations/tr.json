@@ -1,24 +1,24 @@
 {
   "siteName": "Dubai Rose",
   "siteTagline": "Kadınlara Özel Güzellik ve Estetik Merkezi",
-  
+
   "menuHome": "Ana Sayfa",
   "menuServices": "Hizmetler",
   "menuMembership": "VIP Üyelik",
   "menuContact": "İletişim",
-  
+
   "heroTitle": "Güzelliğinizi Yükseltin",
   "heroSubtitle": "Dubai'nin Önde Gelen Sadece Kadınlara Özel Güzellik ve Estetik Merkezi",
   "bookNow": "Randevu Al",
   "womenOnly": "Sadece Kadınlara Özel Merkez",
-  
+
   "servicesTitle": "Hizmetlerimiz",
   "servicesSubtitle": "Size özel lüks tedaviler",
   "viewAllServices": "Tüm Hizmetleri Görüntüle",
   "all": "Tümü",
   "exploreServiceRange": "Tedavilerimizin tamamını keşfedin",
   "exploreMore": "Daha Fazla Keşfet",
-  
+
   "membershipTitle": "Özel VIP Üyelik",
   "membershipSubtitle": "Olağanüstü avantajlar ve kişiselleştirilmiş bakım deneyimi",
   "goldCard": "Altın Müşteri Kartı",
@@ -35,7 +35,7 @@
   "specialOffers": "Özel tekliflere erişim",
   "prioritySupport": "Öncelikli destek",
   "byInvitationOnly": "Yalnızca davetiye ile",
-  
+
   "bookingTitle": "Tedavinizi Ayırtın",
   "bookingSubtitle": "Dubai Rose ziyaretinizi planlayın",
   "selectService": "Hizmet Seçin",
@@ -48,7 +48,7 @@
   "pickDate": "Bir tarih seçin",
   "enterDetails": "Bilgilerinizi girin",
   "serviceSelected": "Seçilen Hizmet",
-  
+
   "facialTreatments": "Yüz Tedavileri",
   "facialTreatmentsDesc": "Temizleme, peeling, maskeler ve daha fazlası",
   "laserTreatments": "Lazer Tedavileri",
@@ -57,7 +57,7 @@
   "hairServicesDesc": "Şekillendirme, boyama ve uzatma",
   "beautyServices": "Güzellik Hizmetleri",
   "beautyServicesDesc": "Makyaj, kirpikler ve kaşlar",
-  
+
   "vipMember": "VIP Üye misiniz?",
   "enterMembershipNumber": "İndiriminizi almak için üyelik numaranızı girin",
   "membershipPlaceholder": "Üyelik No",
@@ -72,18 +72,18 @@
   "vipDiscount": "VIP İndirimi",
   "applied": "Uygulandı",
   "bookingConfirmation": "Rezervasyonunuz onaylandı! Kısa süre içinde size bir onay mesajı göndereceğiz.",
-  
+
   "facialService": "Yüz Tedavileri",
   "laserService": "Lazer Tedavileri",
   "hairService": "Saç Hizmetleri",
   "beautyService": "Güzellik Hizmetleri",
-  
+
   "aboutUs": "Hakkımızda",
   "aboutText": "Dubai Rose, lüks bir ortamda premium estetik tedaviler sunan özel bir sadece kadınlara özel güzellik merkezidir.",
   "aboutTextAdditional": "Yüksek vasıflı profesyonellerden oluşan ekibimiz, kişisel ihtiyaçlarınıza göre özel olarak tasarlanmış olağanüstü güzellik hizmetleri sunmak için gelişmiş teknikler ve premium ürünler kullanır.",
   "certifiedExperts": "Sertifikalı Uzmanlar",
   "premiumService": "Premium Hizmet",
-  
+
   "contactTitle": "Bize Ulaşın",
   "address": "Adres",
   "contactAddress": "Karl-Marx-Straße 45, 12043 Berlin",
@@ -105,16 +105,16 @@
   "error": "Hata",
   "messageFailed": "Mesaj gönderilemedi. Lütfen tekrar deneyin.",
   "connectSocial": "Veya sosyal medyada bize bağlanın",
-  
+
   "footerTagline": "Dubai'nin önde gelen sadece kadınlara özel güzellik ve estetik merkezi, lüks tedaviler ve olağanüstü hizmet sunmaktadır.",
   "quickLinks": "Hızlı Bağlantılar",
   "footerHours": "10:00 - 20:00 (Cmt - Prş)",
   "footerRights": "Tüm Hakları Saklıdır",
   "viewAll": "Tümünü Görüntüle",
-  
+
   "laserHairRemoval": "Lazer Epilasyon",
   "skinTightening": "Cilt Germe",
-  
+
   "aboutThisService": "Bu Hizmet Hakkında",
   "benefits": "Faydalar",
   "procedure": "Prosedür",
@@ -129,7 +129,7 @@
   "inquireViaWhatsApp": "WhatsApp ile Sorgula",
   "relatedServices": "İlgili Hizmetler",
   "loading": "Yükleniyor...",
-  
+
   "breadcrumbHome": "Ana Sayfa",
   "breadcrumbServices": "Hizmetler"
 }

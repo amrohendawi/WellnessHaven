@@ -12,12 +12,12 @@ async function testPublic() {
       service: 1,
       date: '2025-05-15',
       time: '14:00',
-      vipNumber: ''
+      vipNumber: '',
     };
     const response = await fetch(`${baseUrl}/api/booking`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(bookingData)
+      body: JSON.stringify(bookingData),
     });
     const body = await response.json();
     console.log('POST /api/booking status:', response.status);

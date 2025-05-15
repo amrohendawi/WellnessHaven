@@ -18,31 +18,31 @@ const Home = () => {
   useEffect(() => {
     const handleHashLinkClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      
+
       // Check if the clicked element is an anchor with hash
       if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
         e.preventDefault();
-        
+
         const targetId = target.getAttribute('href');
         if (!targetId) return;
-        
+
         const targetElement = document.querySelector(targetId);
-        
+
         if (targetElement) {
           window.scrollTo({
             top: targetElement.getBoundingClientRect().top + window.scrollY - 80, // Accounting for fixed header
-            behavior: 'smooth'
+            behavior: 'smooth',
           });
-          
+
           // Update URL hash without scrolling
           window.history.pushState(null, '', targetId);
         }
       }
     };
-    
+
     // Add event listener to the document
     document.addEventListener('click', handleHashLinkClick);
-    
+
     // Clean up
     return () => {
       document.removeEventListener('click', handleHashLinkClick);

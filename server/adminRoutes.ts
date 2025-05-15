@@ -125,7 +125,7 @@ router.get('/dashboard-summary', async (_req: Request, res: Response) => {
       confirmed,
       pending,
       servicesCount: services.length,
-      blockedSlotsCount: blockedSlots.length
+      blockedSlotsCount: blockedSlots.length,
     });
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch dashboard summary' });

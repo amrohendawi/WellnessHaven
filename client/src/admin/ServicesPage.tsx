@@ -1,10 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
 import { fetchAdminAPI } from '@/lib/api';
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogClose, DialogFooter, DialogDescription } from '@/components/ui/dialog';
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from '@/components/ui/form';
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+  DialogFooter,
+  DialogDescription,
+} from '@/components/ui/dialog';
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  FormDescription,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -23,13 +47,16 @@ interface Service {
 
 export default function ServicesPage() {
   // Form schema for create/edit
-  const serviceSchema = z.object({ 
+  const serviceSchema = z.object({
     slug: z.string().nonempty('Slug is required').min(3, 'Slug must be at least 3 characters'),
-    nameEn: z.string().nonempty('Name is required').min(2, 'Name must be at least 2 characters'), 
-    price: z.coerce.number().min(0, 'Price must be 0 or greater') 
+    nameEn: z.string().nonempty('Name is required').min(2, 'Name must be at least 2 characters'),
+    price: z.coerce.number().min(0, 'Price must be 0 or greater'),
   });
   type ServiceFormValues = z.infer<typeof serviceSchema>;
-  const createForm = useForm<ServiceFormValues>({ resolver: zodResolver(serviceSchema), defaultValues: { slug: '', nameEn: '', price: 0 } });
+  const createForm = useForm<ServiceFormValues>({
+    resolver: zodResolver(serviceSchema),
+    defaultValues: { slug: '', nameEn: '', price: 0 },
+  });
   const editForm = useForm<ServiceFormValues>({ resolver: zodResolver(serviceSchema) });
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -60,7 +87,7 @@ export default function ServicesPage() {
       setIsCreateOpen(false);
       createForm.reset();
       // refresh list
-      const list = await fetchAdminAPI<Service[]>('services'); 
+      const list = await fetchAdminAPI<Service[]>('services');
       setServices(list);
       toast({ title: 'Created', description: 'Service created successfully.' });
     } catch {
@@ -72,10 +99,13 @@ export default function ServicesPage() {
   async function onEdit(values: ServiceFormValues) {
     if (!current) return;
     try {
-      await fetchAdminAPI<Service>(`services/${current.id}`, { method: 'PUT', body: JSON.stringify(values) });
+      await fetchAdminAPI<Service>(`services/${current.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(values),
+      });
       setIsEditOpen(false);
       editForm.reset();
-      const list = await fetchAdminAPI<Service[]>('services'); 
+      const list = await fetchAdminAPI<Service[]>('services');
       setServices(list);
       toast({ title: 'Updated', description: 'Service updated successfully.' });
     } catch {
@@ -85,10 +115,11 @@ export default function ServicesPage() {
 
   // Filter services based on search term
   const filteredServices = searchTerm
-    ? services.filter(s => 
-        s.nameEn.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.id.toString().includes(searchTerm)
+    ? services.filter(
+        s =>
+          s.nameEn.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          s.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          s.id.toString().includes(searchTerm)
       )
     : services;
 
@@ -100,21 +131,23 @@ export default function ServicesPage() {
             <Package className="h-5 w-5 md:h-6 md:w-6 text-gold" />
             <span>Services</span>
           </h1>
-          <p className="text-xs md:text-sm text-muted-foreground mt-1">Manage the spa services offered to clients</p>
+          <p className="text-xs md:text-sm text-muted-foreground mt-1">
+            Manage the spa services offered to clients
+          </p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative w-full sm:w-auto">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-            <Input 
-              type="text" 
-              placeholder="Search services..." 
-              className="pl-9 w-full sm:w-[240px] bg-white/50 focus-visible:bg-white border-gold/20 focus-visible:ring-gold/30" 
+            <Input
+              type="text"
+              placeholder="Search services..."
+              className="pl-9 w-full sm:w-[240px] bg-white/50 focus-visible:bg-white border-gold/20 focus-visible:ring-gold/30"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={e => setSearchTerm(e.target.value)}
             />
           </div>
-          
+
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
             <DialogTrigger asChild>
               <Button className="bg-gold hover:bg-gold/90 text-white w-full sm:w-auto">
@@ -132,52 +165,64 @@ export default function ServicesPage() {
                   Add a new service to your spa offerings. Fill out the details below.
                 </DialogDescription>
               </DialogHeader>
-              <Form {...createForm}> 
+              <Form {...createForm}>
                 <form onSubmit={createForm.handleSubmit(onCreate)} className="space-y-4 py-2">
-                  <FormField name="slug" control={createForm.control} render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Service Slug</FormLabel>
-                      <FormControl>
-                        <Input 
-                          {...field} 
-                          placeholder="e.g., facial-treatment"
-                          className="focus-visible:ring-gold/30" 
-                        />
-                      </FormControl>
-                      <FormDescription className="text-xs">This will be used in the URL</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                  <FormField name="nameEn" control={createForm.control} render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Service Name (English)</FormLabel>
-                      <FormControl>
-                        <Input 
-                          {...field} 
-                          placeholder="e.g., Facial Treatment"
-                          className="focus-visible:ring-gold/30" 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                  <FormField name="price" control={createForm.control} render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Price (€)</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="number" 
-                          {...field} 
-                          className="focus-visible:ring-gold/30" 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
+                  <FormField
+                    name="slug"
+                    control={createForm.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Service Slug</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="e.g., facial-treatment"
+                            className="focus-visible:ring-gold/30"
+                          />
+                        </FormControl>
+                        <FormDescription className="text-xs">
+                          This will be used in the URL
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    name="nameEn"
+                    control={createForm.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Service Name (English)</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="e.g., Facial Treatment"
+                            className="focus-visible:ring-gold/30"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    name="price"
+                    control={createForm.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Price (€)</FormLabel>
+                        <FormControl>
+                          <Input type="number" {...field} className="focus-visible:ring-gold/30" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <DialogFooter className="mt-6 gap-2">
-                    <Button type="button" variant="outline" onClick={() => setIsCreateOpen(false)}>Cancel</Button>
-                    <Button 
-                      type="submit" 
+                    <Button type="button" variant="outline" onClick={() => setIsCreateOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
                       className="bg-gold hover:bg-gold/90 text-white w-full sm:w-auto"
                       disabled={createForm.formState.isSubmitting}
                     >
@@ -191,7 +236,7 @@ export default function ServicesPage() {
                       )}
                     </Button>
                   </DialogFooter>
-                </form> 
+                </form>
               </Form>
             </DialogContent>
           </Dialog>
@@ -209,54 +254,63 @@ export default function ServicesPage() {
               <Pencil className="h-5 w-5" />
               Edit Service
             </DialogTitle>
-            <DialogDescription>
-              Update the service details using the form below.
-            </DialogDescription>
+            <DialogDescription>Update the service details using the form below.</DialogDescription>
           </DialogHeader>
           <Form {...editForm}>
             <form onSubmit={editForm.handleSubmit(onEdit)} className="space-y-4 py-2">
-              <FormField name="slug" control={editForm.control} render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Service Slug</FormLabel>
-                  <FormControl>
-                    <Input 
-                      {...field} 
-                      className="focus-visible:ring-gold/30" 
-                    />
-                  </FormControl>
-                  <FormDescription className="text-xs">This will be used in the URL</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )} />
-              <FormField name="nameEn" control={editForm.control} render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Service Name (English)</FormLabel>
-                  <FormControl>
-                    <Input 
-                      {...field} 
-                      className="focus-visible:ring-gold/30" 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
-              <FormField name="price" control={editForm.control} render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Price (€)</FormLabel>
-                  <FormControl>
-                    <Input 
-                      type="number" 
-                      {...field} 
-                      className="focus-visible:ring-gold/30" 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
+              <FormField
+                name="slug"
+                control={editForm.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Service Slug</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="focus-visible:ring-gold/30" />
+                    </FormControl>
+                    <FormDescription className="text-xs">
+                      This will be used in the URL
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="nameEn"
+                control={editForm.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Service Name (English)</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="focus-visible:ring-gold/30" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="price"
+                control={editForm.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Price (€)</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} className="focus-visible:ring-gold/30" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <DialogFooter className="mt-6 gap-2">
-                <Button type="button" variant="outline" onClick={() => setIsEditOpen(false)} className="w-full sm:w-auto">Cancel</Button>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsEditOpen(false)}
+                  className="w-full sm:w-auto"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
                   className="bg-gold hover:bg-gold/90 text-white w-full sm:w-auto"
                   disabled={editForm.formState.isSubmitting}
                 >
@@ -294,7 +348,9 @@ export default function ServicesPage() {
                   <TableCell colSpan={5} className="h-24 text-center">
                     <div className="flex justify-center items-center h-full">
                       <Loader2 className="h-6 w-6 text-gold animate-spin" />
-                      <span className="ml-2 text-sm text-muted-foreground">Loading services...</span>
+                      <span className="ml-2 text-sm text-muted-foreground">
+                        Loading services...
+                      </span>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -304,9 +360,9 @@ export default function ServicesPage() {
                     <div className="flex flex-col items-center justify-center text-sm text-muted-foreground">
                       <Package className="h-8 w-8 text-muted-foreground/40 mb-2" />
                       {searchTerm ? 'No services match your search.' : 'No services found.'}
-                      <Button 
-                        variant="link" 
-                        className="mt-2 text-gold hover:text-gold-dark" 
+                      <Button
+                        variant="link"
+                        className="mt-2 text-gold hover:text-gold-dark"
                         onClick={() => setIsCreateOpen(true)}
                       >
                         Add your first service
@@ -318,22 +374,22 @@ export default function ServicesPage() {
                 filteredServices.map(service => (
                   <TableRow key={service.id} className="group">
                     <TableCell className="py-3 font-medium">{service.id}</TableCell>
-                    <TableCell className="hidden md:table-cell py-3">                       
+                    <TableCell className="hidden md:table-cell py-3">
                       <span className="text-muted-foreground">{service.slug}</span>
                     </TableCell>
                     <TableCell className="py-3 font-medium">{service.nameEn}</TableCell>
                     <TableCell className="py-3 text-right">€{service.price}</TableCell>
                     <TableCell className="py-3">
                       <div className="flex justify-end gap-1">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
+                        <Button
+                          variant="ghost"
+                          size="sm"
                           onClick={() => {
                             setCurrent(service);
                             editForm.reset({
                               slug: service.slug,
                               nameEn: service.nameEn,
-                              price: service.price
+                              price: service.price,
                             });
                             setIsEditOpen(true);
                           }}
@@ -341,18 +397,26 @@ export default function ServicesPage() {
                         >
                           <Pencil className="h-4 w-4 text-gold-dark" />
                         </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
+                        <Button
+                          variant="ghost"
+                          size="sm"
                           className="h-8 w-8 p-0 opacity-70 group-hover:opacity-100"
                           onClick={async () => {
                             if (!confirm('Are you sure you want to delete this service?')) return;
                             try {
                               await fetchAdminAPI(`services/${service.id}`, { method: 'DELETE' });
                               setServices(prev => prev.filter(item => item.id !== service.id));
-                              toast({ title: 'Success', description: 'Service has been removed', className: 'bg-green-50 border-green-200 text-green-800' });
+                              toast({
+                                title: 'Success',
+                                description: 'Service has been removed',
+                                className: 'bg-green-50 border-green-200 text-green-800',
+                              });
                             } catch {
-                              toast({ title: 'Error', description: 'Failed to delete service', variant: 'destructive' });
+                              toast({
+                                title: 'Error',
+                                description: 'Failed to delete service',
+                                variant: 'destructive',
+                              });
                             }
                           }}
                         >
@@ -363,9 +427,9 @@ export default function ServicesPage() {
                   </TableRow>
                 ))
               )}
-              </TableBody>
-            </Table>
-          </div>
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );

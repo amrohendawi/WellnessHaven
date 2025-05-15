@@ -7,24 +7,28 @@ A modern, multilingual website for the Dubai Rose women-only beauty center featu
 ## 🌟 Features
 
 ### 🌐 Multilingual Support
+
 - Full support for English, Arabic, German, and Turkish
 - Right-to-left (RTL) layout for Arabic
 - Language-specific fonts and styling
 - Seamless language switching with content persistence
 
 ### 💅 Service Showcase
+
 - Categorized display of beauty services (facial treatments, laser treatments, etc.)
 - Service filtering by category
 - Detailed service pages with benefits and procedure information
 - Image galleries for each service
 
 ### 👑 VIP Membership System
+
 - Gold and Silver membership tiers
 - Membership verification and discount application
 - Exclusive member benefits display
 - Membership status validation
 
 ### 📅 Appointment Booking
+
 - Multi-step booking process
 - Service selection with filtering
 - Date and time selection
@@ -32,12 +36,14 @@ A modern, multilingual website for the Dubai Rose women-only beauty center featu
 - Database storage for appointment management
 
 ### 📱 Responsive Design
+
 - Mobile-first approach
 - Tablet and desktop optimized layouts
 - Touch-friendly interface elements
 - Adaptive content presentation
 
 ### 🛠️ Admin Features
+
 - Secure authentication
 - Service management (add, edit, delete)
 - Appointment management (view, status updates)
@@ -60,6 +66,7 @@ The data flow diagram illustrates how user interactions flow through the applica
 ## 🛠️ Technologies Used
 
 ### Frontend
+
 - **React** - UI library
 - **TypeScript** - Type safety
 - **Wouter** - Lightweight routing
@@ -72,6 +79,7 @@ The data flow diagram illustrates how user interactions flow through the applica
 - **react-icons** - Icon library
 
 ### Backend
+
 - **Node.js** - JavaScript runtime
 - **Express** - Web framework
 - **Drizzle ORM** - Database toolkit
@@ -80,6 +88,7 @@ The data flow diagram illustrates how user interactions flow through the applica
 - **TypeScript** - Type safety
 
 ### Development Tools
+
 - **Vite** - Build tool and development server
 - **tsx** - TypeScript execution
 - **ESLint** - Code linting
@@ -135,39 +144,46 @@ The database schema diagram shows the structure of the PostgreSQL database table
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js (v18+)
 - PostgreSQL database
 
 ### Installation
 
 1. Clone the repository
+
 ```bash
 git clone https://github.com/yourusername/dubai-rose.git
 cd dubai-rose
 ```
 
 2. Install dependencies
+
 ```bash
 npm install
 ```
 
 3. Set up environment variables
-Create a `.env` file in the root directory and add:
+   Create a `.env` file in the root directory and add:
+
 ```
 DATABASE_URL=postgresql://username:password@localhost:5432/dubai_rose
 ```
 
 4. Set up the database
+
 ```bash
 npm run db:push
 ```
 
 5. Seed the database with initial data
+
 ```bash
 npm run seed
 ```
 
 6. Start the development server
+
 ```bash
 npm run dev
 ```

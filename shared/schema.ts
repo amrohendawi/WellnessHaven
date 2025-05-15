@@ -1,102 +1,102 @@
-import { pgTable, text, serial, integer, boolean, timestamp, json } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import { pgTable, text, serial, integer, boolean, timestamp, json } from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
+import { z } from 'zod';
 
 // Service groups/categories
-export const serviceGroups = pgTable("service_groups", {
-  id: serial("id").primaryKey(),
-  slug: text("slug").notNull().unique(),
-  nameEn: text("name_en").notNull(),
-  nameAr: text("name_ar").notNull(),
-  nameDe: text("name_de").notNull(),
-  nameTr: text("name_tr").notNull(),
-  descriptionEn: text("description_en"),
-  descriptionAr: text("description_ar"),
-  descriptionDe: text("description_de"),
-  descriptionTr: text("description_tr"),
-  imageUrl: text("image_url"),
-  displayOrder: integer("display_order").default(0),
-  isActive: boolean("is_active").default(true),
-  createdAt: timestamp("created_at").defaultNow()
+export const serviceGroups = pgTable('service_groups', {
+  id: serial('id').primaryKey(),
+  slug: text('slug').notNull().unique(),
+  nameEn: text('name_en').notNull(),
+  nameAr: text('name_ar').notNull(),
+  nameDe: text('name_de').notNull(),
+  nameTr: text('name_tr').notNull(),
+  descriptionEn: text('description_en'),
+  descriptionAr: text('description_ar'),
+  descriptionDe: text('description_de'),
+  descriptionTr: text('description_tr'),
+  imageUrl: text('image_url'),
+  displayOrder: integer('display_order').default(0),
+  isActive: boolean('is_active').default(true),
+  createdAt: timestamp('created_at').defaultNow(),
 });
 
 // User accounts (for admin access)
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
-  isAdmin: boolean("is_admin").default(false),
-  createdAt: timestamp("created_at").defaultNow()
+export const users = pgTable('users', {
+  id: serial('id').primaryKey(),
+  username: text('username').notNull().unique(),
+  password: text('password').notNull(),
+  isAdmin: boolean('is_admin').default(false),
+  createdAt: timestamp('created_at').defaultNow(),
 });
 
 // Services offered by Dubai Rose
-export const services = pgTable("services", {
-  id: serial("id").primaryKey(),
-  slug: text("slug").notNull().unique(),
-  category: text("category").notNull(), // This is the slug of the service group
-  groupId: integer("group_id").references(() => serviceGroups.id),
-  nameEn: text("name_en").notNull(),
-  nameAr: text("name_ar").notNull(),
-  nameDe: text("name_de").notNull(),
-  nameTr: text("name_tr").notNull(),
-  descriptionEn: text("description_en").notNull(),
-  descriptionAr: text("description_ar").notNull(),
-  descriptionDe: text("description_de").notNull(),
-  descriptionTr: text("description_tr").notNull(),
-  longDescriptionEn: text("long_description_en"),
-  longDescriptionAr: text("long_description_ar"),
-  longDescriptionDe: text("long_description_de"),
-  longDescriptionTr: text("long_description_tr"),
-  duration: integer("duration").notNull(),
-  price: integer("price").notNull(),
-  imageUrl: text("image_url").notNull(),
-  imageLarge: text("image_large"),
-  isActive: boolean("is_active").default(true),
-  createdAt: timestamp("created_at").defaultNow()
+export const services = pgTable('services', {
+  id: serial('id').primaryKey(),
+  slug: text('slug').notNull().unique(),
+  category: text('category').notNull(), // This is the slug of the service group
+  groupId: integer('group_id').references(() => serviceGroups.id),
+  nameEn: text('name_en').notNull(),
+  nameAr: text('name_ar').notNull(),
+  nameDe: text('name_de').notNull(),
+  nameTr: text('name_tr').notNull(),
+  descriptionEn: text('description_en').notNull(),
+  descriptionAr: text('description_ar').notNull(),
+  descriptionDe: text('description_de').notNull(),
+  descriptionTr: text('description_tr').notNull(),
+  longDescriptionEn: text('long_description_en'),
+  longDescriptionAr: text('long_description_ar'),
+  longDescriptionDe: text('long_description_de'),
+  longDescriptionTr: text('long_description_tr'),
+  duration: integer('duration').notNull(),
+  price: integer('price').notNull(),
+  imageUrl: text('image_url').notNull(),
+  imageLarge: text('image_large'),
+  isActive: boolean('is_active').default(true),
+  createdAt: timestamp('created_at').defaultNow(),
 });
 
 // VIP Memberships
-export const memberships = pgTable("memberships", {
-  id: serial("id").primaryKey(),
-  membershipNumber: text("membership_number").notNull().unique(),
-  name: text("name").notNull(),
-  email: text("email").notNull(),
-  phone: text("phone").notNull(),
-  type: text("type").notNull(), // 'gold' or 'silver'
-  createdAt: timestamp("created_at").defaultNow(),
-  expiresAt: timestamp("expires_at")
+export const memberships = pgTable('memberships', {
+  id: serial('id').primaryKey(),
+  membershipNumber: text('membership_number').notNull().unique(),
+  name: text('name').notNull(),
+  email: text('email').notNull(),
+  phone: text('phone').notNull(),
+  type: text('type').notNull(), // 'gold' or 'silver'
+  createdAt: timestamp('created_at').defaultNow(),
+  expiresAt: timestamp('expires_at'),
 });
 
 // Bookings/Appointments
-export const bookings = pgTable("bookings", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull(),
-  phone: text("phone").notNull(),
-  service: integer("service").notNull(), // Using service column name as in the database
-  date: text("date").notNull(),
-  time: text("time").notNull(),
-  vipNumber: text("vip_number"),
-  status: text("status").notNull().default("pending"), // pending, confirmed, completed, cancelled
-  createdAt: timestamp("created_at").defaultNow()
+export const bookings = pgTable('bookings', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  email: text('email').notNull(),
+  phone: text('phone').notNull(),
+  service: integer('service').notNull(), // Using service column name as in the database
+  date: text('date').notNull(),
+  time: text('time').notNull(),
+  vipNumber: text('vip_number'),
+  status: text('status').notNull().default('pending'), // pending, confirmed, completed, cancelled
+  createdAt: timestamp('created_at').defaultNow(),
 });
 
 // Contact form submissions
-export const contacts = pgTable("contacts", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull(),
-  phone: text("phone").notNull(),
-  message: text("message").notNull(),
-  createdAt: timestamp("created_at").defaultNow()
+export const contacts = pgTable('contacts', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  email: text('email').notNull(),
+  phone: text('phone').notNull(),
+  message: text('message').notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
 });
 
 // Blocked time slots for availability management
-export const blockedTimeSlots = pgTable("blocked_time_slots", {
-  id: serial("id").primaryKey(),
-  date: text("date").notNull(),
-  time: text("time").notNull(),
-  createdAt: timestamp("created_at").defaultNow()
+export const blockedTimeSlots = pgTable('blocked_time_slots', {
+  id: serial('id').primaryKey(),
+  date: text('date').notNull(),
+  time: text('time').notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
 });
 
 // Insert schemas
@@ -112,13 +112,13 @@ export const insertServiceGroupSchema = createInsertSchema(serviceGroups).pick({
   descriptionTr: true,
   imageUrl: true,
   displayOrder: true,
-  isActive: true
+  isActive: true,
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
-  isAdmin: true
+  isAdmin: true,
 });
 
 export const insertServiceSchema = createInsertSchema(services).pick({
@@ -140,7 +140,7 @@ export const insertServiceSchema = createInsertSchema(services).pick({
   price: true,
   imageUrl: true,
   imageLarge: true,
-  isActive: true
+  isActive: true,
 });
 
 export const insertMembershipSchema = createInsertSchema(memberships).pick({
@@ -149,7 +149,7 @@ export const insertMembershipSchema = createInsertSchema(memberships).pick({
   email: true,
   phone: true,
   type: true,
-  expiresAt: true
+  expiresAt: true,
 });
 
 export const insertBookingSchema = createInsertSchema(bookings).pick({
@@ -160,19 +160,19 @@ export const insertBookingSchema = createInsertSchema(bookings).pick({
   date: true,
   time: true,
   vipNumber: true,
-  status: true
+  status: true,
 });
 
 export const insertContactSchema = createInsertSchema(contacts).pick({
   name: true,
   email: true,
   phone: true,
-  message: true
+  message: true,
 });
 
 export const insertBlockedTimeSlotSchema = createInsertSchema(blockedTimeSlots).pick({
   date: true,
-  time: true
+  time: true,
 });
 
 // Types
