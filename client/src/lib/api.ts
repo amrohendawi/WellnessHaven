@@ -1,5 +1,15 @@
 import { ServiceDisplay, ServiceGroupDisplay } from '@shared/schema';
 
+// Extend Window interface to include Clerk's properties
+declare global {
+  interface Window {
+    __clerk_frontend_api?: {
+      getToken: (options?: { template?: string }) => Promise<string>;
+      [key: string]: any;
+    };
+  }
+}
+
 // API endpoints
 const API_BASE_URL = '/api'; // Always use relative API path to avoid CORS
 
@@ -148,8 +158,65 @@ export async function fetchAdminAPI<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
-  // Remove any leading slash from the endpoint
-  const trimmedEndpoint = endpoint.startsWith('/') ? endpoint.substring(1) : endpoint;
-  // Construct the proper admin API path - '/api' is already added by fetchAPI
-  return fetchAPI<T>(`/admin/${trimmedEndpoint}`, options);
+  try {
+    // Remove any leading slash from the endpoint
+    const trimmedEndpoint = endpoint.startsWith('/') ? endpoint.substring(1) : endpoint;
+    
+    // Make sure we have the right headers for admin requests
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      ...(options.headers as Record<string, string> || {}),
+    };
+    
+    // Get auth token from Clerk if it's available in the window object
+    if (window.__clerk_frontend_api && typeof window.__clerk_frontend_api.getToken === 'function') {
+      try {
+        // This tries to get the session token from Clerk's internal API
+        const token = await window.__clerk_frontend_api.getToken({ template: 'sesame' });
+        if (token) {
+          // Add the token to our headers
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+      } catch (tokenError) {
+        console.warn('Failed to get auth token:', tokenError);
+        // Continue without token, the server will handle unauthorized requests
+      }
+    }
+    
+    // Use absolute URLs in production to ensure we hit the right API domain
+    let fullEndpoint = `/admin/${trimmedEndpoint}`;
+    
+    // In production, determine if we need to use the absolute API URL
+    if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
+      // Extract the project name from the current domain
+      const projectName = window.location.hostname.split('.')[0];
+      // Construct the API domain (adjust this if your API subdomain follows a different pattern)
+      const apiDomain = `${projectName}-spa.vercel.app`; 
+      const protocol = window.location.protocol;
+      
+      // Use absolute URL with the API domain
+      fullEndpoint = `${protocol}//${apiDomain}/api/admin/${trimmedEndpoint}`;
+      
+      // When using absolute URLs, we make the request directly (not via fetchAPI)
+      const response = await fetch(fullEndpoint, {
+        ...options,
+        headers,
+        credentials: 'include', // This ensures cookies are sent with the request
+      });
+      
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`API error (${response.status}): ${error}`);
+      }
+      
+      return await response.json();
+    }
+    
+    // For local development, use the relative path with fetchAPI
+    return fetchAPI<T>(fullEndpoint, { ...options, headers });
+  } catch (error) {
+    console.error(`Admin API fetch error (${endpoint}):`, error);
+    throw error;
+  }
 }
