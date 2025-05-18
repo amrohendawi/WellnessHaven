@@ -42,7 +42,7 @@ const ServicesSection = () => {
   const categories = useMemo(() => {
     if (!allServices) return [];
 
-    const uniqueCategories = [...new Set(allServices.map(s => s.category))];
+    const uniqueCategories = Array.from(new Set(allServices.map(s => s.category)));
     return uniqueCategories.map(category => ({
       id: category,
       name: {

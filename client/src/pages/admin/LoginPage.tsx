@@ -99,7 +99,10 @@ export default function LoginPage() {
         <div className="mt-6 text-center text-sm text-gray-500">
           <p>Don't have an account? Contact the administrator.</p>
           <Link to="/" className="mt-4 inline-block text-gold hover:text-gold/80">
-            <Button variant="outline" className="mt-2 border-gold text-gold hover:bg-gold/10">
+            <Button 
+              variant="outline" 
+              className="mt-2 border-gold text-gold hover:bg-gold/10"
+            >
               ← Back to Website
             </Button>
           </Link>

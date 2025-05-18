@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Link } from 'react-router-dom';
 import { Plus, Search } from 'lucide-react';
 
 interface ServicesPageHeaderProps {
@@ -33,6 +34,11 @@ export const ServicesPageHeader: React.FC<ServicesPageHeaderProps> = ({
               className="pl-10 pr-4 py-2 h-10 w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 focus-visible:ring-gold/30"
             />
           </div>
+          <Link to="/" className="w-full sm:w-auto">
+            <Button variant="outline" className="h-10 w-full sm:w-auto">
+              Home
+            </Button>
+          </Link>
           <Button
             onClick={onAddNewService}
             className="bg-gold hover:bg-gold/90 text-black h-10 min-w-[160px] flex items-center justify-center gap-2 w-full sm:w-auto"

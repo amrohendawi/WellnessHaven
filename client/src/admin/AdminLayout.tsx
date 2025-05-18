@@ -190,10 +190,12 @@ export default function AdminLayout() {
           <Menu className="h-5 w-5 text-gold" />
         </Button>
 
-        <h2 className="text-lg font-display font-bold">
-          <span className="text-gold">Dubai</span>
-          <span className="text-pink-dark">Rose</span>
-        </h2>
+        <Link to="/" className="no-underline">
+          <h2 className="text-lg font-display font-bold">
+            <span className="text-gold">Dubai</span>
+            <span className="text-pink-dark">Rose</span>
+          </h2>
+        </Link>
 
         <div className="ml-auto">
           {user ? (
@@ -228,10 +230,12 @@ export default function AdminLayout() {
         {/* Sidebar header with logo */}
         <div className="p-4 flex items-center justify-between border-b border-pink/5">
           {(!collapsed || mobileOpen) && (
-            <h2 className="text-xl font-display font-bold">
-              <span className="text-gold">Dubai</span>
-              <span className="text-pink-dark">Rose</span>
-            </h2>
+            <Link to="/" className="no-underline">
+              <h2 className="text-xl font-display font-bold">
+                <span className="text-gold">Dubai</span>
+                <span className="text-pink-dark">Rose</span>
+              </h2>
+            </Link>
           )}
 
           {/* Mobile close button */}

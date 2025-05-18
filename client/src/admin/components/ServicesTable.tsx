@@ -62,21 +62,15 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {services.map(service => (
+          {services.map((service) => (
             <TableRow key={service.id}>
               <TableCell className="font-medium">{service.nameEn}</TableCell>
               <TableCell>{service.category}</TableCell>
               <TableCell className="text-right">AED {service.price.toFixed(2)}</TableCell>
               <TableCell className="text-center">{service.duration} min</TableCell>
               <TableCell className="text-center">
-                <Badge
-                  variant={service.isActive ? 'default' : 'outline'}
-                  className={
-                    service.isActive
-                      ? 'bg-green-500 text-white hover:bg-green-600'
-                      : 'border-destructive text-destructive'
-                  }
-                >
+                <Badge variant={service.isActive ? 'default' : 'outline'} 
+                       className={service.isActive ? 'bg-green-500 text-white hover:bg-green-600' : 'border-destructive text-destructive'}>
                   {service.isActive ? 'Active' : 'Inactive'}
                 </Badge>
               </TableCell>
