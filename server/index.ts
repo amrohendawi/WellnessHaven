@@ -1,14 +1,36 @@
 import 'dotenv/config'; // This loads the .env file at the start
 import express, { type Request, Response, NextFunction } from 'express';
 import { createServer } from 'http';
-import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// ES module equivalent for __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 import adminRoutes from './adminRoutes';
+import adminAuthRoutes from './adminAuthRoutes';
+import adminProfileRoutes from './adminProfileRoutes';
 import { registerRoutes } from './routes';
 import { setupVite, serveStatic, log } from './vite';
+import { requireAuth, AuthRequest } from './auth';
 
 const app = express();
+
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? ['https://dubai-rose.vercel.app', 'https://dubai-rose-spa.vercel.app']
+        : 'http://localhost:3000',
+    credentials: true,
+  })
+);
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -44,21 +66,25 @@ app.use((req, res, next) => {
   await registerRoutes(app);
   const server = createServer(app);
 
-  // Protect admin routes: require auth and restrict to single admin user
+  // Authentication routes
+  app.use('/api/auth', adminAuthRoutes);
+
+  // Serve uploaded files
+  app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+  // Protected admin routes
   app.use(
     '/api/admin',
-    ClerkExpressRequireAuth(),
+    requireAuth,
     (req: Request, res: Response, next: NextFunction) => {
-      // ClerkExpressRequireAuth populates req.auth.userId
-      const currentUser = (req as any).auth?.userId;
-      const allowed = process.env.CLERK_ADMIN_USER_ID;
-      if (!currentUser || currentUser !== allowed) {
-        return res.status(403).json({ message: 'Forbidden' });
-      }
+      // Additional admin role check if needed
       next();
     },
     adminRoutes
   );
+
+  // Admin profile routes
+  app.use('/api/admin', requireAuth, adminProfileRoutes);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;

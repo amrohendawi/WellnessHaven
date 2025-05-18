@@ -618,41 +618,6 @@ export async function fetchAdminAPI<T>(
       ...((fetchOptions.headers as Record<string, string>) || {}),
     };
 
-    // Get authentication token using a more robust approach
-    if (typeof window !== 'undefined') {
-      try {
-        // Handle both possible Clerk implementations
-        if (window.Clerk && window.Clerk.session) {
-          logger.debug('Using Clerk global for authentication');
-          const token = await window.Clerk.session.getToken();
-
-          if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-            logger.debug('Auth token successfully retrieved');
-          } else {
-            logger.warn('Token is null or empty');
-          }
-        }
-        // Legacy approach as fallback
-        else if (window.__clerk_frontend_api) {
-          logger.debug('Using __clerk_frontend_api for authentication');
-          try {
-            const token = await window.__clerk_frontend_api.getToken();
-            if (token) {
-              headers['Authorization'] = `Bearer ${token}`;
-              logger.debug('Auth token successfully retrieved via legacy method');
-            }
-          } catch (clerkError) {
-            logger.warn('Error getting token from __clerk_frontend_api', clerkError);
-          }
-        } else {
-          logger.warn('No Clerk authentication provider found - user may not be logged in');
-        }
-      } catch (err) {
-        logger.error('Error getting auth token', err);
-      }
-    }
-
     // Handle cross-origin API URLs based on the deployment configuration
     // This addresses the issue identified in the CORS memory where admin API calls
     // needed to use absolute URLs in production environments
@@ -679,7 +644,6 @@ export async function fetchAdminAPI<T>(
 
     // Debug logging for API requests
     logger.debug(`Admin API request to: ${apiUrl}`);
-    logger.debug(`Auth header present: ${headers['Authorization'] ? 'Yes' : 'No'}`);
 
     try {
       // Make a direct fetch call with proper CORS settings
@@ -726,24 +690,8 @@ export async function fetchAdminAPI<T>(
         const apiError = new ApiError(errorMessage, response.status, endpoint, errorDetails);
 
         // Handle retry for specific status codes
-        if (retryCount > 0 && [401, 403, 408, 429, 500, 502, 503, 504].includes(response.status)) {
+        if (retryCount > 0 && [408, 429, 500, 502, 503, 504].includes(response.status)) {
           logger.warn(`Retrying failed admin request to ${endpoint}. Attempts left: ${retryCount}`);
-
-          // For auth errors, refresh token before retry
-          if ([401, 403].includes(response.status) && typeof window !== 'undefined') {
-            logger.info('Authentication error, refreshing token before retry');
-            try {
-              if (window.Clerk && window.Clerk.session) {
-                // Force token refresh
-                await window.Clerk.session.getToken({
-                  template: 'dubai-rose-api',
-                  skipCache: true,
-                });
-              }
-            } catch (tokenError) {
-              logger.warn('Failed to refresh token', tokenError);
-            }
-          }
 
           // Wait before retrying
           await new Promise(resolve => setTimeout(resolve, retryDelay));
@@ -754,6 +702,18 @@ export async function fetchAdminAPI<T>(
             retry: retryCount - 1,
             retryDelay: retryDelay * 1.5, // Exponential backoff
           });
+        }
+
+        // Handle authentication errors
+        if (response.status === 401) {
+          // Clear the auth state and redirect to login
+          if (typeof window !== 'undefined') {
+            // Clear any auth state
+            localStorage.removeItem('authState');
+
+            // Redirect to login page
+            window.location.href = '/admin/login';
+          }
         }
 
         throw apiError;
@@ -776,10 +736,6 @@ export async function fetchAdminAPI<T>(
               'Received HTML instead of JSON suggests a routing issue or authentication failure. ' +
                 'This typically happens when the API gateway serves the frontend instead of the API.'
             );
-          }
-
-          if (!headers['Authorization']) {
-            logger.error('No authentication token was found. User may not be logged in.');
           }
         }
       }

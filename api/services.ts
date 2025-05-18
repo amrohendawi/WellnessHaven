@@ -3,17 +3,7 @@ import { config } from 'dotenv';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from 'ws';
-import {
-  pgTable,
-  serial,
-  varchar,
-  text,
-  boolean,
-  integer,
-  timestamp,
-  uniqueIndex,
-  index,
-} from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, text, boolean, integer } from 'drizzle-orm/pg-core';
 
 // Embedded minimal schema for this API route
 const services = pgTable('services', {
@@ -92,30 +82,30 @@ function transformService(service: any) {
 export default async function handler(request: VercelRequest, response: VercelResponse) {
   // Handle CORS
   const origin = request.headers.origin;
-  
+
   // Allow these origins
   const allowedOrigins = [
     'https://dubai-rose.vercel.app',
     'http://localhost:3000',
-    'http://localhost:5173'
+    'http://localhost:5173',
   ];
-  
+
   // Allow Vercel preview URLs
   const isVercelPreview = origin && origin.endsWith('vercel.app');
-  
+
   if (origin && (allowedOrigins.includes(origin) || isVercelPreview)) {
     response.setHeader('Access-Control-Allow-Origin', origin);
   }
-  
+
   // Set CORS headers
   response.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
+
   // Handle preflight requests
   if (request.method === 'OPTIONS') {
     return response.status(200).end();
   }
-  
+
   // Ensure database URL is configured
   if (!process.env.DATABASE_URL) {
     console.error('Missing DATABASE_URL environment variable');

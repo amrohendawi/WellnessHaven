@@ -16,7 +16,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose,
   DialogFooter,
   DialogDescription,
 } from '@/components/ui/dialog';
@@ -30,13 +29,10 @@ import {
   FormDescription,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Package, Plus, Pencil, Trash2, Search, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 interface Service {
   id: number;
@@ -116,11 +112,11 @@ export default function ServicesPage() {
   // Filter services based on search term
   const filteredServices = searchTerm
     ? services.filter(
-        s =>
-          s.nameEn.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          s.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          s.id.toString().includes(searchTerm)
-      )
+      s =>
+        s.nameEn.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        s.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        s.id.toString().includes(searchTerm)
+    )
     : services;
 
   return (

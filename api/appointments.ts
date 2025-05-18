@@ -3,16 +3,7 @@ import { config } from 'dotenv';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from 'ws';
-import {
-  pgTable,
-  serial,
-  varchar,
-  text,
-  date,
-  time,
-  integer,
-  timestamp,
-} from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, date, time, integer, timestamp } from 'drizzle-orm/pg-core';
 
 // Embedded minimal schema for this API route
 const bookings = pgTable('bookings', {
