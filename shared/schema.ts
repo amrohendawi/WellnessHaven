@@ -197,6 +197,84 @@ export type Contact = typeof contacts.$inferSelect;
 export type InsertBlockedTimeSlot = z.infer<typeof insertBlockedTimeSlotSchema>;
 export type BlockedTimeSlot = typeof blockedTimeSlots.$inferSelect;
 
+// Admin Service Management Types and Schemas
+// Interface for service data as used in the admin panel forms and API responses
+export interface AdminService {
+  id: number;
+  slug: string;
+  category: string; // This is the slug of the service group
+  groupId: number | null;
+  nameEn: string;
+  nameAr: string;
+  nameDe: string;
+  nameTr: string;
+  descriptionEn: string;
+  descriptionAr: string;
+  descriptionDe: string;
+  descriptionTr: string;
+  longDescriptionEn: string | null;
+  longDescriptionAr: string | null;
+  longDescriptionDe: string | null;
+  longDescriptionTr: string | null;
+  duration: number;
+  price: number;
+  imageUrl: string;
+  imageLarge: string | null;
+  isActive: boolean;
+  createdAt: string; // Assuming API returns it as a string for admin display
+}
+
+// Zod schema for validating the admin service form
+export const AdminServiceFormSchema = z.object({
+  slug: z.string().min(2, 'Slug must be at least 2 characters').toLowerCase(),
+  category: z.string().min(1, 'Category is required'),
+  nameEn: z.string().min(2, 'Name (English) is required'),
+  nameAr: z.string().min(2, 'Name (Arabic) is required'),
+  nameDe: z.string().min(2, 'Name (German) is required'),
+  nameTr: z.string().min(2, 'Name (Turkish) is required'),
+  descriptionEn: z.string().min(10, 'Description (English) must be at least 10 characters'),
+  descriptionAr: z.string().min(10, 'Description (Arabic) must be at least 10 characters'),
+  descriptionDe: z.string().min(10, 'Description (German) must be at least 10 characters'),
+  descriptionTr: z.string().min(10, 'Description (Turkish) must be at least 10 characters'),
+  longDescriptionEn: z.string().optional(),
+  longDescriptionAr: z.string().optional(),
+  longDescriptionDe: z.string().optional(),
+  longDescriptionTr: z.string().optional(),
+  duration: z.number().min(1, 'Duration must be at least 1 minute'),
+  price: z.number().min(0, 'Price must be a positive number'),
+  imageUrl: z.string().url('Please enter a valid URL'),
+  imageLarge: z.string().url('Please enter a valid URL').optional().or(z.literal('')).nullable(), // Allow empty string or null
+  isActive: z.boolean().default(true),
+  groupId: z.number().optional().nullable(),
+});
+
+// Type inferred from the AdminServiceFormSchema
+export type AdminServiceFormValues = z.infer<typeof AdminServiceFormSchema>;
+
+// Default values for the admin service form
+export const defaultAdminServiceFormValues: Partial<AdminServiceFormValues> = {
+  slug: '',
+  category: '',
+  nameEn: '',
+  nameAr: '',
+  nameDe: '',
+  nameTr: '',
+  descriptionEn: '',
+  descriptionAr: '',
+  descriptionDe: '',
+  descriptionTr: '',
+  longDescriptionEn: '',
+  longDescriptionAr: '',
+  longDescriptionDe: '',
+  longDescriptionTr: '',
+  duration: 30,
+  price: 0,
+  imageUrl: '',
+  imageLarge: '',
+  isActive: true,
+  groupId: null,
+};
+
 // Service group representation for frontend
 export interface ServiceGroupDisplay {
   id: number;
