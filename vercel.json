@@ -15,6 +15,7 @@
     }
   ],
   "rewrites": [
+    { "source": "/api/auth/(.*)", "destination": "/api/auth/$1" },
     { "source": "/api/admin/(.*)", "destination": "/api/admin/$1", "has": [{ "type": "header", "key": "accept", "value": "application/json" }] },
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/admin/(.*)", "destination": "/index.html" },
