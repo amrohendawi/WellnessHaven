@@ -73,11 +73,11 @@ const Header = () => {
             </a>
 
             {/* Admin Login */}
-            <Link href="/admin">
+            <a href="/admin">
               <Button variant="outline" size="sm">
                 Admin
               </Button>
-            </Link>
+            </a>
           </nav>
 
           {/* Mobile Navigation Toggle */}
@@ -139,11 +139,11 @@ const Header = () => {
           </a>
 
           {/* Admin Login */}
-          <Link href="/admin" onClick={closeMobileMenu} className="block mx-4 mb-2 text-center">
+          <a href="/admin" onClick={closeMobileMenu} className="block mx-4 mb-2 text-center">
             <Button variant="outline" size="sm" className="w-full">
               Admin
             </Button>
-          </Link>
+          </a>
         </div>
       </div>
     </header>

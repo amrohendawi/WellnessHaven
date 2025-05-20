@@ -51,6 +51,9 @@ function AppRouter() {
       <Route path="/" element={<Home />} />
       <Route path="/services/:slug" element={<ServiceDetails />} />
 
+      {/* Direct /admin access */}
+      <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+
       {/* Auth Routes */}
       <Route path="/admin/login" element={<LoginPage />} />
 

@@ -624,18 +624,22 @@ export async function fetchAdminAPI<T>(
     let apiUrl: string;
 
     if (environment.isProduction()) {
-      // In production, ensure we use absolute URLs to the API domain
+      // In production, always use absolute URLs to the API domain
       // This resolves the cross-origin issues identified in past deployments
       const host = typeof window !== 'undefined' ? window.location.host : '';
 
       if (host.includes('dubai-rose.vercel.app')) {
-        // Handle frontend domain pointing to backend domain
-        apiUrl = `https://dubai-rose.vercel.app/api/admin/${trimmedEndpoint}`;
-        logger.debug(`Using absolute API URL for cross-origin request: ${apiUrl}`);
-      } else {
-        // Handle same-domain scenario
+        // Handle frontend domain - important to use the SPA API domain
+        apiUrl = `https://dubai-rose-spa.vercel.app/api/admin/${trimmedEndpoint}`;
+        logger.debug(`Using SPA absolute API URL for cross-origin request: ${apiUrl}`);
+      } else if (host.includes('dubai-rose-spa.vercel.app')) {
+        // Already on the API domain
         apiUrl = `${API_BASE_URL}/admin/${trimmedEndpoint}`;
-        logger.debug(`Using relative API URL: ${apiUrl}`);
+        logger.debug(`Already on API domain, using: ${apiUrl}`);
+      } else {
+        // Handle any other domain scenario
+        apiUrl = `https://dubai-rose-spa.vercel.app/api/admin/${trimmedEndpoint}`;
+        logger.debug(`Using default SPA API URL: ${apiUrl}`);
       }
     } else {
       // In development, use relative paths
