@@ -18,6 +18,7 @@ import {
   X,
   Settings,
   User,
+  FolderTree,
 } from 'lucide-react';
 
 // Import pages
@@ -89,6 +90,7 @@ export default function AdminLayout() {
     { name: 'Bookings', icon: Calendar, href: '/admin/bookings' },
     { name: 'Availability', icon: Clock, href: '/admin/availability' },
     { name: 'Services', icon: Package, href: '/admin/services' },
+    { name: 'Categories', icon: FolderTree, href: '/admin/categories' },
     { name: 'Profile', icon: User, href: '/admin/profile' },
     { name: 'Settings', icon: Settings, href: '/admin/settings' },
   ];

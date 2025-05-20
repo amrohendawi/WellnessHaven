@@ -21,6 +21,7 @@ import BookingsPage from '@/admin/BookingsPage';
 import BookingDetailPage from '@/admin/BookingDetailPage';
 import AvailabilityPage from '@/admin/AvailabilityPage';
 import ServicesPage from '@/admin/ServicesPage';
+import CategoriesPage from '@/admin/CategoriesPage';
 import ProfilePage from '@/admin/ProfilePage';
 
 // Protected Route Wrapper
@@ -72,6 +73,7 @@ function AppRouter() {
         <Route path="bookings/:id" element={<BookingDetailPage />} />
         <Route path="availability" element={<AvailabilityPage />} />
         <Route path="services" element={<ServicesPage />} />
+        <Route path="categories" element={<CategoriesPage />} />
         <Route path="profile" element={<ProfilePage />} />
       </Route>
 

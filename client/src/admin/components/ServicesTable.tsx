@@ -64,10 +64,10 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
         <TableBody>
           {services.map((service) => (
             <TableRow key={service.id}>
-              <TableCell className="font-medium">{service.nameEn}</TableCell>
-              <TableCell>{service.category}</TableCell>
-              <TableCell className="text-right">AED {service.price.toFixed(2)}</TableCell>
-              <TableCell className="text-center">{service.duration} min</TableCell>
+              <TableCell className="font-medium">{service.nameEn || 'Unnamed Service'}</TableCell>
+              <TableCell>{service.category || 'Uncategorized'}</TableCell>
+              <TableCell className="text-right">EUR {(service.price || 0).toFixed(2)}</TableCell>
+              <TableCell className="text-center">{service.duration || 0} min</TableCell>
               <TableCell className="text-center">
                 <Badge variant={service.isActive ? 'default' : 'outline'} 
                        className={service.isActive ? 'bg-green-500 text-white hover:bg-green-600' : 'border-destructive text-destructive'}>

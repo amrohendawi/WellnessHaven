@@ -40,11 +40,17 @@ export interface IStorage {
   createService(service: InsertService): Promise<Service>;
   updateService(id: number, service: Partial<InsertService>): Promise<Service | undefined>;
   deleteService(id: number): Promise<void>;
+  // Service group management for admin
+  createServiceGroup(serviceGroup: Partial<ServiceGroup>): Promise<ServiceGroup>;
+  updateServiceGroup(id: number, serviceGroup: Partial<ServiceGroup>): Promise<ServiceGroup | undefined>;
+  deleteServiceGroup(id: number): Promise<void>;
+  getServiceGroupById(id: number): Promise<ServiceGroup | undefined>;
   getBookingById(id: number): Promise<Booking | undefined>;
   updateBooking(
     id: number,
     update: Partial<InsertBooking> & { status?: string }
   ): Promise<Booking | undefined>;
+
 }
 
 export class DatabaseStorage implements IStorage {
@@ -142,6 +148,25 @@ export class DatabaseStorage implements IStorage {
   ): Promise<Booking | undefined> {
     const [booking] = await db.update(bookings).set(update).where(eq(bookings.id, id)).returning();
     return booking;
+  }
+
+  async getServiceGroupById(id: number): Promise<ServiceGroup | undefined> {
+    const [group] = await db.select().from(serviceGroups).where(eq(serviceGroups.id, id));
+    return group || undefined;
+  }
+
+  async createServiceGroup(group: Partial<ServiceGroup>): Promise<ServiceGroup> {
+    const [newGroup] = await db.insert(serviceGroups).values(group).returning();
+    return newGroup;
+  }
+
+  async updateServiceGroup(id: number, group: Partial<ServiceGroup>): Promise<ServiceGroup | undefined> {
+    const [updated] = await db.update(serviceGroups).set(group).where(eq(serviceGroups.id, id)).returning();
+    return updated;
+  }
+
+  async deleteServiceGroup(id: number): Promise<void> {
+    await db.delete(serviceGroups).where(eq(serviceGroups.id, id));
   }
 }
 
