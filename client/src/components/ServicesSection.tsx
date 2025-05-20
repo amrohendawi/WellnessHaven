@@ -134,14 +134,14 @@ const ServicesSection = () => {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !slideContainerRef.current) return;
-    const diff = startPosition - e.clientX;
+    const diff = dir === 'rtl' ? e.clientX - startPosition : startPosition - e.clientX;
     slideContainerRef.current.scrollLeft += diff;
     setStartPosition(e.clientX);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging || !slideContainerRef.current) return;
-    const diff = startPosition - e.touches[0].clientX;
+    const diff = dir === 'rtl' ? e.touches[0].clientX - startPosition : startPosition - e.touches[0].clientX;
     slideContainerRef.current.scrollLeft += diff;
     setStartPosition(e.touches[0].clientX);
   };
@@ -261,7 +261,8 @@ const ServicesSection = () => {
               className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-lg text-gold hover:bg-gold hover:text-white transition-colors duration-200 focus:outline-none"
               onClick={() => {
                 if (slideContainerRef.current) {
-                  const newPosition = currentPosition - 350;
+                  const delta = dir === 'rtl' ? 350 : -350;
+                  const newPosition = currentPosition + delta;
                   setCurrentPosition(newPosition);
                   slideContainerRef.current.scrollTo({
                     left: newPosition,
@@ -272,13 +273,14 @@ const ServicesSection = () => {
               onMouseEnter={() => setAutoScrollPaused(true)}
               onMouseLeave={() => setAutoScrollPaused(false)}
             >
-              <i className="fas fa-chevron-left"></i>
+              <i className={`fas fa-chevron-${dir === 'rtl' ? 'right' : 'left'}`}></i>
             </button>
 
             {/* Services slider container */}
             <div
               ref={slideContainerRef}
-              className="overflow-x-scroll scrollbar-none relative flex snap-x snap-mandatory py-4 px-2 -mx-2"
+              dir={dir}
+              className={`overflow-x-scroll scrollbar-none relative flex snap-x snap-mandatory py-4 px-2 -mx-2 ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}
               style={{
                 scrollBehavior: isDragging ? 'auto' : 'smooth',
                 WebkitOverflowScrolling: 'touch',
@@ -299,7 +301,8 @@ const ServicesSection = () => {
               className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-lg text-gold hover:bg-gold hover:text-white transition-colors duration-200 focus:outline-none"
               onClick={() => {
                 if (slideContainerRef.current) {
-                  const newPosition = currentPosition + 350;
+                  const delta = dir === 'rtl' ? -350 : 350;
+                  const newPosition = currentPosition + delta;
                   setCurrentPosition(newPosition);
                   slideContainerRef.current.scrollTo({
                     left: newPosition,
@@ -310,7 +313,7 @@ const ServicesSection = () => {
               onMouseEnter={() => setAutoScrollPaused(true)}
               onMouseLeave={() => setAutoScrollPaused(false)}
             >
-              <i className="fas fa-chevron-right"></i>
+              <i className={`fas fa-chevron-${dir === 'rtl' ? 'left' : 'right'}`}></i>
             </button>
           </div>
         )}
