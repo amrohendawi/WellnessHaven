@@ -151,8 +151,8 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
     const fieldsToValidate = getFieldsForStep(currentStep);
     const isValid = await form.trigger(fieldsToValidate as any);
     
-    if (isValid) {
-      setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
+    if (isValid && currentStep < steps.length - 1) {
+      setCurrentStep(prev => prev + 1);
     }
   };
 
@@ -179,9 +179,41 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
     }
   };
 
-  // Handle final form submission
+  // Simple form submission handler
   const handleFormSubmit = async (values: AdminServiceFormValues) => {
-    await onSubmit(values);
+    try {
+      console.log("Form submitted with values:", values);
+      await onSubmit(values);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("There was a problem saving your changes. Please try again.");
+    }
+  };
+  
+  // Handle manual save button click - actual submission
+  const handleSaveClick = () => {
+    console.log("Save button clicked");
+    // This will be connected to a normal button, not a submit button
+    form.handleSubmit(handleFormSubmit)();
+  };
+
+  // Show validation errors
+  const showValidationErrors = () => {
+    const errors = form.formState.errors;
+    const errorFields = Object.keys(errors);
+    
+    if (errorFields.length > 0) {
+      // Create a readable list of missing fields
+      const fieldNames = errorFields.map(field => {
+        // Convert camelCase to readable format
+        return field
+          .replace(/([A-Z])/g, ' $1')
+          .replace(/^./, str => str.toUpperCase());
+      }).join(', ');
+      
+      // Use browser alert for validation errors
+      alert(`Please fill in all required fields: ${fieldNames}`);
+    }
   };
   
   // Handle adding a new category
@@ -218,44 +250,34 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[650px] md:max-w-[700px] lg:max-w-[800px] p-4 md:p-6 w-[95vw]">
-        <DialogHeader className="pb-4">
-          <DialogTitle className="text-xl font-display text-gold-dark flex items-center gap-2">
-            {/* Icon can be passed as a prop if it needs to change (e.g., Plus for create, Pencil for edit) */}
-            {/* <Plus className="h-5 w-5" /> */}
-            {dialogTitle}
-          </DialogTitle>
-          <DialogDescription>{dialogDescription}</DialogDescription>
-          
-          {/* Step Indicator */}
-          <div className="mt-6">
-            <nav aria-label="Progress">
-              <ol role="list" className="space-y-2 md:flex md:space-x-4 md:space-y-0">
-                {steps.map((step, index) => (
-                  <li key={step.id} className="md:flex-1">
-                    <div 
+      <DialogContent className="sm:max-w-[600px] lg:max-w-[700px] overflow-y-auto max-h-[90vh] px-6 py-6">
+        <DialogHeader className="space-y-2 pb-5">
+          <DialogTitle className="text-xl font-semibold">{dialogTitle}</DialogTitle>
+          <DialogDescription className="text-sm text-muted-foreground">{dialogDescription}</DialogDescription>
+        </DialogHeader>
+        
+        {/* Step Indicator */}
+        <div className="mb-8">
+          <nav aria-label="Progress">
+            <ol role="list" className="flex flex-wrap space-y-0 space-x-2 md:space-x-4 justify-between md:justify-start">
+              {steps.map((step, index) => (
+                <li key={step.id} className="flex-none md:flex-1">
+                  <div 
+                    className={cn(
+                      "group flex items-center",
+                      index !== steps.length - 1 ? "mr-0" : ""
+                    )}
+                    >
+                    <span 
                       className={cn(
-                        "group flex flex-col py-1 md:pl-4 md:pt-1",
-                        index !== steps.length - 1 ? "border-l-2 border-gold/20 md:border-l-0 md:border-t-2" : "",
-                        index < currentStep ? "border-gold" : ""
+                        "flex h-8 w-8 items-center justify-center rounded-full border-2 flex-shrink-0",
+                        index < currentStep 
+                          ? "border-blue-600 bg-blue-600 text-white" 
+                          : index === currentStep 
+                            ? "border-blue-600 text-blue-600" 
+                            : "border-gray-300 text-gray-500"
                       )}
                     >
-                      <span 
-                        className={cn(
-                          "flex h-9 items-center text-sm",
-                          index <= currentStep ? "text-gold-dark" : "text-gray-500"
-                        )}
-                      >
-                        <span 
-                          className={cn(
-                            "flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2",
-                            index < currentStep 
-                              ? "border-gold bg-gold text-white" 
-                              : index === currentStep 
-                                ? "border-gold text-gold" 
-                                : "border-gray-300 text-gray-500"
-                          )}
-                        >
                           {index < currentStep ? (
                             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -263,23 +285,31 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                           ) : (
                             <span>{index + 1}</span>
                           )}
-                        </span>
-                        <span className="ml-2 text-sm font-medium">{step.title}</span>
-                      </span>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </nav>
-          </div>
-        </DialogHeader>
+                    </span>
+                    <span className="ml-2 text-sm font-medium hidden md:inline">{step.title}</span>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        </div>
+        
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4 py-2">
+          {/* No onSubmit handler to prevent automatic form submission */}
+          <form 
+            onSubmit={(e) => {
+              console.log('Form submit event detected');
+              // Always prevent default form submission
+              e.preventDefault();
+              return false;
+            }}
+            className="space-y-7" 
+            id="service-form">
             {/* Step-specific content */}
-            <div className="min-h-[300px] max-h-[500px] overflow-y-auto pr-2">
+            <div className="min-h-[250px] max-h-[400px] overflow-y-auto px-1 pb-4">
               {/* Step 1: Basic Info */}
               {currentStep === 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                   <FormField
                     name="slug"
                     control={form.control}
@@ -290,10 +320,10 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                           <Input
                             {...field}
                             placeholder="facial-treatment"
-                            className="focus-visible:ring-gold/30"
+                            className="focus-visible:ring-blue-600/30 h-10"
                           />
                         </FormControl>
-                        <FormDescription className="text-xs">
+                        <FormDescription className="text-xs text-muted-foreground">
                           URL-friendly identifier (lowercase, hyphens)
                         </FormDescription>
                         <FormMessage />
@@ -314,7 +344,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                                 variant="outline"
                                 role="combobox"
                                 className={cn(
-                                  "w-full justify-between",
+                                  "w-full justify-between h-10",
                                   !field.value && "text-muted-foreground"
                                 )}
                               >
@@ -416,10 +446,10 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     name="isActive"
                     control={form.control}
                     render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 md:p-4 md:col-span-2">
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 shadow-sm md:col-span-2 mt-4">
                         <div className="space-y-0.5">
                           <FormLabel className="text-sm md:text-base">Active</FormLabel>
-                          <FormDescription className="text-xs">
+                          <FormDescription className="text-xs text-muted-foreground">
                             This service will be visible to customers
                           </FormDescription>
                         </div>
@@ -427,7 +457,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                           <Switch
                             checked={field.value}
                             onCheckedChange={field.onChange}
-                            className="data-[state=checked]:bg-gold"
+                            className="data-[state=checked]:bg-blue-600"
                           />
                         </FormControl>
                       </FormItem>
@@ -795,6 +825,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     type="button"
                     variant="outline"
                     onClick={prevStep}
+                    className="px-5 h-10"
                     disabled={isLoadingOnSubmit || currentStep === 0}
                   >
                     Back
@@ -804,7 +835,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                 {currentStep < steps.length - 1 ? (
                   <Button
                     type="button"
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-medium"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 h-10"
                     onClick={nextStep}
                     disabled={isLoadingOnSubmit || !isCurrentStepValid()}
                   >
@@ -812,9 +843,10 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                   </Button>
                 ) : (
                   <Button
-                    type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-medium"
-                    disabled={isLoadingOnSubmit || !form.formState.isDirty}
+                    type="button"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 h-10"
+                    onClick={handleSaveClick}
+                    disabled={isLoadingOnSubmit}
                   >
                     {isLoadingOnSubmit ? (
                       <>
