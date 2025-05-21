@@ -33,15 +33,8 @@
     }
   ],
   "rewrites": [
-    { "source": "/api/auth/login", "destination": "/api/auth/login" },
-    { "source": "/api/auth/logout", "destination": "/api/auth/logout" },
-    { "source": "/api/auth/me", "destination": "/api/auth/me" },
-    { "source": "/api/admin/dashboard-summary", "destination": "/api/admin/dashboard-summary" },
-    { "source": "/api/admin/service-groups", "destination": "/api/admin/service-groups" },
-    { "source": "/api/admin/service-groups/(.*)", "destination": "/api/admin/service-groups/$1" },
-    { "source": "/api/admin/services", "destination": "/api/admin/services" },
-    { "source": "/api/admin/services/(.*)", "destination": "/api/admin/services/$1" },
-    { "source": "/api/admin/(.*)", "destination": "/api/admin/$1" },
+    { "source": "/api/auth/(.*)", "destination": "/api/auth" },
+    { "source": "/api/admin/(.*)", "destination": "/api/admin" },
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/admin/(.*)", "destination": "/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
