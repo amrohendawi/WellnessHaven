@@ -57,14 +57,7 @@ const steps = [
   { id: 'long-descriptions', title: 'Full Descriptions' },
 ];
 
-// Sample categories - In production, this would come from an API
-const defaultCategories: Category[] = [
-  { value: 'facials', label: 'Facials' },
-  { value: 'massage', label: 'Massage' },
-  { value: 'body-treatments', label: 'Body Treatments' },
-  { value: 'hair-removal', label: 'Hair Removal' },
-  { value: 'nail-care', label: 'Nail Care' },
-];
+// Define the steps for the multi-step form
 
 export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
   isOpen,
@@ -77,9 +70,64 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
   isLoadingOnSubmit,
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [categories, setCategories] = useState<Category[]>(defaultCategories);
+  // Fetch categories from the API
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(false);
   const [isCreatingCategory, setIsCreatingCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
+  
+  // Fetch categories when the dialog opens
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setIsLoadingCategories(true);
+      try {
+        const response = await fetch('/api/admin/service-groups');
+        if (!response.ok) {
+          throw new Error('Failed to fetch categories');
+        }
+        const data = await response.json();
+        console.log('Service groups data:', data); // Debug log
+        
+        // Transform service groups to category format handling multilingual names
+        const formattedCategories = data.map((group: any) => {
+          // Handle different possible property name formats
+          const id = group.id?.toString() || '';
+          
+          // Handle the case where name might be a multilingual object
+          let label = '';
+          if (group.nameEn) {
+            // Direct property access
+            label = group.nameEn;
+          } else if (group.name_en) {
+            // Snake case property
+            label = group.name_en;
+          } else if (typeof group.name === 'object' && group.name?.en) {
+            // Nested object with language keys
+            label = group.name.en;
+          } else if (typeof group.name === 'string') {
+            // Simple string
+            label = group.name;
+          }
+          
+          console.log(`Group ${id}: Label = ${label}`, group); // Debug log with full object
+          
+          return {
+            value: id,
+            label: label || `Group ${id}`, // Fallback to prevent empty labels
+          };
+        });
+        setCategories(formattedCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      } finally {
+        setIsLoadingCategories(false);
+      }
+    };
+
+    if (isOpen) {
+      fetchCategories();
+    }
+  }, [isOpen]);
   
   const form = useForm<AdminServiceFormValues>({
     resolver: zodResolver(AdminServiceFormSchema),
@@ -270,9 +318,11 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                                   !field.value && "text-muted-foreground"
                                 )}
                               >
-                                {field.value
-                                  ? categories.find((category) => category.value === field.value)?.label
-                                  : "Select a category"}
+                                {isLoadingCategories
+                                  ? 'Loading categories...'
+                                  : field.value && categories.find((category) => category.value === field.value)?.label
+                                    ? categories.find((category) => category.value === field.value)?.label
+                                    : 'Select category'}
                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                               </Button>
                             </FormControl>
@@ -283,25 +333,35 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                               <CommandList>
                                 <CommandEmpty>No category found.</CommandEmpty>
                                 <CommandGroup heading="Categories">
-                                  {categories.map((category) => (
-                                    <CommandItem
-                                      key={category.value}
-                                      value={category.value}
-                                      onSelect={() => {
-                                        form.setValue('category', category.value);
-                                      }}
-                                    >
-                                      <Check
-                                        className={cn(
-                                          "mr-2 h-4 w-4",
-                                          category.value === field.value
-                                            ? "opacity-100"
-                                            : "opacity-0"
-                                        )}
-                                      />
-                                      {category.label}
+                                  {isLoadingCategories ? (
+                                    <CommandItem key="loading" value="loading">
+                                      Loading categories...
                                     </CommandItem>
-                                  ))}
+                                  ) : categories.length === 0 ? (
+                                    <CommandItem key="no-categories" value="no-categories">
+                                      No categories available
+                                    </CommandItem>
+                                  ) : (
+                                    categories.map((category) => (
+                                      <CommandItem
+                                        key={category.value}
+                                        value={category.value}
+                                        onSelect={() => {
+                                          form.setValue('category', category.value);
+                                        }}
+                                      >
+                                        <Check
+                                          className={cn(
+                                            "mr-2 h-4 w-4",
+                                            category.value === field.value
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          )}
+                                        />
+                                        {category.label}
+                                      </CommandItem>
+                                    ))
+                                  )}
                                 </CommandGroup>
                                 <CommandSeparator />
                                 <CommandGroup>
@@ -744,7 +804,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                 {currentStep < steps.length - 1 ? (
                   <Button
                     type="button"
-                    className="bg-gold hover:bg-gold/90 text-white"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-medium"
                     onClick={nextStep}
                     disabled={isLoadingOnSubmit || !isCurrentStepValid()}
                   >
@@ -753,7 +813,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                 ) : (
                   <Button
                     type="submit"
-                    className="bg-gold hover:bg-gold/90 text-white"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-medium"
                     disabled={isLoadingOnSubmit || !form.formState.isDirty}
                   >
                     {isLoadingOnSubmit ? (
