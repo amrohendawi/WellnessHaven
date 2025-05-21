@@ -24,6 +24,9 @@ import ServicesPage from '@/admin/ServicesPage';
 import CategoriesPage from '@/admin/CategoriesPage';
 import ProfilePage from '@/admin/ProfilePage';
 
+// Test Pages
+import ApiTest from '@/pages/ApiTest';
+
 // Protected Route Wrapper
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -51,6 +54,7 @@ function AppRouter() {
       {/* Public Routes */}
       <Route path="/" element={<Home />} />
       <Route path="/services/:slug" element={<ServiceDetails />} />
+      <Route path="/api-test" element={<ApiTest />} />
 
       {/* Direct /admin access */}
       <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />

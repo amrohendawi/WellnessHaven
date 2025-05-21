@@ -31,19 +31,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     'http://localhost:3000',
     'http://localhost:5173',
   ];
-  
+
   // Allow Vercel preview URLs
   const isVercelPreview = origin && origin.endsWith('vercel.app');
-  
+
   if (origin && (allowedOrigins.includes(origin) || isVercelPreview)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
-  
+
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
+
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -86,13 +86,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // For this serverless function, we'll use simple SQL queries
     // These represent simplified versions of the queries we would normally 
     // run using the full drizzle schema
-    
+
     let totalBookings = 0;
     let confirmed = 0;
     let pending = 0;
     let servicesCount = 0;
     let blockedSlotsCount = 0;
-    
+
     try {
       const [bookingsResult] = await db.execute<{ count: number }>(
         'SELECT COUNT(*) as count FROM bookings'
@@ -111,7 +111,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     } catch (e) {
       console.log('Error counting bookings (table may not exist yet):', e);
     }
-    
+
     try {
       const [servicesResult] = await db.execute<{ count: number }>(
         'SELECT COUNT(*) as count FROM services'
@@ -120,7 +120,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     } catch (e) {
       console.log('Error counting services (table may not exist yet):', e);
     }
-    
+
     try {
       const [blockedSlotsResult] = await db.execute<{ count: number }>(
         'SELECT COUNT(*) as count FROM blocked_time_slots'
