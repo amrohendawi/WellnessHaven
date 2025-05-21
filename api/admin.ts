@@ -159,24 +159,32 @@ async function handleDashboardSummary(req: VercelRequest, res: VercelResponse) {
       totalBookings = Number(result[0]?.count) || 0;
       
       const confirmedResult = await db.execute(sql`SELECT COUNT(*) as count FROM bookings WHERE status = ${'confirmed'}`);
-      confirmed = Number(confirmedResult[0]?.count) || 0;
+      // Extract count from the result
+      const confirmedRows = Array.isArray(confirmedResult) ? confirmedResult : (confirmedResult.rows || []);
+      confirmed = Number(confirmedRows[0]?.count) || 0;
       
       const pendingResult = await db.execute(sql`SELECT COUNT(*) as count FROM bookings WHERE status = ${'pending'}`);
-      pending = Number(pendingResult[0]?.count) || 0;
+      // Extract count from the result
+      const pendingRows = Array.isArray(pendingResult) ? pendingResult : (pendingResult.rows || []);
+      pending = Number(pendingRows[0]?.count) || 0;
     } catch (e) {
       console.log('Error counting bookings (table may not exist yet):', e);
     }
     
     try {
       const servicesResult = await db.execute(sql`SELECT COUNT(*) as count FROM services`);
-      servicesCount = Number(servicesResult[0]?.count) || 0;
+      // Extract count from the result
+      const serviceRows = Array.isArray(servicesResult) ? servicesResult : (servicesResult.rows || []);
+      servicesCount = Number(serviceRows[0]?.count) || 0;
     } catch (e) {
       console.log('Error counting services (table may not exist yet):', e);
     }
     
     try {
       const blockedSlotsResult = await db.execute(sql`SELECT COUNT(*) as count FROM blocked_time_slots`);
-      blockedSlotsCount = Number(blockedSlotsResult[0]?.count) || 0;
+      // Extract count from the result
+      const blockedRows = Array.isArray(blockedSlotsResult) ? blockedSlotsResult : (blockedSlotsResult.rows || []);
+      blockedSlotsCount = Number(blockedRows[0]?.count) || 0;
     } catch (e) {
       console.log('Error counting blocked slots (table may not exist yet):', e);
     }
@@ -209,7 +217,9 @@ async function handleServiceGroups(req: VercelRequest, res: VercelResponse, path
       if (id) {
         // Get specific service group
         const result = await db.execute(sql`SELECT * FROM service_groups WHERE id = ${id}`);
-        const group = result[0];
+        // Extract the first row from the query result
+        const rows = Array.isArray(result) ? result : (result.rows || []);
+        const group = rows[0];
         
         if (!group) {
           return res.status(404).json({ message: 'Service group not found' });
@@ -219,7 +229,8 @@ async function handleServiceGroups(req: VercelRequest, res: VercelResponse, path
       } else {
         // Get all service groups
         const result = await db.execute(sql`SELECT * FROM service_groups ORDER BY display_order ASC`);
-        const groups = result;
+        // Convert query result to array
+        const groups = Array.isArray(result) ? result : (result.rows || []);
         
         return res.status(200).json(groups.map(transformServiceGroup));
       }
@@ -251,7 +262,9 @@ async function handleServiceGroups(req: VercelRequest, res: VercelResponse, path
         RETURNING *
       `);
       
-      const newGroup = result[0];
+      // Extract the first row from the result
+      const rows = Array.isArray(result) ? result : (result.rows || []);
+      const newGroup = rows[0];
       return res.status(201).json(transformServiceGroup(newGroup));
     }
     
@@ -263,97 +276,50 @@ async function handleServiceGroups(req: VercelRequest, res: VercelResponse, path
       
       const { slug, name, description, displayOrder, isActive } = req.body;
       
-      // Build the SET part of the SQL dynamically based on what fields are present
-      let setValues = [];
-      let params = [];
-      let paramCount = 1;
+      // Check if there are any fields to update
+      const hasFieldsToUpdate = slug !== undefined ||
+        name?.en !== undefined ||
+        name?.ar !== undefined ||
+        name?.de !== undefined ||
+        name?.tr !== undefined ||
+        description?.en !== undefined ||
+        description?.ar !== undefined ||
+        description?.de !== undefined ||
+        description?.tr !== undefined ||
+        displayOrder !== undefined ||
+        isActive !== undefined;
       
-      if (slug !== undefined) {
-        setValues.push(`slug = $${paramCount++}`);
-        params.push(slug);
-      }
-      
-      if (name?.en !== undefined) {
-        setValues.push(`name_en = $${paramCount++}`);
-        params.push(name.en);
-      }
-      
-      if (name?.ar !== undefined) {
-        setValues.push(`name_ar = $${paramCount++}`);
-        params.push(name.ar);
-      }
-      
-      if (name?.de !== undefined) {
-        setValues.push(`name_de = $${paramCount++}`);
-        params.push(name.de);
-      }
-      
-      if (name?.tr !== undefined) {
-        setValues.push(`name_tr = $${paramCount++}`);
-        params.push(name.tr);
-      }
-      
-      if (description?.en !== undefined) {
-        setValues.push(`description_en = $${paramCount++}`);
-        params.push(description.en);
-      }
-      
-      if (description?.ar !== undefined) {
-        setValues.push(`description_ar = $${paramCount++}`);
-        params.push(description.ar);
-      }
-      
-      if (description?.de !== undefined) {
-        setValues.push(`description_de = $${paramCount++}`);
-        params.push(description.de);
-      }
-      
-      if (description?.tr !== undefined) {
-        setValues.push(`description_tr = $${paramCount++}`);
-        params.push(description.tr);
-      }
-      
-      if (displayOrder !== undefined) {
-        setValues.push(`display_order = $${paramCount++}`);
-        params.push(displayOrder);
-      }
-      
-      if (isActive !== undefined) {
-        setValues.push(`is_active = $${paramCount++}`);
-        params.push(isActive);
-      }
-      
-      if (setValues.length === 0) {
+      if (!hasFieldsToUpdate) {
         return res.status(400).json({ message: 'No fields to update' });
       }
       
-      // Add the ID as the last parameter
-      params.push(id);
+      // Create SQL string parts for the dynamic update
+      const setParts = [];
       
-      // Create SQL template parts for dynamic updates
-      const sqlParts = [];
+      if (slug !== undefined) setParts.push(`slug = '${slug}'`);
+      if (name?.en !== undefined) setParts.push(`name_en = '${name.en}'`);
+      if (name?.ar !== undefined) setParts.push(`name_ar = '${name.ar}'`);
+      if (name?.de !== undefined) setParts.push(`name_de = '${name.de}'`);
+      if (name?.tr !== undefined) setParts.push(`name_tr = '${name.tr}'`);
+      if (description?.en !== undefined) setParts.push(`description_en = '${description.en}'`);
+      if (description?.ar !== undefined) setParts.push(`description_ar = '${description.ar}'`);
+      if (description?.de !== undefined) setParts.push(`description_de = '${description.de}'`);
+      if (description?.tr !== undefined) setParts.push(`description_tr = '${description.tr}'`);
+      if (displayOrder !== undefined) setParts.push(`display_order = ${displayOrder}`);
+      if (isActive !== undefined) setParts.push(`is_active = ${isActive}`);
       
-      if (slug !== undefined) sqlParts.push(sql`slug = ${slug}`);
-      if (name?.en !== undefined) sqlParts.push(sql`name_en = ${name.en}`);
-      if (name?.ar !== undefined) sqlParts.push(sql`name_ar = ${name.ar}`);
-      if (name?.de !== undefined) sqlParts.push(sql`name_de = ${name.de}`);
-      if (name?.tr !== undefined) sqlParts.push(sql`name_tr = ${name.tr}`);
-      if (description?.en !== undefined) sqlParts.push(sql`description_en = ${description.en}`);
-      if (description?.ar !== undefined) sqlParts.push(sql`description_ar = ${description.ar}`);
-      if (description?.de !== undefined) sqlParts.push(sql`description_de = ${description.de}`);
-      if (description?.tr !== undefined) sqlParts.push(sql`description_tr = ${description.tr}`);
-      if (displayOrder !== undefined) sqlParts.push(sql`display_order = ${displayOrder}`);
-      if (isActive !== undefined) sqlParts.push(sql`is_active = ${isActive}`);
-      
-      const sqlSetClause = sql.join(sqlParts, sql`, `);
-      const result = await db.execute(sql`
+      const setClause = setParts.join(', ');
+      // Execute the query with the manually constructed SET clause
+      const result = await db.execute(`
         UPDATE service_groups 
-        SET ${sqlSetClause} 
-        WHERE id = ${id}
+        SET ${setClause} 
+        WHERE id = '${id}'
         RETURNING *
       `);
       
-      const updatedGroup = result[0];
+      // Extract the first row from the result
+      const rows = Array.isArray(result) ? result : (result.rows || []);
+      const updatedGroup = rows[0];
       if (!updatedGroup) {
         return res.status(404).json({ message: 'Service group not found' });
       }
@@ -372,7 +338,9 @@ async function handleServiceGroups(req: VercelRequest, res: VercelResponse, path
         SELECT COUNT(*) as count FROM services WHERE group_id = ${id}
       `);
       
-      const serviceCount = Number(serviceCountResult[0]?.count || 0);
+      // Extract count from the result
+      const countRows = Array.isArray(serviceCountResult) ? serviceCountResult : (serviceCountResult.rows || []);
+      const serviceCount = Number(countRows[0]?.count || 0);
       if (serviceCount > 0) {
         return res.status(400).json({ 
           message: 'Cannot delete category with associated services. Remove the services first.' 
@@ -410,7 +378,9 @@ async function handleServices(req: VercelRequest, res: VercelResponse, pathParts
       if (id) {
         // Get specific service
         const result = await db.execute(sql`SELECT * FROM services WHERE id = ${id}`);
-        const service = result[0];
+        // Extract the first row from the query result
+        const rows = Array.isArray(result) ? result : (result.rows || []);
+        const service = rows[0];
         
         if (!service) {
           return res.status(404).json({ message: 'Service not found' });
@@ -420,7 +390,8 @@ async function handleServices(req: VercelRequest, res: VercelResponse, pathParts
       } else {
         // Get all services
         const result = await db.execute(sql`SELECT * FROM services ORDER BY id ASC`);
-        const services = result;
+        // Convert query result to array
+        const services = Array.isArray(result) ? result : (result.rows || []);
         
         return res.status(200).json(services.map(transformService));
       }
@@ -467,7 +438,9 @@ async function handleServices(req: VercelRequest, res: VercelResponse, pathParts
         RETURNING *
       `);
       
-      const newService = result[0];
+      // Extract the first row from the result
+      const rows = Array.isArray(result) ? result : (result.rows || []);
+      const newService = rows[0];
       return res.status(201).json(transformService(newService));
     }
     
@@ -482,145 +455,66 @@ async function handleServices(req: VercelRequest, res: VercelResponse, pathParts
         duration, price, imageUrl, isActive 
       } = req.body;
       
-      // Build the SET part of the SQL dynamically based on what fields are present
-      let setValues = [];
-      let params = [];
-      let paramCount = 1;
+      // Check if there are any fields to update
+      const hasFieldsToUpdate = slug !== undefined || 
+        category !== undefined || 
+        groupId !== undefined || 
+        name?.en !== undefined || 
+        name?.ar !== undefined || 
+        name?.de !== undefined || 
+        name?.tr !== undefined || 
+        description?.en !== undefined || 
+        description?.ar !== undefined || 
+        description?.de !== undefined || 
+        description?.tr !== undefined || 
+        longDescription?.en !== undefined || 
+        longDescription?.ar !== undefined || 
+        longDescription?.de !== undefined || 
+        longDescription?.tr !== undefined || 
+        duration !== undefined || 
+        price !== undefined || 
+        imageUrl !== undefined || 
+        isActive !== undefined;
       
-      if (slug !== undefined) {
-        setValues.push(`slug = $${paramCount++}`);
-        params.push(slug);
-      }
-      
-      if (category !== undefined) {
-        setValues.push(`category = $${paramCount++}`);
-        params.push(category);
-      }
-      
-      if (groupId !== undefined) {
-        setValues.push(`group_id = $${paramCount++}`);
-        params.push(groupId);
-      }
-      
-      if (name?.en !== undefined) {
-        setValues.push(`name_en = $${paramCount++}`);
-        params.push(name.en);
-      }
-      
-      if (name?.ar !== undefined) {
-        setValues.push(`name_ar = $${paramCount++}`);
-        params.push(name.ar);
-      }
-      
-      if (name?.de !== undefined) {
-        setValues.push(`name_de = $${paramCount++}`);
-        params.push(name.de);
-      }
-      
-      if (name?.tr !== undefined) {
-        setValues.push(`name_tr = $${paramCount++}`);
-        params.push(name.tr);
-      }
-      
-      if (description?.en !== undefined) {
-        setValues.push(`description_en = $${paramCount++}`);
-        params.push(description.en);
-      }
-      
-      if (description?.ar !== undefined) {
-        setValues.push(`description_ar = $${paramCount++}`);
-        params.push(description.ar);
-      }
-      
-      if (description?.de !== undefined) {
-        setValues.push(`description_de = $${paramCount++}`);
-        params.push(description.de);
-      }
-      
-      if (description?.tr !== undefined) {
-        setValues.push(`description_tr = $${paramCount++}`);
-        params.push(description.tr);
-      }
-      
-      if (longDescription?.en !== undefined) {
-        setValues.push(`long_description_en = $${paramCount++}`);
-        params.push(longDescription.en);
-      }
-      
-      if (longDescription?.ar !== undefined) {
-        setValues.push(`long_description_ar = $${paramCount++}`);
-        params.push(longDescription.ar);
-      }
-      
-      if (longDescription?.de !== undefined) {
-        setValues.push(`long_description_de = $${paramCount++}`);
-        params.push(longDescription.de);
-      }
-      
-      if (longDescription?.tr !== undefined) {
-        setValues.push(`long_description_tr = $${paramCount++}`);
-        params.push(longDescription.tr);
-      }
-      
-      if (duration !== undefined) {
-        setValues.push(`duration = $${paramCount++}`);
-        params.push(duration);
-      }
-      
-      if (price !== undefined) {
-        setValues.push(`price = $${paramCount++}`);
-        params.push(price);
-      }
-      
-      if (imageUrl !== undefined) {
-        setValues.push(`image_url = $${paramCount++}`);
-        params.push(imageUrl);
-      }
-      
-      if (isActive !== undefined) {
-        setValues.push(`is_active = $${paramCount++}`);
-        params.push(isActive);
-      }
-      
-      if (setValues.length === 0) {
+      if (!hasFieldsToUpdate) {
         return res.status(400).json({ message: 'No fields to update' });
       }
       
-      // Add the ID as the last parameter
-      params.push(id);
+      // Create SQL string parts for the dynamic update
+      const setParts = [];
       
-      // Create SQL template parts for dynamic updates
-      const sqlParts = [];
+      if (slug !== undefined) setParts.push(`slug = '${slug}'`);
+      if (category !== undefined) setParts.push(`category = '${category}'`);
+      if (groupId !== undefined) setParts.push(`group_id = ${groupId === null ? 'NULL' : `'${groupId}'`}`);
+      if (name?.en !== undefined) setParts.push(`name_en = '${name.en}'`);
+      if (name?.ar !== undefined) setParts.push(`name_ar = '${name.ar}'`);
+      if (name?.de !== undefined) setParts.push(`name_de = '${name.de}'`);
+      if (name?.tr !== undefined) setParts.push(`name_tr = '${name.tr}'`);
+      if (description?.en !== undefined) setParts.push(`description_en = '${description.en}'`);
+      if (description?.ar !== undefined) setParts.push(`description_ar = '${description.ar}'`);
+      if (description?.de !== undefined) setParts.push(`description_de = '${description.de}'`);
+      if (description?.tr !== undefined) setParts.push(`description_tr = '${description.tr}'`);
+      if (longDescription?.en !== undefined) setParts.push(`long_description_en = '${longDescription.en}'`);
+      if (longDescription?.ar !== undefined) setParts.push(`long_description_ar = '${longDescription.ar}'`);
+      if (longDescription?.de !== undefined) setParts.push(`long_description_de = '${longDescription.de}'`);
+      if (longDescription?.tr !== undefined) setParts.push(`long_description_tr = '${longDescription.tr}'`);
+      if (duration !== undefined) setParts.push(`duration = ${duration}`);
+      if (price !== undefined) setParts.push(`price = ${price}`);
+      if (imageUrl !== undefined) setParts.push(`image_url = '${imageUrl}'`);
+      if (isActive !== undefined) setParts.push(`is_active = ${isActive}`);
       
-      if (slug !== undefined) sqlParts.push(sql`slug = ${slug}`);
-      if (category !== undefined) sqlParts.push(sql`category = ${category}`);
-      if (groupId !== undefined) sqlParts.push(sql`group_id = ${groupId}`);
-      if (name?.en !== undefined) sqlParts.push(sql`name_en = ${name.en}`);
-      if (name?.ar !== undefined) sqlParts.push(sql`name_ar = ${name.ar}`);
-      if (name?.de !== undefined) sqlParts.push(sql`name_de = ${name.de}`);
-      if (name?.tr !== undefined) sqlParts.push(sql`name_tr = ${name.tr}`);
-      if (description?.en !== undefined) sqlParts.push(sql`description_en = ${description.en}`);
-      if (description?.ar !== undefined) sqlParts.push(sql`description_ar = ${description.ar}`);
-      if (description?.de !== undefined) sqlParts.push(sql`description_de = ${description.de}`);
-      if (description?.tr !== undefined) sqlParts.push(sql`description_tr = ${description.tr}`);
-      if (longDescription?.en !== undefined) sqlParts.push(sql`long_description_en = ${longDescription.en}`);
-      if (longDescription?.ar !== undefined) sqlParts.push(sql`long_description_ar = ${longDescription.ar}`);
-      if (longDescription?.de !== undefined) sqlParts.push(sql`long_description_de = ${longDescription.de}`);
-      if (longDescription?.tr !== undefined) sqlParts.push(sql`long_description_tr = ${longDescription.tr}`);
-      if (duration !== undefined) sqlParts.push(sql`duration = ${duration}`);
-      if (price !== undefined) sqlParts.push(sql`price = ${price}`);
-      if (imageUrl !== undefined) sqlParts.push(sql`image_url = ${imageUrl}`);
-      if (isActive !== undefined) sqlParts.push(sql`is_active = ${isActive}`);
-      
-      const sqlSetClause = sql.join(sqlParts, sql`, `);
-      const result = await db.execute(sql`
+      const setClause = setParts.join(', ');
+      // Execute the query with the manually constructed SET clause
+      const result = await db.execute(`
         UPDATE services 
-        SET ${sqlSetClause} 
-        WHERE id = ${id}
+        SET ${setClause} 
+        WHERE id = '${id}'
         RETURNING *
       `);
       
-      const updatedService = result[0];
+      // Extract the first row from the result
+      const rows = Array.isArray(result) ? result : (result.rows || []);
+      const updatedService = rows[0];
       if (!updatedService) {
         return res.status(404).json({ message: 'Service not found' });
       }
