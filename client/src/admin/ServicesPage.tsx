@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Package, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { fetchAdminAPI } from '@/lib/api';
 import { ServicesPageHeader } from './components/ServicesPageHeader';
@@ -9,8 +8,7 @@ import { ServiceFormDialog } from './components/ServiceFormDialog';
 import {
   AdminService,
   AdminServiceFormValues,
-  defaultAdminServiceFormValues,
-} from '../../../shared/schema';
+} from '@shared/schema';
 
 export default function ServicesPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);

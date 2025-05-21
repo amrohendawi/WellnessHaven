@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Edit, Trash2, Eye, EyeOff } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { ServiceGroup } from '../../../../shared/schema';
+import { ServiceGroup } from '@shared/schema';
 
 interface CategoriesTableProps {
   categories: ServiceGroup[];

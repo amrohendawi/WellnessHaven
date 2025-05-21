@@ -9,7 +9,7 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { AdminService } from '../../../shared/schema';
+import { AdminService } from '@shared/schema';
 import { Pencil, Trash2, Loader2, Info } from 'lucide-react';
 
 interface ServicesTableProps {

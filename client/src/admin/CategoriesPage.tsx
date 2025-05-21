@@ -5,7 +5,7 @@ import { useToast } from '@/hooks/use-toast';
 import { fetchAdminAPI } from '@/lib/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { ServiceGroup } from '../../../shared/schema';
+import { ServiceGroup } from '@shared/schema';
 import { CategoriesTable } from './components/CategoriesTable';
 import { CategoryFormDialog } from './components/CategoryFormDialog';
 

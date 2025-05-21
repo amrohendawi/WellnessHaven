@@ -9,7 +9,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { ServiceDisplay } from '@shared/schema';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getServiceBySlug, getServices } from '@/lib/api';
+import { getServices } from '@/lib/api';
 
 const ServiceDetails = () => {
   const [, setLocation] = useLocation();

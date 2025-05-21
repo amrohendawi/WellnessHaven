@@ -30,7 +30,7 @@ import {
   AdminServiceFormValues,
   AdminServiceFormSchema,
   defaultAdminServiceFormValues,
-} from '../../../../shared/schema';
+} from '@shared/schema';
 
 interface Category {
   value: string;
