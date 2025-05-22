@@ -6,8 +6,8 @@ import { fetchAdminAPI } from '@/lib/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ServiceGroup } from '@shared/schema';
-import { CategoriesTable } from './components/CategoriesTable';
-import { CategoryFormDialog } from './components/CategoryFormDialog';
+import { CategoriesTable } from '@/admin/components/CategoriesTable';
+import { CategoryFormDialog } from '@/admin/components/CategoryFormDialog';
 
 // Category form values type
 export interface CategoryFormValues {
@@ -21,6 +21,27 @@ export interface CategoryFormValues {
   descriptionAr?: string;
   descriptionDe?: string;
   descriptionTr?: string;
+  imageUrl?: string;
+  displayOrder: number;
+  isActive: boolean;
+}
+
+// Server-side category structure
+interface ServerCategoryFormat {
+  id?: number;
+  slug: string;
+  name: {
+    en: string;
+    ar: string;
+    de: string;
+    tr: string;
+  };
+  description: {
+    en?: string;
+    ar?: string;
+    de?: string;
+    tr?: string;
+  };
   imageUrl?: string;
   displayOrder: number;
   isActive: boolean;
@@ -78,6 +99,9 @@ export default function CategoriesPage() {
 
   const handleEditClick = (category: ServiceGroup) => {
     setCurrentCategory(category);
+    
+    // Note: The form values will be handled in the CategoryFormDialog component
+    // through the initialValues prop. No need to reset a form here.
     setIsEditDialogOpen(true);
   };
 
@@ -99,6 +123,7 @@ export default function CategoriesPage() {
   const handleCreateSubmit = async (values: CategoryFormValues) => {
     setIsSubmitting(true);
     try {
+      // Send the form values directly without transformation
       await fetchAdminAPI('service-groups', {
         method: 'POST',
         body: JSON.stringify(values),
@@ -118,6 +143,7 @@ export default function CategoriesPage() {
     if (!currentCategory) return;
     setIsSubmitting(true);
     try {
+      // Send the form values directly without transformation
       await fetchAdminAPI(`service-groups/${currentCategory.id}`, {
         method: 'PUT',
         body: JSON.stringify(values),
@@ -201,32 +227,29 @@ export default function CategoriesPage() {
       />
 
       {/* Edit Category Dialog */}
-      {currentCategory && (
-        <CategoryFormDialog
-          isOpen={isEditDialogOpen}
-          onOpenChange={setIsEditDialogOpen}
-          onSubmit={handleEditSubmit}
-          initialValues={{
-            id: currentCategory.id,
-            slug: currentCategory.slug,
-            nameEn: currentCategory.nameEn,
-            nameAr: currentCategory.nameAr,
-            nameDe: currentCategory.nameDe,
-            nameTr: currentCategory.nameTr,
-            descriptionEn: currentCategory.descriptionEn || '',
-            descriptionAr: currentCategory.descriptionAr || '',
-            descriptionDe: currentCategory.descriptionDe || '',
-            descriptionTr: currentCategory.descriptionTr || '',
-            imageUrl: currentCategory.imageUrl || '',
-            displayOrder: currentCategory.displayOrder,
-            isActive: currentCategory.isActive,
-          }}
-          dialogTitle="Edit Category"
-          dialogDescription="Update service category details."
-          submitButtonText="Save Changes"
-          isLoadingOnSubmit={isSubmitting}
-        />
-      )}
+      <CategoryFormDialog
+        isOpen={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+        onSubmit={handleEditSubmit}
+        initialValues={currentCategory ? {
+          id: currentCategory.id,
+          slug: currentCategory.slug || '',
+          nameEn: currentCategory.nameEn || '',
+          nameAr: currentCategory.nameAr || '',
+          nameDe: currentCategory.nameDe || '',
+          nameTr: currentCategory.nameTr || '',
+          descriptionEn: currentCategory.descriptionEn || '',
+          descriptionAr: currentCategory.descriptionAr || '',
+          descriptionDe: currentCategory.descriptionDe || '',
+          descriptionTr: currentCategory.descriptionTr || '',
+          displayOrder: currentCategory.displayOrder || 0,
+          isActive: currentCategory.isActive !== false,
+        } : defaultCategoryFormValues}
+        dialogTitle="Edit Category"
+        dialogDescription="Update a service category and its translations."
+        submitButtonText="Save Changes"
+        isLoadingOnSubmit={isSubmitting}
+      />
     </div>
   );
 }

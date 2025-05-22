@@ -2,9 +2,9 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import jwt from 'jsonwebtoken';
 import { config } from 'dotenv';
 import cookie from 'cookie';
-import { PgDatabase } from 'drizzle-orm/pg-core';
-import { drizzle } from 'drizzle-orm/vercel-postgres';
-import { sql } from '@vercel/postgres';
+import { drizzle } from 'drizzle-orm/neon-serverless';
+import { Pool, neonConfig } from '@neondatabase/serverless';
+import ws from 'ws';
 import { users } from '../shared/schema';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
@@ -18,11 +18,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (origin) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
-  
+
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
+
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -59,17 +59,21 @@ async function handleLogin(req: VercelRequest, res: VercelResponse) {
     // Authentication logic using database
     const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
     const JWT_EXPIRES_IN = '24h';
-    
+
+    // Configure Neon for WebSockets
+    neonConfig.webSocketConstructor = ws;
+
     // Initialize database connection
-    const db = drizzle(sql);
-    
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const db = drizzle({ client: pool });
+
     // Find user in database
     const userResults = await db.select().from(users).where(eq(users.username, username)).limit(1);
-    
+
     if (!userResults || userResults.length === 0 || !userResults[0].isAdmin) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
-    
+
     // Check password against hash stored in database
     const isValid = await bcrypt.compare(password, userResults[0].password);
 
@@ -146,17 +150,21 @@ async function handleMe(req: VercelRequest, res: VercelResponse) {
     const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
     try {
       const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
-      
+
+      // Configure Neon for WebSockets
+      neonConfig.webSocketConstructor = ws;
+
       // Initialize database connection
-      const db = drizzle(sql);
-      
+      const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+      const db = drizzle({ client: pool });
+
       // Find user in database
       const userResults = await db.select().from(users).where(eq(users.id, parseInt(decoded.userId))).limit(1);
-      
+
       if (!userResults || userResults.length === 0) {
         return res.status(401).json({ message: 'User not found' });
       }
-      
+
       // Return user info from database
       return res.status(200).json({
         id: userResults[0].id.toString(),

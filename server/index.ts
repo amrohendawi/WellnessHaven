@@ -12,6 +12,7 @@ const __dirname = path.dirname(__filename);
 import adminRoutes from './adminRoutes';
 import adminAuthRoutes from './adminAuthRoutes';
 import adminProfileRoutes from './adminProfileRoutes';
+import usersRoutes from './usersRoutes';
 import { registerRoutes } from './routes';
 import { setupVite, serveStatic, log } from './vite';
 import { requireAuth, AuthRequest } from './auth';
@@ -85,6 +86,9 @@ app.use((req, res, next) => {
 
   // Admin profile routes
   app.use('/api/admin', requireAuth, adminProfileRoutes);
+  
+  // User management routes
+  app.use('/api/admin', requireAuth, usersRoutes);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;

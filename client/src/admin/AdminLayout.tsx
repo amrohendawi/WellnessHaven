@@ -91,8 +91,8 @@ export default function AdminLayout() {
     { name: 'Availability', icon: Clock, href: '/admin/availability' },
     { name: 'Services', icon: Package, href: '/admin/services' },
     { name: 'Categories', icon: FolderTree, href: '/admin/categories' },
-    { name: 'Profile', icon: User, href: '/admin/profile' },
-    { name: 'Settings', icon: Settings, href: '/admin/settings' },
+    { name: 'Users', icon: User, href: '/admin/users' },
+    { name: 'Profile', icon: Settings, href: '/admin/profile' },
   ];
 
   // Set active nav item based on current route

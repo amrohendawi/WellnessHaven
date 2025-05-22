@@ -23,6 +23,7 @@ import AvailabilityPage from '@/admin/AvailabilityPage';
 import ServicesPage from '@/admin/ServicesPage';
 import CategoriesPage from '@/admin/CategoriesPage';
 import ProfilePage from '@/admin/ProfilePage';
+import UsersPage from '@/admin/UsersPage';
 
 // Test Pages
 import ApiTest from '@/pages/ApiTest';
@@ -78,6 +79,7 @@ function AppRouter() {
         <Route path="availability" element={<AvailabilityPage />} />
         <Route path="services" element={<ServicesPage />} />
         <Route path="categories" element={<CategoriesPage />} />
+        <Route path="users" element={<UsersPage />} />
         <Route path="profile" element={<ProfilePage />} />
       </Route>
 
