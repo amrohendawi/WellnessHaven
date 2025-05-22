@@ -5,9 +5,19 @@ import cookie from 'cookie';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import ws from 'ws';
-import { users } from '@shared/schema';
+import { pgTable, text, serial, boolean, timestamp } from 'drizzle-orm/pg-core';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
+
+// Create a local copy of the schema elements needed for this file
+// This approach avoids path resolution issues in Vercel's serverless functions
+export const users = pgTable('users', {
+  id: serial('id').primaryKey(),
+  username: text('username').notNull().unique(),
+  password: text('password').notNull(),
+  isAdmin: boolean('is_admin').default(false),
+  createdAt: timestamp('created_at').defaultNow(),
+});
 
 // Load environment variables
 config();
