@@ -337,22 +337,6 @@ export default function AdminLayout() {
 
       {/* Main content - Always positioned after sidebar */}
       <main className="flex-1">
-        {/* Mobile header */}
-        <header className="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 lg:hidden">
-          <button
-            type="button"
-            className="rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-600"
-            onClick={() => setMobileOpen(true)}
-          >
-            <span className="sr-only">Open sidebar</span>
-            <Menu className="h-6 w-6" aria-hidden="true" />
-          </button>
-          <div className="flex-1 text-center">
-            <h1 className="text-xl font-bold text-pink-dark">Dubai Rose</h1>
-          </div>
-          <div className="w-10"></div> {/* Spacer for alignment */}
-        </header>
-
         {/* Page content */}
         <div className="overflow-y-auto bg-gray-50 p-4 md:p-6">
           <Outlet />
