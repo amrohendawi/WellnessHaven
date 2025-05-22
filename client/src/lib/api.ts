@@ -651,6 +651,13 @@ export async function fetchAdminAPI<T>(
       });
 
       // Process the response
+      if (response.status === 204) {
+        // 204 No Content is a successful response, often used for DELETE operations
+        // Just return an empty object since there is no content
+        logger.debug(`Successful 204 No Content response from ${apiUrl}`);
+        return {} as T;
+      }
+      
       if (!response.ok) {
         // Handle error response
         const contentType = response.headers.get('content-type');
