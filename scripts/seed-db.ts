@@ -1,9 +1,11 @@
 import { config } from 'dotenv';
 import { db } from '../server/db';
-import { services, memberships, serviceGroups } from '../shared/schema';
+import { services, memberships, serviceGroups, users } from '../shared/schema';
+import { eq } from 'drizzle-orm';
 import servicesData from './data/services.json';
 import membershipsData from './data/memberships.json';
 import serviceGroupsData from './data/service-groups.json' assert { type: 'json' };
+import bcrypt from 'bcryptjs';
 
 // Load environment variables from .env file
 config();
@@ -24,6 +26,8 @@ async function clearData() {
     await db.delete(memberships);
     await db.delete(services);
     await db.delete(serviceGroups);
+    // Only clear non-admin users if needed
+    // await db.delete(users).where(eq(users.isAdmin, false));
     console.log(green('✓ Existing data cleared successfully.'));
   } catch (error) {
     console.error(red('✗ Error clearing existing data:'), error);
@@ -119,6 +123,63 @@ async function seedMemberships() {
 }
 
 /**
+ * Seed admin user
+ */
+async function seedAdminUser() {
+  try {
+    // Check if admin user already exists
+    const existingAdminUsers = await db.select().from(users).where(eq(users.isAdmin, true));
+
+    // Admin user data from environment variables
+    const email = process.env.SEED_ADMIN_EMAIL;
+    const password = process.env.SEED_ADMIN_PASSWORD;
+    
+    // Validate that admin credentials are provided in environment variables
+    if (!email || !password) {
+      console.error(red('Missing admin credentials in environment variables'));
+      console.error(yellow('Please set SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD in .env file'));
+      throw new Error('Missing admin credentials');
+    }
+    
+    // Hash the password for security
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    if (existingAdminUsers.length > 0) {
+      // Update existing admin user with new credentials
+      await db.update(users)
+        .set({ 
+          username: email, 
+          password: hashedPassword 
+        })
+        .where(eq(users.isAdmin, true));
+      
+      return {
+        success: true,
+        message: `Updated existing admin user credentials to ${email}.`,
+      };
+    }
+    
+    // If no admin user exists, we'll create a new one
+    
+    // Create the admin user
+    await db.insert(users).values({
+      username: email,
+      password: hashedPassword,
+      isAdmin: true,
+      createdAt: new Date(),
+    });
+    
+    return {
+      success: true,
+      message: 'Admin user created successfully!',
+    };
+  } catch (error) {
+    console.error(red('✗ Error creating admin user:'), error);
+    throw error;
+  }
+}
+
+/**
  * Main seed function following drizzle best practices
  */
 async function seed() {
@@ -159,6 +220,14 @@ async function seed() {
         membershipsResult.success
           ? green(`✓ ${membershipsResult.message}`)
           : yellow(`! ${membershipsResult.message}`)
+      );
+      
+      // Seed admin user
+      const adminUserResult = await seedAdminUser();
+      console.log(
+        adminUserResult.success
+          ? green(`✓ ${adminUserResult.message}`)
+          : yellow(`! ${adminUserResult.message}`)
       );
     };
 

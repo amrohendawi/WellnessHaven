@@ -2,6 +2,12 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import jwt from 'jsonwebtoken';
 import { config } from 'dotenv';
 import cookie from 'cookie';
+import { PgDatabase } from 'drizzle-orm/pg-core';
+import { drizzle } from 'drizzle-orm/vercel-postgres';
+import { sql } from '@vercel/postgres';
+import { users } from '../shared/schema';
+import { eq } from 'drizzle-orm';
+import bcrypt from 'bcryptjs';
 
 // Load environment variables
 config();
@@ -50,28 +56,30 @@ async function handleLogin(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ message: 'Username and password are required' });
     }
 
-    // Authentication logic 
-    const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
-    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+    // Authentication logic using database
     const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
     const JWT_EXPIRES_IN = '24h';
     
-    let isValid = false;
+    // Initialize database connection
+    const db = drizzle(sql);
     
-    if (username !== ADMIN_USERNAME) {
+    // Find user in database
+    const userResults = await db.select().from(users).where(eq(users.username, username)).limit(1);
+    
+    if (!userResults || userResults.length === 0 || !userResults[0].isAdmin) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
     
-    // For dev/production password check
-    isValid = password === ADMIN_PASSWORD;
+    // Check password against hash stored in database
+    const isValid = await bcrypt.compare(password, userResults[0].password);
 
     if (!isValid) {
       console.error(`Login failed for user: ${username}`);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Generate token
-    const token = jwt.sign({ userId: 'admin' }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+    // Generate token with user ID from database
+    const token = jwt.sign({ userId: userResults[0].id.toString() }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
     // Set HTTP-only cookie
     const cookieOptions = {
@@ -136,17 +144,25 @@ async function handleMe(req: VercelRequest, res: VercelResponse) {
 
     // Verify token
     const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-    const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
-    
     try {
       const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
       
-      // Return user info
+      // Initialize database connection
+      const db = drizzle(sql);
+      
+      // Find user in database
+      const userResults = await db.select().from(users).where(eq(users.id, parseInt(decoded.userId))).limit(1);
+      
+      if (!userResults || userResults.length === 0) {
+        return res.status(401).json({ message: 'User not found' });
+      }
+      
+      // Return user info from database
       return res.status(200).json({
-        id: 'admin',
-        username: ADMIN_USERNAME,
-        firstName: 'Admin',
-        role: 'admin',
+        id: userResults[0].id.toString(),
+        username: userResults[0].username,
+        role: userResults[0].isAdmin ? 'admin' : 'user',
+        firstName: 'Admin', // This could be added as a column in users table later
       });
     } catch (error) {
       return res.status(401).json({ message: 'Invalid or expired token' });

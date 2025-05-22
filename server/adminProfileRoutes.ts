@@ -3,6 +3,9 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { db } from './db';
+import { users } from '../shared/schema';
+import { eq } from 'drizzle-orm';
 
 // ES module equivalent for __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -50,20 +53,41 @@ const upload = multer({
 // Create router
 const router = Router();
 
-// In-memory profile data store (would be a database in production)
-const adminProfile = {
-  username: process.env.ADMIN_USERNAME || 'admin',
-  firstName: 'Admin',
-  email: 'admin@dubairose.ae',
-  imageUrl: '',
-  passwordHash: '',
-};
+// Admin profile data comes from database now
+// This is just a type definition for profile data
+interface AdminProfile {
+  username: string;
+  firstName?: string;
+  email?: string;
+  imageUrl?: string;
+}
 
 // Get profile data
-router.get('/profile', requireAuth, (req, res) => {
-  // Don't send password data to client
-  const { passwordHash, ...profileData } = adminProfile;
-  res.json(profileData);
+router.get('/profile', requireAuth, async (req, res) => {
+  try {
+    // Get the admin user from the database
+    const adminUsers = await db.select({
+      username: users.username,
+      isAdmin: users.isAdmin,
+      createdAt: users.createdAt
+    }).from(users).where(eq(users.isAdmin, true)).limit(1);
+
+    if (!adminUsers || adminUsers.length === 0) {
+      return res.status(404).json({ message: 'Admin profile not found' });
+    }
+
+    // Return just the username and other public fields
+    res.json({
+      username: adminUsers[0].username,
+      // Additional fields will be added when those columns are added to DB
+      firstName: 'Admin', // Default until we add these fields to the schema
+      email: 'admin@dubairose.ae',
+      imageUrl: ''
+    });
+  } catch (error) {
+    console.error('Error fetching admin profile:', error);
+    res.status(500).json({ message: 'Error fetching profile' });
+  }
 });
 
 // Update profile
@@ -71,38 +95,65 @@ router.post('/profile/update', requireAuth, upload.single('profileImage'), async
   try {
     const { username, firstName, email, password } = req.body;
 
-    // Update basic info
-    if (username) adminProfile.username = username;
-    if (firstName) adminProfile.firstName = firstName;
-    if (email) adminProfile.email = email;
-
+    // Find the admin user
+    const adminUsers = await db.select().from(users).where(eq(users.isAdmin, true)).limit(1);
+    
+    if (!adminUsers || adminUsers.length === 0) {
+      return res.status(404).json({ message: 'Admin profile not found' });
+    }
+    
+    const adminUser = adminUsers[0];
+    
+    // Prepare update data
+    const updateData: Record<string, any> = {};
+    
+    // Update username if provided
+    if (username && username !== adminUser.username) {
+      updateData.username = username;
+    }
+    
     // Update password if provided
     if (password && password.trim() !== '') {
-      adminProfile.passwordHash = await bcrypt.hash(password, 10);
-
-      // Update environment variable for development
-      if (process.env.NODE_ENV === 'development') {
-        process.env.ADMIN_PASSWORD = password;
-        process.env.ADMIN_PASSWORD_HASH = adminProfile.passwordHash;
-      }
+      const passwordHash = await bcrypt.hash(password, 10);
+      updateData.password = passwordHash;
     }
-
-    // Add profile image URL if file was uploaded
+    
+    // Only update if there are changes
+    if (Object.keys(updateData).length > 0) {
+      await db.update(users)
+        .set(updateData)
+        .where(eq(users.id, adminUser.id));
+    }
+    
+    // For now, we're not storing firstName, email, or imageUrl in the database
+    // We would add these fields to the database schema in a production app
+    
+    // If an image was uploaded
+    let imageUrl = '';
     if (req.file) {
       // Generate URL path to the uploaded image
-      const relativePath = `/uploads/profiles/${req.file.filename}`;
-      adminProfile.imageUrl = relativePath;
+      imageUrl = `/uploads/profiles/${req.file.filename}`;
     }
 
-    // Return updated profile without password
-    const { passwordHash, ...updatedProfile } = adminProfile;
+    // Get the updated user data
+    const updatedUser = await db.select({
+      username: users.username,
+      isAdmin: users.isAdmin,
+      createdAt: users.createdAt
+    }).from(users).where(eq(users.id, adminUser.id)).limit(1);
+
     res.json({
       message: 'Profile updated successfully',
-      profile: updatedProfile,
+      profile: {
+        username: updatedUser[0].username,
+        firstName: firstName || 'Admin', // Placeholder
+        email: email || 'admin@dubairose.ae', // Placeholder
+        imageUrl: imageUrl || ''
+      }
     });
   } catch (error) {
     console.error('Error updating profile:', error);
-    res.status(500).json({ message: 'Failed to update profile' });
+    res.status(500).json({ message: 'Error updating profile' });
   }
 });
 
