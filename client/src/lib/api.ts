@@ -629,11 +629,12 @@ export async function fetchAdminAPI<T>(
       const host = typeof window !== 'undefined' ? window.location.host : '';
       
       // Always use same-domain API calls to prevent CORS issues
-      // This is a key change from the previous approach that tried to use cross-origin requests
-      apiUrl = `/api/admin/${trimmedEndpoint}`;
-      logger.debug(`Using same-domain API URL: ${apiUrl} (host: ${host})`);
+      // Use the consolidated admin API endpoint in production to stay within Vercel's limits
+      apiUrl = `/api/admin-consolidated/${trimmedEndpoint}`;
+      logger.debug(`Using consolidated admin API URL: ${apiUrl} (host: ${host})`);
     } else {
-      // In development, use relative paths
+      // In development, use relative paths to the original API endpoints
+      // This allows development to continue using the Express server
       apiUrl = `${API_BASE_URL}/admin/${trimmedEndpoint}`;
     }
 

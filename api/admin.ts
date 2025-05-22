@@ -2,15 +2,47 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { config } from 'dotenv';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
-import { sql } from 'drizzle-orm';
+import { pgTable, text, serial, boolean, timestamp } from 'drizzle-orm/pg-core';
+import { sql, eq, ne } from 'drizzle-orm';
 import ws from 'ws';
 import jwt from 'jsonwebtoken';
+import cookie from 'cookie';
+import bcrypt from 'bcryptjs';
 
 // Load environment variables
 config();
 
 // We need to set this to make Neon work with serverless
 neonConfig.webSocketConstructor = ws;
+
+// Define schema elements needed for this file
+export const users = pgTable('users', {
+  id: serial('id').primaryKey(),
+  username: text('username').notNull().unique(),
+  password: text('password').notNull(),
+  isAdmin: boolean('is_admin').default(false),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+export const bookings = pgTable('bookings', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  email: text('email').notNull(),
+  phone: text('phone').notNull(),
+  date: text('date').notNull(),
+  time: text('time').notNull(),
+  service: text('service').notNull(),
+  notes: text('notes'),
+  status: text('status').default('pending'),
+  created_at: timestamp('created_at').defaultNow(),
+});
+
+export const blockedTimeSlots = pgTable('blocked_time_slots', {
+  id: serial('id').primaryKey(),
+  date: text('date').notNull(),
+  time: text('time').notNull(),
+  created_at: timestamp('created_at').defaultNow(),
+});
 
 // Helper function to transform DB service group to frontend format
 function transformServiceGroup(group: any) {
@@ -56,8 +88,8 @@ function transformService(service: any) {
   };
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS handling
+// CORS handling helper function
+function setupCORS(req: VercelRequest, res: VercelResponse): void {
   const origin = req.headers.origin;
   if (origin) {
     res.setHeader('Access-Control-Allow-Origin', origin);
@@ -66,66 +98,103 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
+}
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Handle CORS for browsers
+  setupCORS(req, res);
+
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // Extract the path from the URL
-  const urlPath = req.url || '';
-  const pathParts = urlPath.split('/api/admin/')[1]?.split('?')[0] || '';
-  const mainPath = pathParts.split('/')[0];
-  
-  // Auth check except for OPTIONS requests
-  if (req.method !== 'OPTIONS') {
-    // Verify authentication
-    const isAuthenticated = await verifyAuth(req);
-    if (!isAuthenticated) {
-      return res.status(401).json({ message: 'Authentication required' });
-    }
+  // Verify authentication for all admin routes
+  const authResult = await verifyAuth(req);
+  if (!authResult.authenticated) {
+    return res.status(401).json({ message: 'Unauthorized' });
   }
 
-  // Route to appropriate handler based on path
-  if (mainPath === 'dashboard-summary') {
-    return handleDashboardSummary(req, res);
-  } else if (mainPath === 'service-groups') {
-    return handleServiceGroups(req, res, pathParts);
-  } else if (mainPath === 'services') {
-    return handleServices(req, res, pathParts);
-  } else {
-    return res.status(404).json({ message: 'Endpoint not found' });
+  // Get the path after /api/admin/
+  const path = req.url?.split('/api/admin/')[1]?.split('?')[0] || '';
+  const pathParts = path.split('/');
+  const mainPath = pathParts[0];
+  
+  // Create database connection
+  const db = await createDbConnection();
+  
+  try {
+    // Route based on path
+    switch(mainPath) {
+      case '':
+      case 'dashboard':
+        return handleDashboardSummary(req, res);
+      
+      case 'service-groups':
+        return handleServiceGroups(req, res, path.replace('service-groups', ''));
+      
+      case 'services':
+        return handleServices(req, res, path.replace('services', ''));
+      
+      case 'users':
+        return handleUsers(req, res, db, authResult);
+      
+      case 'bookings':
+        return handleBookings(req, res, db);
+      
+      case 'blocked-slots':
+        return handleBlockedSlots(req, res, db);
+      
+      case 'profile':
+        return handleProfile(req, res, db, authResult);
+      
+      default:
+        return res.status(404).json({ message: 'Endpoint not found' });
+    }
+  } catch (error: any) {
+    console.error('Error handling admin request:', error);
+    return res.status(500).json({ 
+      message: 'An unexpected error occurred while processing the request', 
+      error: error.message 
+    });
   }
 }
 
 // Auth verification helper
-async function verifyAuth(req: VercelRequest): Promise<boolean> {
+async function verifyAuth(req: VercelRequest): Promise<{ authenticated: boolean, userId?: string }> {
   try {
+    // Parse cookies
     const cookieHeader = req.headers.cookie;
-    if (!cookieHeader) return false;
+    if (!cookieHeader) {
+      return { authenticated: false };
+    }
 
     // Extract token from cookies
-    const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
-      const [key, value] = cookie.trim().split('=');
-      acc[key] = value;
-      return acc;
-    }, {} as Record<string, string>);
-
+    const cookies = cookie.parse(cookieHeader);
     const token = cookies.token;
-    if (!token) return false;
+    if (!token) {
+      return { authenticated: false };
+    }
 
     // Verify token
     const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
     
-    try {
-      jwt.verify(token, JWT_SECRET);
-      return true;
-    } catch (error) {
-      return false;
+    // Initialize database connection
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const db = drizzle({ client: pool });
+    
+    // Find user in database
+    const userResults = await db.select().from(users).where(eq(users.id, parseInt(decoded.userId))).limit(1);
+    
+    if (!userResults || userResults.length === 0 || !userResults[0].isAdmin) {
+      return { authenticated: false };
     }
+    
+    return { authenticated: true, userId: decoded.userId };
   } catch (error) {
-    console.error('Auth check error:', error);
-    return false;
+    console.error('Auth verification error:', error);
+    return { authenticated: false };
   }
 }
 
@@ -530,20 +599,365 @@ async function handleServices(req: VercelRequest, res: VercelResponse, pathParts
       
       // Consider checking if service has associated bookings
       
-      await db.execute(sql`DELETE FROM services WHERE id = ${id}`);
+      await db.execute(`DELETE FROM services WHERE id = '${id}'`);
+      
       return res.status(204).end();
     }
     
-    // Handle unsupported methods
+    // Method not supported
     else {
       return res.status(405).json({ message: 'Method not allowed' });
     }
-    
   } catch (error) {
     console.error('Error handling services:', error);
-    return res.status(500).json({
-      message: 'An error occurred while processing your request.',
-      error: error instanceof Error ? error.message : String(error),
-    });
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+// Handler for users management
+async function handleUsers(
+  req: VercelRequest, 
+  res: VercelResponse, 
+  db: any, 
+  auth: { authenticated: boolean; userId?: string }
+) {
+  try {
+    if (req.method === 'GET') {
+      // Get all users
+      const allUsers = await db.select({
+        id: users.id,
+        username: users.username,
+        isAdmin: users.isAdmin,
+        createdAt: users.createdAt
+      }).from(users);
+      
+      // Format the users with additional fields for compatibility with the frontend
+      const formattedUsers = allUsers.map((user: any) => ({
+        ...user,
+        id: user.id.toString(),
+        firstName: '', // Placeholder
+        email: user.username,
+        imageUrl: '',
+      }));
+      
+      return res.status(200).json(formattedUsers);
+    } else if (req.method === 'POST' && req.url?.includes('/create')) {
+      // Create a new user
+      const { username, firstName, email, password, isAdmin } = req.body;
+      
+      // Validate required fields
+      if (!username || !password) {
+        return res.status(400).json({ message: 'Username and password are required' });
+      }
+      
+      // Check if username already exists
+      const existingUser = await db.select().from(users).where(eq(users.username, username)).limit(1);
+      
+      if (existingUser && existingUser.length > 0) {
+        return res.status(400).json({ message: 'Username already exists' });
+      }
+      
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+      
+      // Create new user
+      const [newUser] = await db.insert(users).values({
+        username,
+        password: hashedPassword,
+        isAdmin: isAdmin === 'true' || isAdmin === true,
+        createdAt: new Date(),
+      }).returning();
+      
+      return res.status(201).json({ 
+        id: newUser.id.toString(),
+        username: newUser.username,
+        isAdmin: newUser.isAdmin,
+        firstName: firstName || '',
+        email: email || newUser.username,
+        imageUrl: '',
+      });
+    } else if (req.method === 'POST' && req.url?.includes('/update')) {
+      // Update a user
+      const { userId, username, firstName, email, password, isAdmin } = req.body;
+      
+      if (!userId) {
+        return res.status(400).json({ message: 'User ID is required' });
+      }
+      
+      // Check if user exists
+      const existingUser = await db.select().from(users).where(eq(users.id, parseInt(userId))).limit(1);
+      
+      if (!existingUser || existingUser.length === 0) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      
+      // Check if username already exists (for another user)
+      if (username && username !== existingUser[0].username) {
+        const userWithSameName = await db
+          .select()
+          .from(users)
+          .where(eq(users.username, username))
+          .limit(1);
+        
+        if (userWithSameName && userWithSameName.length > 0) {
+          return res.status(400).json({ message: 'Username already exists' });
+        }
+      }
+      
+      // Prepare update data
+      const updateData: Record<string, any> = {};
+      
+      if (username) {
+        updateData.username = username;
+      }
+      
+      if (password) {
+        updateData.password = await bcrypt.hash(password, 10);
+      }
+      
+      if (isAdmin !== undefined) {
+        updateData.isAdmin = isAdmin === 'true' || isAdmin === true;
+      }
+      
+      // Update user if there are changes
+      if (Object.keys(updateData).length > 0) {
+        const [updated] = await db.update(users)
+          .set(updateData)
+          .where(eq(users.id, parseInt(userId)))
+          .returning();
+          
+        return res.status(200).json({ 
+          id: updated.id.toString(),
+          username: updated.username,
+          isAdmin: updated.isAdmin,
+          firstName: firstName || '',
+          email: email || updated.username,
+          imageUrl: '',
+        });
+      }
+      
+      return res.status(200).json({ 
+        id: existingUser[0].id.toString(),
+        username: existingUser[0].username,
+        isAdmin: existingUser[0].isAdmin,
+        firstName: firstName || '',
+        email: email || existingUser[0].username,
+        imageUrl: '',
+      });
+    } else if (req.method === 'POST' && req.url?.includes('/delete')) {
+      // Delete a user
+      const { userId } = req.body;
+      
+      if (!userId) {
+        return res.status(400).json({ message: 'User ID is required' });
+      }
+      
+      // Check if user exists
+      const existingUser = await db.select().from(users).where(eq(users.id, parseInt(userId))).limit(1);
+      
+      if (!existingUser || existingUser.length === 0) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      
+      // Delete the user
+      await db.delete(users).where(eq(users.id, parseInt(userId)));
+      
+      return res.status(200).json({ message: 'User deleted successfully' });
+    } else {
+      return res.status(404).json({ message: 'Endpoint not found' });
+    }
+  } catch (error: any) {
+    console.error('Error handling users request:', error);
+    return res.status(500).json({ message: 'An error occurred while processing the request', error: error.message });
+  }
+}
+
+// Handler for bookings
+async function handleBookings(req: VercelRequest, res: VercelResponse, db: any) {
+  try {
+    // Log the connection string (with sensitive info redacted)
+    console.log('Using database connection with hostname:', process.env.DATABASE_URL?.split('@')[1]?.split('/')[0] || 'unknown');
+    
+    if (req.method === 'GET') {
+      try {
+        // Get all bookings with more robust error handling
+        console.log('Attempting to fetch bookings from database');
+        const allBookings = await db.select().from(bookings);
+        console.log(`Successfully retrieved ${allBookings.length} bookings`);
+        return res.status(200).json(allBookings);
+      } catch (dbError: any) {
+        console.error('Database error when fetching bookings:', dbError);
+        return res.status(500).json({ message: 'Database error when fetching bookings', error: dbError.message });
+      }
+    } else if (req.method === 'POST') {
+      try {
+        // Create a new booking
+        const { name, email, phone, date, time, service, notes, status } = req.body;
+        console.log('Creating new booking with data:', { name, email, phone, date, time, service });
+        
+        // Use created_at field name instead of createdAt to match the schema
+        const [newBooking] = await db.insert(bookings).values({
+          name,
+          email,
+          phone,
+          date,
+          time,
+          service,
+          notes,
+          status: status || 'pending',
+          created_at: new Date(),
+        }).returning();
+        
+        console.log('Successfully created new booking with ID:', newBooking.id);
+        return res.status(201).json(newBooking);
+      } catch (dbError: any) {
+        console.error('Database error when creating booking:', dbError);
+        return res.status(500).json({ message: 'Database error when creating booking', error: dbError.message });
+      }
+    } else {
+      return res.status(405).json({ message: 'Method not allowed' });
+    }
+  } catch (error: any) {
+    console.error('Unexpected error handling bookings request:', error);
+    return res.status(500).json({ message: 'An unexpected error occurred while processing the request', error: error.message });
+  }
+}
+
+// Handler for blocked slots
+async function handleBlockedSlots(req: VercelRequest, res: VercelResponse, db: any) {
+  try {
+    // Log the connection string (with sensitive info redacted)
+    console.log('Using database connection with hostname:', process.env.DATABASE_URL?.split('@')[1]?.split('/')[0] || 'unknown');
+    
+    if (req.method === 'GET') {
+      try {
+        console.log('Attempting to fetch blocked time slots from database');
+        const slots = await db.select().from(blockedTimeSlots);
+        console.log(`Successfully retrieved ${slots.length} blocked time slots`);
+        return res.status(200).json(slots);
+      } catch (dbError: any) {
+        console.error('Database error when fetching blocked time slots:', dbError);
+        return res.status(500).json({ message: 'Database error when fetching blocked slots', error: dbError.message });
+      }
+    } else if (req.method === 'POST') {
+      try {
+        // Create a new blocked slot
+        const { date, time } = req.body;
+        console.log('Creating new blocked time slot with data:', { date, time });
+        
+        if (!date || !time) {
+          return res.status(400).json({ message: 'Date and time are required' });
+        }
+        
+        // Use created_at field name instead of createdAt to match the schema
+        const [newSlot] = await db.insert(blockedTimeSlots).values({
+          date,
+          time,
+          created_at: new Date(),
+        }).returning();
+        
+        console.log('Successfully created new blocked time slot with ID:', newSlot.id);
+        return res.status(201).json(newSlot);
+      } catch (dbError: any) {
+        console.error('Database error when creating blocked time slot:', dbError);
+        return res.status(500).json({ message: 'Database error when creating blocked slot', error: dbError.message });
+      }
+    } else if (req.method === 'DELETE') {
+      try {
+        // Delete a blocked slot
+        const id = parseInt(req.query.id as string);
+        console.log('Attempting to delete blocked time slot with ID:', id);
+        
+        if (isNaN(id)) {
+          return res.status(400).json({ message: 'Valid ID is required' });
+        }
+        
+        await db.delete(blockedTimeSlots).where(eq(blockedTimeSlots.id, id));
+        console.log('Successfully deleted blocked time slot with ID:', id);
+        return res.status(204).end();
+      } catch (dbError: any) {
+        console.error('Database error when deleting blocked time slot:', dbError);
+        return res.status(500).json({ message: 'Database error when deleting blocked slot', error: dbError.message });
+      }
+    } else {
+      return res.status(405).json({ message: 'Method not allowed' });
+    }
+  } catch (error: any) {
+    console.error('Unexpected error handling blocked slots request:', error);
+    return res.status(500).json({ message: 'An unexpected error occurred while processing the request', error: error.message });
+  }
+}
+
+// Handler for profile
+async function handleProfile(
+  req: VercelRequest, 
+  res: VercelResponse, 
+  db: any, 
+  auth: { authenticated: boolean; userId?: string }
+) {
+  try {
+    if (req.method === 'GET') {
+      // Get the admin user profile
+      const userResults = await db.select({
+        id: users.id,
+        username: users.username,
+        isAdmin: users.isAdmin,
+        createdAt: users.createdAt
+      }).from(users).where(eq(users.id, parseInt(auth.userId!))).limit(1);
+      
+      if (!userResults || userResults.length === 0) {
+        return res.status(404).json({ message: 'Profile not found' });
+      }
+      
+      // Return just the username and other public fields
+      return res.status(200).json({
+        id: userResults[0].id.toString(),
+        username: userResults[0].username,
+        firstName: 'Admin', // Default until we add these fields to the schema
+        email: userResults[0].username,
+        imageUrl: ''
+      });
+    } else if (req.method === 'POST' && req.url?.includes('/update')) {
+      // Handle profile update
+      const { username, firstName, email, password } = req.body;
+      
+      // Prepare update data
+      const updateData: Record<string, any> = {};
+      
+      if (username) {
+        updateData.username = username;
+      }
+      
+      if (password) {
+        updateData.password = await bcrypt.hash(password, 10);
+      }
+      
+      // Update the user if there are changes
+      if (Object.keys(updateData).length > 0) {
+        await db.update(users)
+          .set(updateData)
+          .where(eq(users.id, parseInt(auth.userId!)));
+      }
+      
+      // Return updated profile data
+      const updatedUser = await db.select({
+        id: users.id,
+        username: users.username,
+        isAdmin: users.isAdmin,
+      }).from(users).where(eq(users.id, parseInt(auth.userId!))).limit(1);
+      
+      return res.status(200).json({
+        id: updatedUser[0].id.toString(),
+        username: updatedUser[0].username,
+        firstName: firstName || 'Admin',
+        email: email || updatedUser[0].username,
+        imageUrl: ''
+      });
+    } else {
+      return res.status(404).json({ message: 'Endpoint not found' });
+    }
+  } catch (error: any) {
+    console.error('Error handling profile request:', error);
+    return res.status(500).json({ message: 'An error occurred while processing the request', error: error.message });
   }
 }
