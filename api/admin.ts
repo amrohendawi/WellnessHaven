@@ -472,49 +472,67 @@ async function handleServices(req: VercelRequest, res: VercelResponse, pathParts
     
     // POST - Create a new service
     else if (req.method === 'POST') {
+      // Log the incoming request body to help diagnose
+      console.log('Received service creation request with body:', req.body);
+      
+      // Extract data using flat property names (nameEn instead of name.en)
       const { 
-        slug, category, groupId, name, description, longDescription, 
+        slug, category, groupId, 
+        nameEn, nameAr, nameDe, nameTr,
+        descriptionEn, descriptionAr, descriptionDe, descriptionTr,
+        longDescriptionEn, longDescriptionAr, longDescriptionDe, longDescriptionTr,
         duration, price, imageUrl, isActive 
       } = req.body;
       
-      if (!slug || !name?.en || !category) {
+      // Validate required fields
+      if (!slug || !nameEn || !category) {
         return res.status(400).json({ message: 'Slug, category, and English name are required' });
       }
       
-      const result = await db.execute(sql`
-        INSERT INTO services 
-        (slug, category, group_id, name_en, name_ar, name_de, name_tr, 
-         description_en, description_ar, description_de, description_tr,
-         long_description_en, long_description_ar, long_description_de, long_description_tr,
-         duration, price, image_url, is_active) 
-        VALUES (
-          ${slug}, 
-          ${category},
-          ${groupId || null},
-          ${name.en}, 
-          ${name.ar || ''}, 
-          ${name.de || ''}, 
-          ${name.tr || ''},
-          ${description?.en || ''},
-          ${description?.ar || ''},
-          ${description?.de || ''},
-          ${description?.tr || ''},
-          ${longDescription?.en || ''},
-          ${longDescription?.ar || ''},
-          ${longDescription?.de || ''},
-          ${longDescription?.tr || ''},
-          ${duration || 60},
-          ${price || 0},
-          ${imageUrl || ''},
-          ${isActive !== false}
-        )
-        RETURNING *
-      `);
-      
-      // Extract the first row from the result
-      const rows = Array.isArray(result) ? result : (result.rows || []);
-      const newService = rows[0];
-      return res.status(201).json(transformService(newService));
+      let result;
+      try {
+        console.log('Creating new service with slug:', slug);
+        
+        result = await db.execute(sql`
+          INSERT INTO services 
+          (slug, category, group_id, name_en, name_ar, name_de, name_tr, 
+           description_en, description_ar, description_de, description_tr,
+           long_description_en, long_description_ar, long_description_de, long_description_tr,
+           duration, price, image_url, is_active) 
+          VALUES (
+            ${slug}, 
+            ${category},
+            ${groupId || null},
+            ${nameEn}, 
+            ${nameAr || ''}, 
+            ${nameDe || ''}, 
+            ${nameTr || ''},
+            ${descriptionEn || ''},
+            ${descriptionAr || ''},
+            ${descriptionDe || ''},
+            ${descriptionTr || ''},
+            ${longDescriptionEn || ''},
+            ${longDescriptionAr || ''},
+            ${longDescriptionDe || ''},
+            ${longDescriptionTr || ''},
+            ${duration || 60},
+            ${price || 0},
+            ${imageUrl || ''},
+            ${isActive !== false}
+          )
+          RETURNING *
+        `);
+        
+        console.log('Service created successfully');
+        
+        // Extract the first row from the result
+        const rows = Array.isArray(result) ? result : (result.rows || []);
+        const newService = rows[0];
+        return res.status(201).json(transformService(newService));
+      } catch (dbError) {
+        console.error('Error creating service:', dbError);
+        return res.status(500).json({ message: 'Database error when creating service', error: typeof dbError === 'object' ? JSON.stringify(dbError) : String(dbError) });
+      }
     }
     
     // PUT - Update an existing service
@@ -601,11 +619,29 @@ async function handleServices(req: VercelRequest, res: VercelResponse, pathParts
         return res.status(400).json({ message: 'Service ID is required' });
       }
       
-      // Consider checking if service has associated bookings
+      console.log(`Attempting to delete service with ID: ${id}`);
       
-      await db.execute(`DELETE FROM services WHERE id = '${id}'`);
-      
-      return res.status(204).end();
+      try {
+        // Use parameterized query with sql template tag to prevent SQL injection
+        const result = await db.execute(sql`DELETE FROM services WHERE id = ${id} RETURNING id`);
+        
+        // Check if any rows were affected
+        const rows = Array.isArray(result) ? result : (result.rows || []);
+        
+        if (!rows.length) {
+          console.log(`No service found with ID: ${id}`);
+          return res.status(404).json({ message: 'Service not found' });
+        }
+        
+        console.log(`Successfully deleted service with ID: ${id}`);
+        return res.status(204).end();
+      } catch (dbError: any) {
+        console.error(`Error deleting service with ID ${id}:`, dbError);
+        return res.status(500).json({ 
+          message: 'Database error when deleting service', 
+          error: dbError.message || String(dbError) 
+        });
+      }
     }
     
     // Method not supported
