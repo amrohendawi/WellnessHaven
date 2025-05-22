@@ -5,7 +5,7 @@ import cookie from 'cookie';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import ws from 'ws';
-import { users } from '../shared/schema';
+import { users } from '@shared/schema';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
 
