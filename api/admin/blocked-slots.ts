@@ -23,11 +23,12 @@ export const users = pgTable('users', {
   createdAt: timestamp('created_at').defaultNow(),
 });
 
+// Define blocked time slots table based on existing structure in the database
 export const blockedTimeSlots = pgTable('blocked_time_slots', {
   id: serial('id').primaryKey(),
   date: text('date').notNull(),
   time: text('time').notNull(),
-  createdAt: timestamp('created_at').defaultNow(),
+  created_at: timestamp('created_at').defaultNow(),
 });
 
 // Authentication middleware
@@ -94,40 +95,64 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const db = drizzle({ client: pool });
 
   try {
+    // Log the connection string (with sensitive info redacted)
+    console.log('Using database connection with hostname:', process.env.DATABASE_URL?.split('@')[1]?.split('/')[0] || 'unknown');
+    
     if (req.method === 'GET') {
-      // Get all blocked slots
-      const slots = await db.select().from(blockedTimeSlots);
-      return res.status(200).json(slots);
+      try {
+        console.log('Attempting to fetch blocked time slots from database');
+        const slots = await db.select().from(blockedTimeSlots);
+        console.log(`Successfully retrieved ${slots.length} blocked time slots`);
+        return res.status(200).json(slots);
+      } catch (dbError) {
+        console.error('Database error when fetching blocked time slots:', dbError);
+        return res.status(500).json({ message: 'Database error when fetching blocked slots', error: dbError.message });
+      }
     } else if (req.method === 'POST') {
-      // Create a new blocked slot
-      const { date, time } = req.body;
-      
-      if (!date || !time) {
-        return res.status(400).json({ message: 'Date and time are required' });
+      try {
+        // Create a new blocked slot
+        const { date, time } = req.body;
+        console.log('Creating new blocked time slot with data:', { date, time });
+        
+        if (!date || !time) {
+          return res.status(400).json({ message: 'Date and time are required' });
+        }
+        
+        // Use created_at field name instead of createdAt to match the schema
+        const [newSlot] = await db.insert(blockedTimeSlots).values({
+          date,
+          time,
+          created_at: new Date(),
+        }).returning();
+        
+        console.log('Successfully created new blocked time slot with ID:', newSlot.id);
+        return res.status(201).json(newSlot);
+      } catch (dbError) {
+        console.error('Database error when creating blocked time slot:', dbError);
+        return res.status(500).json({ message: 'Database error when creating blocked slot', error: dbError.message });
       }
-      
-      const [newSlot] = await db.insert(blockedTimeSlots).values({
-        date,
-        time,
-        createdAt: new Date(),
-      }).returning();
-      
-      return res.status(201).json(newSlot);
     } else if (req.method === 'DELETE') {
-      // Delete a blocked slot
-      const id = parseInt(req.query.id as string);
-      
-      if (isNaN(id)) {
-        return res.status(400).json({ message: 'Valid ID is required' });
+      try {
+        // Delete a blocked slot
+        const id = parseInt(req.query.id as string);
+        console.log('Attempting to delete blocked time slot with ID:', id);
+        
+        if (isNaN(id)) {
+          return res.status(400).json({ message: 'Valid ID is required' });
+        }
+        
+        await db.delete(blockedTimeSlots).where(eq(blockedTimeSlots.id, id));
+        console.log('Successfully deleted blocked time slot with ID:', id);
+        return res.status(204).end();
+      } catch (dbError) {
+        console.error('Database error when deleting blocked time slot:', dbError);
+        return res.status(500).json({ message: 'Database error when deleting blocked slot', error: dbError.message });
       }
-      
-      await db.delete(blockedTimeSlots).where(eq(blockedTimeSlots.id, id));
-      return res.status(204).end();
     } else {
       return res.status(405).json({ message: 'Method not allowed' });
     }
   } catch (error) {
-    console.error('Error handling blocked slots request:', error);
-    return res.status(500).json({ message: 'An error occurred while processing the request' });
+    console.error('Unexpected error handling blocked slots request:', error);
+    return res.status(500).json({ message: 'An unexpected error occurred while processing the request', error: error.message });
   }
 }

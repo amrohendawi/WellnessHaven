@@ -7,6 +7,7 @@ import { eq } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
 import { config } from 'dotenv';
 import cookie from 'cookie';
+import bcrypt from 'bcryptjs';
 
 // Load environment variables
 config();
@@ -21,20 +22,6 @@ export const users = pgTable('users', {
   password: text('password').notNull(),
   isAdmin: boolean('is_admin').default(false),
   createdAt: timestamp('created_at').defaultNow(),
-});
-
-// Define bookings table based on existing structure in the database
-export const bookings = pgTable('bookings', {
-  id: serial('id').primaryKey(),
-  name: text('name').notNull(),
-  email: text('email').notNull(),
-  phone: text('phone').notNull(),
-  date: text('date').notNull(),
-  time: text('time').notNull(),
-  service: text('service').notNull(),
-  notes: text('notes'),
-  status: text('status').default('pending'),
-  created_at: timestamp('created_at').defaultNow(),
 });
 
 // Authentication middleware
@@ -64,7 +51,7 @@ async function requireAuth(req: VercelRequest): Promise<{ authenticated: boolean
     // Find user in database
     const userResults = await db.select().from(users).where(eq(users.id, parseInt(decoded.userId))).limit(1);
     
-    if (!userResults || userResults.length === 0 || !userResults[0].isAdmin) {
+    if (!userResults || userResults.length === 0) {
       return { authenticated: false };
     }
     
@@ -82,7 +69,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
   
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   
   // Handle preflight requests
@@ -101,50 +88,68 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const db = drizzle({ client: pool });
 
   try {
-    // Log the connection string (with sensitive info redacted)
-    console.log('Using database connection with hostname:', process.env.DATABASE_URL?.split('@')[1]?.split('/')[0] || 'unknown');
-    
     if (req.method === 'GET') {
-      try {
-        // Get all bookings with more robust error handling
-        console.log('Attempting to fetch bookings from database');
-        const allBookings = await db.select().from(bookings);
-        console.log(`Successfully retrieved ${allBookings.length} bookings`);
-        return res.status(200).json(allBookings);
-      } catch (dbError) {
-        console.error('Database error when fetching bookings:', dbError);
-        return res.status(500).json({ message: 'Database error when fetching bookings', error: dbError.message });
+      // Get the admin user profile
+      const userResults = await db.select({
+        id: users.id,
+        username: users.username,
+        isAdmin: users.isAdmin,
+        createdAt: users.createdAt
+      }).from(users).where(eq(users.id, parseInt(auth.userId!))).limit(1);
+      
+      if (!userResults || userResults.length === 0) {
+        return res.status(404).json({ message: 'Profile not found' });
       }
-    } else if (req.method === 'POST') {
-      try {
-        // Create a new booking
-        const { name, email, phone, date, time, service, notes, status } = req.body;
-        console.log('Creating new booking with data:', { name, email, phone, date, time, service });
-        
-        // Use created_at field name instead of createdAt to match the schema
-        const [newBooking] = await db.insert(bookings).values({
-          name,
-          email,
-          phone,
-          date,
-          time,
-          service,
-          notes,
-          status: status || 'pending',
-          created_at: new Date(),
-        }).returning();
-        
-        console.log('Successfully created new booking with ID:', newBooking.id);
-        return res.status(201).json(newBooking);
-      } catch (dbError) {
-        console.error('Database error when creating booking:', dbError);
-        return res.status(500).json({ message: 'Database error when creating booking', error: dbError.message });
+      
+      // Return just the username and other public fields
+      return res.status(200).json({
+        id: userResults[0].id.toString(),
+        username: userResults[0].username,
+        firstName: 'Admin', // Default until we add these fields to the schema
+        email: userResults[0].username,
+        imageUrl: ''
+      });
+    } else if (req.method === 'POST' && req.url?.includes('/update')) {
+      // Handle profile update
+      const { username, firstName, email, password } = req.body;
+      
+      // Prepare update data
+      const updateData: Record<string, any> = {};
+      
+      if (username) {
+        updateData.username = username;
       }
+      
+      if (password) {
+        updateData.password = await bcrypt.hash(password, 10);
+      }
+      
+      // Update the user if there are changes
+      if (Object.keys(updateData).length > 0) {
+        await db.update(users)
+          .set(updateData)
+          .where(eq(users.id, parseInt(auth.userId!)));
+      }
+      
+      // Return updated profile data
+      const updatedUser = await db.select({
+        id: users.id,
+        username: users.username,
+        isAdmin: users.isAdmin,
+      }).from(users).where(eq(users.id, parseInt(auth.userId!))).limit(1);
+      
+      return res.status(200).json({
+        id: updatedUser[0].id.toString(),
+        username: updatedUser[0].username,
+        firstName: firstName || 'Admin',
+        email: email || updatedUser[0].username,
+        imageUrl: ''
+      });
     } else {
-      return res.status(405).json({ message: 'Method not allowed' });
+      return res.status(404).json({ message: 'Endpoint not found' });
     }
   } catch (error) {
-    console.error('Unexpected error handling bookings request:', error);
-    return res.status(500).json({ message: 'An unexpected error occurred while processing the request', error: error.message });
+    console.error('Error handling profile request:', error);
+    return res.status(500).json({ message: 'An error occurred while processing the request' });
   }
 }
