@@ -629,9 +629,9 @@ export async function fetchAdminAPI<T>(
       const host = typeof window !== 'undefined' ? window.location.host : '';
       
       // Always use same-domain API calls to prevent CORS issues
-      // Use the consolidated admin API endpoint in production to stay within Vercel's limits
-      apiUrl = `/api/admin-consolidated/${trimmedEndpoint}`;
-      logger.debug(`Using consolidated admin API URL: ${apiUrl} (host: ${host})`);
+      // Use the regular admin endpoint which now has all functionality consolidated
+      apiUrl = `/api/admin/${trimmedEndpoint}`;
+      logger.debug(`Using admin API URL: ${apiUrl} (host: ${host})`);
     } else {
       // In development, use relative paths to the original API endpoints
       // This allows development to continue using the Express server
