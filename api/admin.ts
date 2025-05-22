@@ -124,10 +124,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const db = await createDbConnection();
   
   try {
+    // Log path info to help debug routing issues
+    console.log(`Admin API request for path: '${path}', mainPath: '${mainPath}'`);
+    
     // Route based on path
     switch(mainPath) {
       case '':
       case 'dashboard':
+      case 'dashboard-summary':
         return handleDashboardSummary(req, res);
       
       case 'service-groups':
@@ -777,12 +781,51 @@ async function handleBookings(req: VercelRequest, res: VercelResponse, db: any) 
   try {
     // Log the connection string (with sensitive info redacted)
     console.log('Using database connection with hostname:', process.env.DATABASE_URL?.split('@')[1]?.split('/')[0] || 'unknown');
+    console.log('Bookings handler called with method:', req.method);
+    
+    // Check if bookings table exists using raw SQL to avoid schema issues
+    try {
+      const tablesResult = await db.execute(sql`
+        SELECT EXISTS (
+          SELECT FROM information_schema.tables 
+          WHERE table_schema = 'public' 
+          AND table_name = 'bookings'
+        );
+      `);
+      const tableExists = tablesResult[0]?.exists || false;
+      console.log('Bookings table exists:', tableExists);
+      
+      if (!tableExists) {
+        console.log('Creating bookings table since it does not exist');
+        await db.execute(sql`
+          CREATE TABLE IF NOT EXISTS bookings (
+            id SERIAL PRIMARY KEY,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            phone TEXT NOT NULL,
+            date TEXT NOT NULL,
+            time TEXT NOT NULL,
+            service TEXT NOT NULL,
+            notes TEXT,
+            status TEXT DEFAULT 'pending',
+            created_at TIMESTAMP DEFAULT NOW()
+          );
+        `);
+        console.log('Bookings table created successfully');
+      }
+    } catch (schemaError: any) {
+      console.error('Error checking/creating bookings table:', schemaError);
+    }
     
     if (req.method === 'GET') {
       try {
         // Get all bookings with more robust error handling
         console.log('Attempting to fetch bookings from database');
-        const allBookings = await db.select().from(bookings);
+        
+        // Use raw SQL query to avoid schema issues
+        const result = await db.execute(sql`SELECT * FROM bookings ORDER BY created_at DESC;`);
+        const allBookings = Array.isArray(result) ? result : [];
+        
         console.log(`Successfully retrieved ${allBookings.length} bookings`);
         return res.status(200).json(allBookings);
       } catch (dbError: any) {
@@ -828,11 +871,44 @@ async function handleBlockedSlots(req: VercelRequest, res: VercelResponse, db: a
   try {
     // Log the connection string (with sensitive info redacted)
     console.log('Using database connection with hostname:', process.env.DATABASE_URL?.split('@')[1]?.split('/')[0] || 'unknown');
+    console.log('Blocked Slots handler called with method:', req.method);
+    
+    // Check if blocked_time_slots table exists using raw SQL to avoid schema issues
+    try {
+      const tablesResult = await db.execute(sql`
+        SELECT EXISTS (
+          SELECT FROM information_schema.tables 
+          WHERE table_schema = 'public' 
+          AND table_name = 'blocked_time_slots'
+        );
+      `);
+      const tableExists = tablesResult[0]?.exists || false;
+      console.log('Blocked time slots table exists:', tableExists);
+      
+      if (!tableExists) {
+        console.log('Creating blocked_time_slots table since it does not exist');
+        await db.execute(sql`
+          CREATE TABLE IF NOT EXISTS blocked_time_slots (
+            id SERIAL PRIMARY KEY,
+            date TEXT NOT NULL,
+            time TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT NOW()
+          );
+        `);
+        console.log('Blocked time slots table created successfully');
+      }
+    } catch (schemaError: any) {
+      console.error('Error checking/creating blocked_time_slots table:', schemaError);
+    }
     
     if (req.method === 'GET') {
       try {
         console.log('Attempting to fetch blocked time slots from database');
-        const slots = await db.select().from(blockedTimeSlots);
+        
+        // Use raw SQL query to avoid schema issues
+        const result = await db.execute(sql`SELECT * FROM blocked_time_slots ORDER BY date ASC, time ASC;`);
+        const slots = Array.isArray(result) ? result : [];
+        
         console.log(`Successfully retrieved ${slots.length} blocked time slots`);
         return res.status(200).json(slots);
       } catch (dbError: any) {
