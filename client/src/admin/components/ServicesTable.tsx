@@ -1,17 +1,16 @@
-import React from 'react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
 import { AdminService } from '@shared/schema';
-import { Pencil, Trash2, Loader2, Info } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Info, Loader2, Pencil, Trash2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 interface ServicesTableProps {
   services: AdminService[];
@@ -138,7 +137,7 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => onDelete(service.id)}
+                  onClick={() => onDelete(service.id.toString())}
                   className="hover:text-destructive h-8 w-8 ml-1"
                   // disabled={isDeleting === service.id}
                 >

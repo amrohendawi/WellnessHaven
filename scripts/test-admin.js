@@ -1,6 +1,4 @@
 import fetch from 'node-fetch';
-import jwt from 'jsonwebtoken';
-import fs from 'fs';
 
 // Helper function to interpret admin user data with Clerk
 (async () => {

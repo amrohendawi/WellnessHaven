@@ -1,28 +1,28 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useLanguage } from '@/context/LanguageContext';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { useForm } from 'react-hook-form';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { format } from 'date-fns';
-import { ar, de, tr, enUS } from 'date-fns/locale';
-import { cn } from '@/lib/utils';
-import { CalendarIcon } from 'lucide-react';
+import { Calendar } from '@/components/ui/calendar';
 import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogHeader,
-  DialogFooter,
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
 } from '@/components/ui/dialog';
-import { useQuery } from '@tanstack/react-query';
-import type { ServiceDisplay, ServiceGroupDisplay } from '@shared/schema';
-import { useToast } from '@/hooks/use-toast';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Toaster } from '@/components/ui/toaster';
-import { getAvailableTimeSlots, createBooking, getServiceGroups } from '@/lib/api';
+import { useLanguage } from '@/context/LanguageContext';
+import { useToast } from '@/hooks/use-toast';
+import { createBooking, getAvailableTimeSlots, getServiceGroups } from '@/lib/api';
+import { cn } from '@/lib/utils';
+import type { ServiceDisplay, ServiceGroupDisplay } from '@shared/schema';
+import { useQuery } from '@tanstack/react-query';
+import { format } from 'date-fns';
+import { ar, de, enUS, tr } from 'date-fns/locale';
+import { CalendarIcon } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 // Time slots will be fetched from the API for each date
 
@@ -858,10 +858,14 @@ const AvailableTimeSlots = ({
     retryDelay: 1000,
     refetchOnWindowFocus: false,
     staleTime: 0,
-    onError: err => {
-      console.warn('Error fetching time slots, will use fallback:', err);
-    },
   });
+
+  // Handle errors in useEffect instead of onError prop
+  useEffect(() => {
+    if (error) {
+      console.warn('Error fetching time slots, will use fallback:', error);
+    }
+  }, [error]);
 
   if (isLoading || isFetching) {
     return (
@@ -874,7 +878,7 @@ const AvailableTimeSlots = ({
   }
 
   // Use fallback time slots if the API call fails
-  if (error || !data || !data.availableSlots) {
+  if (error || !data || !('availableSlots' in data) || !data.availableSlots) {
     // Generate fallback time slots and display them
     const fallbackSlots = generateFallbackTimeSlots();
 
@@ -906,7 +910,7 @@ const AvailableTimeSlots = ({
     );
   }
 
-  if (data.availableSlots.length === 0) {
+  if (data && 'availableSlots' in data && data.availableSlots.length === 0) {
     return (
       <div className="text-center text-gray-500 p-4 border rounded-md">
         {t('noTimeSlotsAvailable')}
@@ -917,16 +921,18 @@ const AvailableTimeSlots = ({
 
   return (
     <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-      {data.availableSlots.map(time => (
-        <Button
-          key={time}
-          variant={selectedTime === time ? 'default' : 'outline'}
-          className="hover-lift"
-          onClick={() => onSelectTime(time)}
-        >
-          {time}
-        </Button>
-      ))}
+      {data &&
+        'availableSlots' in data &&
+        data.availableSlots.map((time: string) => (
+          <Button
+            key={time}
+            variant={selectedTime === time ? 'default' : 'outline'}
+            className="hover-lift"
+            onClick={() => onSelectTime(time)}
+          >
+            {time}
+          </Button>
+        ))}
     </div>
   );
 };

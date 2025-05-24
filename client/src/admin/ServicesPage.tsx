@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { fetchAdminAPI } from '@/lib/api';
+import { AdminService, AdminServiceFormValues } from '@shared/schema';
+import { Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ServiceFormDialog } from './components/ServiceFormDialog';
 import { ServicesPageHeader } from './components/ServicesPageHeader';
 import { ServicesTable } from './components/ServicesTable';
-import { ServiceFormDialog } from './components/ServiceFormDialog';
-import { AdminService, AdminServiceFormValues } from '@shared/schema';
 
 export default function ServicesPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -163,7 +163,14 @@ export default function ServicesPage() {
             if (!open) setCurrentService(null);
           }}
           onSubmit={handleEditSubmit}
-          initialValues={currentService}
+          initialValues={{
+            ...currentService,
+            longDescriptionEn: currentService.longDescriptionEn || undefined,
+            longDescriptionAr: currentService.longDescriptionAr || undefined,
+            longDescriptionDe: currentService.longDescriptionDe || undefined,
+            longDescriptionTr: currentService.longDescriptionTr || undefined,
+            imageLarge: currentService.imageLarge || undefined,
+          }}
           dialogTitle="Edit Service"
           dialogDescription={`Update the details for ${currentService.nameEn}.`}
           submitButtonText="Save Changes"

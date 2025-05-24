@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Edit2, Trash2, User } from 'lucide-react';
+import { Edit2, Trash2 } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,

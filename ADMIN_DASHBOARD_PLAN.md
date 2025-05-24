@@ -1,10 +1,12 @@
 # Admin Dashboard Implementation Checklist
 
-This checklist ensures a stable, predictable implementation of the admin dashboard using Clerk and Shadcn UI.
+This checklist ensures a stable, predictable implementation of the admin
+dashboard using Clerk and Shadcn UI.
 
 ## 1. Authentication & Authorization (Clerk)
 
-- [x] Sign up for Clerk and install `@clerk/clerk-sdk-node` and `@clerk/clerk-react`.
+- [x] Sign up for Clerk and install `@clerk/clerk-sdk-node` and
+      `@clerk/clerk-react`.
 - [x] Configure Clerk (environment variables, `vercel.json`).
 - [x] Wrap React app with `<ClerkProvider>`.
 - [x] Protect admin routes with `<SignedIn>`/`<SignedOut>` or route guards.
@@ -13,7 +15,8 @@ This checklist ensures a stable, predictable implementation of the admin dashboa
 ## 2. Dashboard UI Structure
 
 - [x] Create `client/src/admin/` folder (`pages`, `components`, `hooks`, `lib`).
-- [x] Build `AdminLayout.tsx` with sidebar (Dashboard, Bookings, Availability, Services).
+- [x] Build `AdminLayout.tsx` with sidebar (Dashboard, Bookings, Availability,
+      Services).
 - [x] Set up `/admin/*` routes and guard with Clerk authentication.
 
 ## 3. Booking Management
@@ -24,7 +27,8 @@ This checklist ensures a stable, predictable implementation of the admin dashboa
   - [x] `PUT /api/admin/bookings/:id` (update status/details).
 - [x] Implement `BookingsPage.tsx` with a data table, filters, and actions.
 - [x] Implement `BookingDetailPage.tsx` to view/edit individual bookings.
-- [x] Add route `/admin/bookings/:id` in `AdminLayout.tsx` to `BookingDetailPage.tsx`.
+- [x] Add route `/admin/bookings/:id` in `AdminLayout.tsx` to
+      `BookingDetailPage.tsx`.
 
 ## 4. Availability Management
 
@@ -42,12 +46,14 @@ This checklist ensures a stable, predictable implementation of the admin dashboa
 ## 6. Dashboard Overview
 
 - [x] Create `GET /api/admin/dashboard-summary` for key metrics.
-- [x] Build `DashboardPage.tsx` showing cards: bookings count, upcoming, revenue.
+- [x] Build `DashboardPage.tsx` showing cards: bookings count, upcoming,
+      revenue.
 
 ## 7. Styling and UX
 
 - [x] Use Shadcn UI components for consistency in Bookings page.
-- [x] Style `BookingDetailPage.tsx` with Shadcn `Card`, `Typography`, `Select`, and `Button`.
+- [x] Style `BookingDetailPage.tsx` with Shadcn `Card`, `Typography`, `Select`,
+      and `Button`.
 - [x] Ensure responsive layout for Bookings pages.
 
 ## 8. Deployment & Testing
@@ -59,6 +65,7 @@ This checklist ensures a stable, predictable implementation of the admin dashboa
 ## Next Steps
 
 - [ ] Write smoke tests for `/api/admin/bookings` endpoints.
-- [ ] Develop smoke tests for `/api/admin/services` and `/api/admin/blocked-slots`.
+- [ ] Develop smoke tests for `/api/admin/services` and
+      `/api/admin/blocked-slots`.
 - [ ] Style Services and Availability pages with Shadcn UI.
 - [ ] Integrate Clerk toasts and loading indicators across admin flows.

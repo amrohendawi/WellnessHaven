@@ -49,7 +49,8 @@ export async function uploadToImgur(file: File): Promise<string> {
               reject(new Error('Imgur upload succeeded but no image link was returned'));
             }
           } catch (e) {
-            reject(new Error(`Failed to parse Imgur response: ${e.message}`));
+            const errorMessage = e instanceof Error ? e.message : 'Unknown error';
+            reject(new Error(`Failed to parse Imgur response: ${errorMessage}`));
           }
         } else {
           let errorMsg = `HTTP error ${xhr.status}`;

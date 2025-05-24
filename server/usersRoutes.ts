@@ -1,13 +1,13 @@
-import { Router, Request, Response } from 'express';
+import bcrypt from 'bcryptjs';
+import { eq } from 'drizzle-orm';
+import { Request, Router } from 'express';
+import fs from 'fs';
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs';
 import { fileURLToPath } from 'url';
-import { db } from './db';
 import { users } from '../shared/schema';
-import { eq, ne } from 'drizzle-orm';
-import bcrypt from 'bcryptjs';
 import { requireAuth } from './auth';
+import { db } from './db';
 
 // ES module equivalent for __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -15,7 +15,7 @@ const __dirname = path.dirname(__filename);
 
 // Set up file storage for profile images (same as in adminProfileRoutes)
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: (_req, _file, cb) => {
     const uploadDir = path.join(__dirname, '../uploads/profiles');
 
     // Create directory if it doesn't exist
@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
 
     cb(null, uploadDir);
   },
-  filename: (req, file, cb) => {
+  filename: (_req, file, cb) => {
     // Use timestamp to make filename unique
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     const ext = path.extname(file.originalname);
@@ -34,7 +34,7 @@ const storage = multer.diskStorage({
 });
 
 // Set up file filter for images
-const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const fileFilter = (_req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   if (file.mimetype.startsWith('image/')) {
     cb(null, true);
   } else {
@@ -54,7 +54,7 @@ const upload = multer({
 const router = Router();
 
 // Get all users
-router.get('/users', requireAuth, async (req, res) => {
+router.get('/users', requireAuth, async (_req, res) => {
   try {
     const allUsers = await db
       .select({

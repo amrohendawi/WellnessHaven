@@ -1,13 +1,13 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { config } from 'dotenv';
 import { Pool, neonConfig } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-serverless';
-import { pgTable, text, serial, boolean, timestamp } from 'drizzle-orm/pg-core';
-import { sql, eq, ne } from 'drizzle-orm';
-import ws from 'ws';
-import jwt from 'jsonwebtoken';
-import cookie from 'cookie';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import bcrypt from 'bcryptjs';
+import cookie from 'cookie';
+import { config } from 'dotenv';
+import { eq, sql } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/neon-serverless';
+import { boolean, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import jwt from 'jsonwebtoken';
+import ws from 'ws';
 
 // Load environment variables
 config();
@@ -567,12 +567,10 @@ async function handleServices(req: VercelRequest, res: VercelResponse, pathParts
         return res.status(201).json(transformService(newService));
       } catch (dbError) {
         console.error('Error creating service:', dbError);
-        return res
-          .status(500)
-          .json({
-            message: 'Database error when creating service',
-            error: typeof dbError === 'object' ? JSON.stringify(dbError) : String(dbError),
-          });
+        return res.status(500).json({
+          message: 'Database error when creating service',
+          error: typeof dbError === 'object' ? JSON.stringify(dbError) : String(dbError),
+        });
       }
     }
 
@@ -714,7 +712,7 @@ async function handleUsers(
   req: VercelRequest,
   res: VercelResponse,
   db: any,
-  auth: { authenticated: boolean; userId?: string }
+  _auth: { authenticated: boolean; userId?: string }
 ) {
   try {
     if (req.method === 'GET') {
@@ -983,12 +981,10 @@ async function handleBookings(req: VercelRequest, res: VercelResponse, db: any) 
     }
   } catch (error: any) {
     console.error('Unexpected error handling bookings request:', error);
-    return res
-      .status(500)
-      .json({
-        message: 'An unexpected error occurred while processing the request',
-        error: error.message,
-      });
+    return res.status(500).json({
+      message: 'An unexpected error occurred while processing the request',
+      error: error.message,
+    });
   }
 }
 
@@ -1100,12 +1096,10 @@ async function handleBlockedSlots(req: VercelRequest, res: VercelResponse, db: a
     }
   } catch (error: any) {
     console.error('Unexpected error handling blocked slots request:', error);
-    return res
-      .status(500)
-      .json({
-        message: 'An unexpected error occurred while processing the request',
-        error: error.message,
-      });
+    return res.status(500).json({
+      message: 'An unexpected error occurred while processing the request',
+      error: error.message,
+    });
   }
 }
 

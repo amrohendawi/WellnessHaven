@@ -1,6 +1,7 @@
 # Vercel Deployment Guide
 
-This guide will walk you through the steps to deploy the Dubai Rose Beauty & Aesthetics Center website to Vercel.
+This guide will walk you through the steps to deploy the Dubai Rose Beauty &
+Aesthetics Center website to Vercel.
 
 ## Prerequisites
 
@@ -32,7 +33,8 @@ To add these variables:
 
 ### 3. Deploy Settings
 
-Vercel should automatically detect the project as a Vite project based on the `vercel.json` configuration.
+Vercel should automatically detect the project as a Vite project based on the
+`vercel.json` configuration.
 
 Deployment settings:
 
@@ -90,8 +92,10 @@ After deployment, you can:
 
 ### Updating Your Site
 
-Any changes pushed to the main branch will automatically trigger a new deployment.
+Any changes pushed to the main branch will automatically trigger a new
+deployment.
 
 ### Preview Deployments
 
-Vercel creates preview deployments for pull requests, allowing you to test changes before merging to production.
+Vercel creates preview deployments for pull requests, allowing you to test
+changes before merging to production.

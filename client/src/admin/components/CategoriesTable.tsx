@@ -8,7 +8,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Edit, Trash2, Eye, EyeOff } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { ServiceGroup } from '@shared/schema';
 

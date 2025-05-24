@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { fetchAdminAPI } from '@/lib/api';
-import { toast } from 'sonner';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { Loader2, UserPlus } from 'lucide-react';
-import UsersTable, { UserData } from './components/UsersTable';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import UserFormDialog from './components/UserFormDialog';
+import UsersTable, { UserData } from './components/UsersTable';
 
 export default function UsersPage() {
-  const { user: currentUser } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [users, setUsers] = useState<UserData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -132,7 +132,7 @@ export default function UsersPage() {
               onEdit={handleEditUser}
               onDelete={handleDeleteUser}
               isLoading={isLoading}
-              currentUserId={currentUser?.id}
+              currentUserId={undefined}
             />
           )}
         </CardContent>

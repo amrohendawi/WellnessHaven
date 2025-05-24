@@ -2,13 +2,16 @@
 
 ## Overview
 
-This document provides a comprehensive analysis of the Dubai Rose admin dashboard architecture, including system design, implementation patterns, and quality assessment.
+This document provides a comprehensive analysis of the Dubai Rose admin
+dashboard architecture, including system design, implementation patterns, and
+quality assessment.
 
 ## System Architecture
 
 ### High-Level Architecture
 
-The Dubai Rose admin dashboard follows a modern web application architecture with the following key components:
+The Dubai Rose admin dashboard follows a modern web application architecture
+with the following key components:
 
 - **Frontend**: React/TypeScript with Vite build system
 - **Backend**: Express.js server with Vercel serverless functions
@@ -217,7 +220,8 @@ drizzle_orm --> postgres
 
 ### Authentication Architecture
 
-The authentication system uses a custom JWT-based approach with the following characteristics:
+The authentication system uses a custom JWT-based approach with the following
+characteristics:
 
 **Strengths:**
 
@@ -486,7 +490,8 @@ Page -> Admin: Show success message
 
 ### Areas for Improvement
 
-See the comprehensive bug report and quality issues document for detailed analysis of improvements needed.
+See the comprehensive bug report and quality issues document for detailed
+analysis of improvements needed.
 
 ## Future Enhancements
 
@@ -518,4 +523,6 @@ See the comprehensive bug report and quality issues document for detailed analys
 
 ---
 
-_This document serves as a comprehensive architectural overview of the Dubai Rose admin dashboard system. For specific implementation details, refer to the source code and additional documentation._
+_This document serves as a comprehensive architectural overview of the Dubai
+Rose admin dashboard system. For specific implementation details, refer to the
+source code and additional documentation._

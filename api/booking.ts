@@ -3,16 +3,7 @@ import { config } from 'dotenv';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from 'ws';
-import {
-  pgTable,
-  serial,
-  varchar,
-  date,
-  time,
-  integer,
-  timestamp,
-  text,
-} from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, date, time, integer } from 'drizzle-orm/pg-core';
 
 // Ensure environment variables are loaded
 config();

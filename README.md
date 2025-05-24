@@ -2,7 +2,9 @@
 
 ![Dubai Rose Logo](client/src/assets/logo.png)
 
-A modern, multilingual website for the Dubai Rose women-only beauty center featuring service showcase, VIP membership system, appointment booking, and content management.
+A modern, multilingual website for the Dubai Rose women-only beauty center
+featuring service showcase, VIP membership system, appointment booking, and
+content management.
 
 ## 🌟 Features
 
@@ -15,7 +17,8 @@ A modern, multilingual website for the Dubai Rose women-only beauty center featu
 
 ### 💅 Service Showcase
 
-- Categorized display of beauty services (facial treatments, laser treatments, etc.)
+- Categorized display of beauty services (facial treatments, laser treatments,
+  etc.)
 - Service filtering by category
 - Detailed service pages with benefits and procedure information
 - Image galleries for each service
@@ -55,13 +58,17 @@ A modern, multilingual website for the Dubai Rose women-only beauty center featu
 
 ![Component Structure](diagrams/component-structure.puml)
 
-The component structure diagram shows the high-level organization of the application, with clear separation between frontend, backend, and database layers. See the source PlantUML file in `diagrams/component-structure.puml`.
+The component structure diagram shows the high-level organization of the
+application, with clear separation between frontend, backend, and database
+layers. See the source PlantUML file in `diagrams/component-structure.puml`.
 
 ### Data Flow
 
 ![Data Flow](diagrams/data-flow.puml)
 
-The data flow diagram illustrates how user interactions flow through the application layers, from the UI to the database and back. See the source PlantUML file in `diagrams/data-flow.puml`.
+The data flow diagram illustrates how user interactions flow through the
+application layers, from the UI to the database and back. See the source
+PlantUML file in `diagrams/data-flow.puml`.
 
 ## 🛠️ Technologies Used
 
@@ -139,7 +146,10 @@ dubai-rose/
 
 ![Database Schema](diagrams/database-schema.puml)
 
-The database schema diagram shows the structure of the PostgreSQL database tables and their relationships. This schema is implemented using Drizzle ORM in `shared/schema.ts` and supports all the application's data storage needs. See the source PlantUML file in `diagrams/database-schema.puml`.
+The database schema diagram shows the structure of the PostgreSQL database
+tables and their relationships. This schema is implemented using Drizzle ORM in
+`shared/schema.ts` and supports all the application's data storage needs. See
+the source PlantUML file in `diagrams/database-schema.puml`.
 
 ## 🚀 Getting Started
 
@@ -163,8 +173,8 @@ cd dubai-rose
 npm install
 ```
 
-3. Set up environment variables
-   Create a `.env` file in the root directory and add:
+3. Set up environment variables Create a `.env` file in the root directory and
+   add:
 
 ```
 DATABASE_URL=postgresql://username:password@localhost:5432/dubai_rose
@@ -202,7 +212,8 @@ npm run dev
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the LICENSE file for
+details.
 
 ## 🙏 Acknowledgements
 

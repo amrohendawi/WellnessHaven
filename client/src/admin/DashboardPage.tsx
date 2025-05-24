@@ -10,15 +10,7 @@ import {
 import { fetchAdminAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { CircleEllipsis } from 'lucide-react';
-import {
-  CalendarDays,
-  Check,
-  Clock,
-  PackageOpen,
-  Users,
-  CheckCircle,
-  HelpCircle,
-} from 'lucide-react';
+import { CalendarDays, Clock, PackageOpen, Users, CheckCircle, HelpCircle } from 'lucide-react';
 
 interface DashboardSummary {
   totalBookings: number;

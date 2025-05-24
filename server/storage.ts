@@ -1,23 +1,23 @@
 import {
-  users,
-  type User,
-  type InsertUser,
-  services,
-  type Service,
-  type InsertService,
-  bookings,
-  type Booking,
-  type InsertBooking,
-  memberships,
-  type Membership,
-  serviceGroups,
-  type ServiceGroup,
   blockedTimeSlots,
+  bookings,
+  memberships,
+  serviceGroups,
+  services,
+  users,
   type BlockedTimeSlot,
+  type Booking,
   type InsertBlockedTimeSlot,
+  type InsertBooking,
+  type InsertService,
+  type InsertUser,
+  type Membership,
+  type Service,
+  type ServiceGroup,
+  type User,
 } from '@shared/schema';
-import { db } from './db';
 import { eq } from 'drizzle-orm';
+import { db } from './db';
 
 // modify the interface with any CRUD methods you might need
 export interface IStorage {
@@ -158,7 +158,23 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createServiceGroup(group: Partial<ServiceGroup>): Promise<ServiceGroup> {
-    const [newGroup] = await db.insert(serviceGroups).values(group).returning();
+    // Ensure required fields are provided
+    const serviceGroupData = {
+      slug: group.slug || '',
+      nameEn: group.nameEn || '',
+      nameAr: group.nameAr || '',
+      nameDe: group.nameDe || '',
+      nameTr: group.nameTr || '',
+      descriptionEn: group.descriptionEn || null,
+      descriptionAr: group.descriptionAr || null,
+      descriptionDe: group.descriptionDe || null,
+      descriptionTr: group.descriptionTr || null,
+      imageUrl: group.imageUrl || null,
+      displayOrder: group.displayOrder ?? 0,
+      isActive: group.isActive ?? true,
+    };
+
+    const [newGroup] = await db.insert(serviceGroups).values(serviceGroupData).returning();
     return newGroup;
   }
 
