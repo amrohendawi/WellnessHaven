@@ -27,26 +27,37 @@ import { Loader2, User, ImagePlus } from 'lucide-react';
 import { UserData } from './UsersTable';
 
 // Form validation schema
-const userFormSchema = z.object({
-  username: z.string().min(3, {
-    message: 'Username must be at least 3 characters.',
-  }).email({
-    message: 'Please enter a valid email address.',
-  }),
-  firstName: z.string().optional(),
-  email: z.string().email({
-    message: 'Please enter a valid email address.',
-  }).optional(),
-  password: z.string().min(6, {
-    message: 'Password must be at least 6 characters.',
-  }).optional().or(z.literal('')),
-  confirmPassword: z.string().optional().or(z.literal('')),
-  isAdmin: z.boolean().default(false),
-})
-.refine(data => !data.password || data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ['confirmPassword'],
-});
+const userFormSchema = z
+  .object({
+    username: z
+      .string()
+      .min(3, {
+        message: 'Username must be at least 3 characters.',
+      })
+      .email({
+        message: 'Please enter a valid email address.',
+      }),
+    firstName: z.string().optional(),
+    email: z
+      .string()
+      .email({
+        message: 'Please enter a valid email address.',
+      })
+      .optional(),
+    password: z
+      .string()
+      .min(6, {
+        message: 'Password must be at least 6 characters.',
+      })
+      .optional()
+      .or(z.literal('')),
+    confirmPassword: z.string().optional().or(z.literal('')),
+    isAdmin: z.boolean().default(false),
+  })
+  .refine(data => !data.password || data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
 
 type UserFormValues = z.infer<typeof userFormSchema>;
 
@@ -86,28 +97,28 @@ export default function UserFormDialog({
   const handleSubmit = async (values: UserFormValues) => {
     // Create FormData to handle file upload
     const formData = new FormData();
-    
+
     // Append user data
     formData.append('username', values.username);
     formData.append('firstName', values.firstName || '');
     formData.append('email', values.email || '');
     formData.append('isAdmin', values.isAdmin.toString());
-    
+
     // Only include password if it's provided (for new users or password changes)
     if (values.password) {
       formData.append('password', values.password);
     }
-    
+
     // Add user ID for updates
     if (user?.id) {
       formData.append('userId', user.id);
     }
-    
+
     // Handle file upload if there's a file
     if (fileInputRef.current?.files?.[0]) {
       formData.append('profileImage', fileInputRef.current.files[0]);
     }
-    
+
     // Submit the form
     await onSubmit(formData);
   };
@@ -135,12 +146,12 @@ export default function UserFormDialog({
         <DialogHeader>
           <DialogTitle>{isNewUser ? 'Add New User' : 'Edit User'}</DialogTitle>
           <DialogDescription>
-            {isNewUser 
-              ? 'Create a new user account with the appropriate permissions.' 
+            {isNewUser
+              ? 'Create a new user account with the appropriate permissions.'
               : 'Update user details and permissions.'}
           </DialogDescription>
         </DialogHeader>
-        
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
             {/* Profile Image Upload */}
@@ -167,7 +178,7 @@ export default function UserFormDialog({
                 />
               </div>
             </div>
-            
+
             {/* Username (Email) */}
             <FormField
               control={form.control}
@@ -178,14 +189,12 @@ export default function UserFormDialog({
                   <FormControl>
                     <Input {...field} type="email" placeholder="user@example.com" />
                   </FormControl>
-                  <FormDescription>
-                    This will be used as the username for login.
-                  </FormDescription>
+                  <FormDescription>This will be used as the username for login.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             {/* Name */}
             <FormField
               control={form.control}
@@ -200,7 +209,7 @@ export default function UserFormDialog({
                 </FormItem>
               )}
             />
-            
+
             {/* Password */}
             <FormField
               control={form.control}
@@ -209,22 +218,22 @@ export default function UserFormDialog({
                 <FormItem>
                   <FormLabel>{isNewUser ? 'Password*' : 'New Password'}</FormLabel>
                   <FormControl>
-                    <Input 
-                      {...field} 
-                      type="password" 
-                      placeholder={isNewUser ? "Enter password" : "Leave blank to keep current password"} 
+                    <Input
+                      {...field}
+                      type="password"
+                      placeholder={
+                        isNewUser ? 'Enter password' : 'Leave blank to keep current password'
+                      }
                     />
                   </FormControl>
                   {!isNewUser && (
-                    <FormDescription>
-                      Leave blank to keep the current password.
-                    </FormDescription>
+                    <FormDescription>Leave blank to keep the current password.</FormDescription>
                   )}
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             {/* Confirm Password */}
             <FormField
               control={form.control}
@@ -239,7 +248,7 @@ export default function UserFormDialog({
                 </FormItem>
               )}
             />
-            
+
             {/* Admin Toggle */}
             <FormField
               control={form.control}
@@ -253,24 +262,17 @@ export default function UserFormDialog({
                     </FormDescription>
                   </div>
                   <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
                 </FormItem>
               )}
             />
-            
+
             <DialogFooter>
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={() => onOpenChange(false)}
-              >
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Cancel
               </Button>
-              <Button 
+              <Button
                 type="submit"
                 className="bg-blue-600 hover:bg-blue-700 text-white"
                 disabled={isLoading}
@@ -280,8 +282,10 @@ export default function UserFormDialog({
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     {isNewUser ? 'Creating...' : 'Saving...'}
                   </>
+                ) : isNewUser ? (
+                  'Create User'
                 ) : (
-                  isNewUser ? 'Create User' : 'Save Changes'
+                  'Save Changes'
                 )}
               </Button>
             </DialogFooter>

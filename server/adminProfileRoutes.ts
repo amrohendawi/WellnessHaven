@@ -66,11 +66,15 @@ interface AdminProfile {
 router.get('/profile', requireAuth, async (req, res) => {
   try {
     // Get the admin user from the database
-    const adminUsers = await db.select({
-      username: users.username,
-      isAdmin: users.isAdmin,
-      createdAt: users.createdAt
-    }).from(users).where(eq(users.isAdmin, true)).limit(1);
+    const adminUsers = await db
+      .select({
+        username: users.username,
+        isAdmin: users.isAdmin,
+        createdAt: users.createdAt,
+      })
+      .from(users)
+      .where(eq(users.isAdmin, true))
+      .limit(1);
 
     if (!adminUsers || adminUsers.length === 0) {
       return res.status(404).json({ message: 'Admin profile not found' });
@@ -82,7 +86,7 @@ router.get('/profile', requireAuth, async (req, res) => {
       // Additional fields will be added when those columns are added to DB
       firstName: 'Admin', // Default until we add these fields to the schema
       email: 'admin@dubairose.ae',
-      imageUrl: ''
+      imageUrl: '',
     });
   } catch (error) {
     console.error('Error fetching admin profile:', error);
@@ -97,37 +101,35 @@ router.post('/profile/update', requireAuth, upload.single('profileImage'), async
 
     // Find the admin user
     const adminUsers = await db.select().from(users).where(eq(users.isAdmin, true)).limit(1);
-    
+
     if (!adminUsers || adminUsers.length === 0) {
       return res.status(404).json({ message: 'Admin profile not found' });
     }
-    
+
     const adminUser = adminUsers[0];
-    
+
     // Prepare update data
     const updateData: Record<string, any> = {};
-    
+
     // Update username if provided
     if (username && username !== adminUser.username) {
       updateData.username = username;
     }
-    
+
     // Update password if provided
     if (password && password.trim() !== '') {
       const passwordHash = await bcrypt.hash(password, 10);
       updateData.password = passwordHash;
     }
-    
+
     // Only update if there are changes
     if (Object.keys(updateData).length > 0) {
-      await db.update(users)
-        .set(updateData)
-        .where(eq(users.id, adminUser.id));
+      await db.update(users).set(updateData).where(eq(users.id, adminUser.id));
     }
-    
+
     // For now, we're not storing firstName, email, or imageUrl in the database
     // We would add these fields to the database schema in a production app
-    
+
     // If an image was uploaded
     let imageUrl = '';
     if (req.file) {
@@ -136,11 +138,15 @@ router.post('/profile/update', requireAuth, upload.single('profileImage'), async
     }
 
     // Get the updated user data
-    const updatedUser = await db.select({
-      username: users.username,
-      isAdmin: users.isAdmin,
-      createdAt: users.createdAt
-    }).from(users).where(eq(users.id, adminUser.id)).limit(1);
+    const updatedUser = await db
+      .select({
+        username: users.username,
+        isAdmin: users.isAdmin,
+        createdAt: users.createdAt,
+      })
+      .from(users)
+      .where(eq(users.id, adminUser.id))
+      .limit(1);
 
     res.json({
       message: 'Profile updated successfully',
@@ -148,8 +154,8 @@ router.post('/profile/update', requireAuth, upload.single('profileImage'), async
         username: updatedUser[0].username,
         firstName: firstName || 'Admin', // Placeholder
         email: email || 'admin@dubairose.ae', // Placeholder
-        imageUrl: imageUrl || ''
-      }
+        imageUrl: imageUrl || '',
+      },
     });
   } catch (error) {
     console.error('Error updating profile:', error);

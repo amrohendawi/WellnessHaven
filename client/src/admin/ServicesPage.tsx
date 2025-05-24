@@ -5,10 +5,7 @@ import { fetchAdminAPI } from '@/lib/api';
 import { ServicesPageHeader } from './components/ServicesPageHeader';
 import { ServicesTable } from './components/ServicesTable';
 import { ServiceFormDialog } from './components/ServiceFormDialog';
-import {
-  AdminService,
-  AdminServiceFormValues,
-} from '@shared/schema';
+import { AdminService, AdminServiceFormValues } from '@shared/schema';
 
 export default function ServicesPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);

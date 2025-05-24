@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
+import type React from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -31,7 +32,7 @@ type NavItem = {
   active?: boolean;
 };
 
-interface User {
+interface AdminUser {
   id: string;
   username: string;
   firstName?: string;
@@ -43,7 +44,7 @@ export default function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, isLoading, logout } = useAuth();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AdminUser | null>(null);
   const [mounted, setMounted] = useState(false);
 
   // Set mounted state after initial render

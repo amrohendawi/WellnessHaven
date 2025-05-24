@@ -31,11 +31,11 @@ export async function authenticateUser(username: string, password: string): Prom
   try {
     // Find the user in the database
     const user = await db.select().from(users).where(eq(users.username, username)).limit(1);
-    
+
     if (!user || user.length === 0 || !user[0].isAdmin) {
       return false;
     }
-    
+
     // Compare the provided password with the stored hash
     return await bcrypt.compare(password, user[0].password);
   } catch (error) {
@@ -99,16 +99,20 @@ export const logout = (_req: Request, res: Response) => {
 export const getCurrentUser = async (req: AuthRequest, res: Response) => {
   try {
     // Fetch user details from the database
-    const adminUsers = await db.select({
-      id: users.id,
-      username: users.username,
-      isAdmin: users.isAdmin
-    }).from(users).where(eq(users.isAdmin, true)).limit(1);
-    
+    const adminUsers = await db
+      .select({
+        id: users.id,
+        username: users.username,
+        isAdmin: users.isAdmin,
+      })
+      .from(users)
+      .where(eq(users.isAdmin, true))
+      .limit(1);
+
     if (!adminUsers || adminUsers.length === 0) {
       return res.status(404).json({ message: 'User not found' });
     }
-    
+
     res.json({
       id: adminUsers[0].id.toString(),
       username: adminUsers[0].username,

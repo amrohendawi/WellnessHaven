@@ -56,12 +56,14 @@ const router = Router();
 // Get all users
 router.get('/users', requireAuth, async (req, res) => {
   try {
-    const allUsers = await db.select({
-      id: users.id,
-      username: users.username,
-      isAdmin: users.isAdmin,
-      createdAt: users.createdAt
-    }).from(users);
+    const allUsers = await db
+      .select({
+        id: users.id,
+        username: users.username,
+        isAdmin: users.isAdmin,
+        createdAt: users.createdAt,
+      })
+      .from(users);
 
     // Format the users with additional fields
     // In the future, these could come from additional columns in the users table
@@ -84,25 +86,26 @@ router.get('/users', requireAuth, async (req, res) => {
 router.get('/users/:userId', requireAuth, async (req, res) => {
   try {
     const { userId } = req.params;
-    
+
     if (!userId) {
       return res.status(400).json({ message: 'User ID is required' });
     }
-    
-    const user = await db.select({
-      id: users.id,
-      username: users.username,
-      isAdmin: users.isAdmin,
-      createdAt: users.createdAt
-    })
-    .from(users)
-    .where(eq(users.id, parseInt(userId)))
-    .limit(1);
-    
+
+    const user = await db
+      .select({
+        id: users.id,
+        username: users.username,
+        isAdmin: users.isAdmin,
+        createdAt: users.createdAt,
+      })
+      .from(users)
+      .where(eq(users.id, parseInt(userId)))
+      .limit(1);
+
     if (!user || user.length === 0) {
       return res.status(404).json({ message: 'User not found' });
     }
-    
+
     // Format the user response
     const formattedUser = {
       ...user[0],
@@ -111,7 +114,7 @@ router.get('/users/:userId', requireAuth, async (req, res) => {
       email: user[0].username,
       imageUrl: '',
     };
-    
+
     res.json(formattedUser);
   } catch (error) {
     console.error('Error fetching user:', error);
@@ -123,22 +126,22 @@ router.get('/users/:userId', requireAuth, async (req, res) => {
 router.post('/users/create', requireAuth, upload.single('profileImage'), async (req, res) => {
   try {
     const { username, firstName, email, password, isAdmin } = req.body;
-    
+
     // Validate required fields
     if (!username || !password) {
       return res.status(400).json({ message: 'Username and password are required' });
     }
-    
+
     // Check if username already exists
     const existingUser = await db.select().from(users).where(eq(users.username, username)).limit(1);
-    
+
     if (existingUser && existingUser.length > 0) {
       return res.status(400).json({ message: 'Username already exists' });
     }
-    
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    
+
     // Create new user
     const result = await db.insert(users).values({
       username,
@@ -146,10 +149,10 @@ router.post('/users/create', requireAuth, upload.single('profileImage'), async (
       isAdmin: isAdmin === 'true',
       createdAt: new Date(),
     });
-    
+
     // Handle profile image if uploaded
     // For a real app, you'd store this in the database and handle file paths
-    
+
     res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
     console.error('Error creating user:', error);
@@ -161,18 +164,22 @@ router.post('/users/create', requireAuth, upload.single('profileImage'), async (
 router.post('/users/update', requireAuth, upload.single('profileImage'), async (req, res) => {
   try {
     const { userId, username, firstName, email, password, isAdmin } = req.body;
-    
+
     if (!userId) {
       return res.status(400).json({ message: 'User ID is required' });
     }
-    
+
     // Check if user exists
-    const existingUser = await db.select().from(users).where(eq(users.id, parseInt(userId))).limit(1);
-    
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, parseInt(userId)))
+      .limit(1);
+
     if (!existingUser || existingUser.length === 0) {
       return res.status(404).json({ message: 'User not found' });
     }
-    
+
     // Check if username already exists (for another user)
     if (username && username !== existingUser[0].username) {
       const userWithSameName = await db
@@ -180,37 +187,38 @@ router.post('/users/update', requireAuth, upload.single('profileImage'), async (
         .from(users)
         .where(eq(users.username, username))
         .limit(1);
-      
+
       if (userWithSameName && userWithSameName.length > 0) {
         return res.status(400).json({ message: 'Username already exists' });
       }
     }
-    
+
     // Prepare update data
     const updateData: Record<string, any> = {};
-    
+
     if (username) {
       updateData.username = username;
     }
-    
+
     if (password) {
       updateData.password = await bcrypt.hash(password, 10);
     }
-    
+
     if (isAdmin !== undefined) {
       updateData.isAdmin = isAdmin === 'true';
     }
-    
+
     // Update user if there are changes
     if (Object.keys(updateData).length > 0) {
-      await db.update(users)
+      await db
+        .update(users)
         .set(updateData)
         .where(eq(users.id, parseInt(userId)));
     }
-    
+
     // Handle profile image if uploaded
     // For a real app, you'd store this in the database and handle file paths
-    
+
     res.json({ message: 'User updated successfully' });
   } catch (error) {
     console.error('Error updating user:', error);
@@ -222,21 +230,25 @@ router.post('/users/update', requireAuth, upload.single('profileImage'), async (
 router.post('/users/delete', requireAuth, async (req, res) => {
   try {
     const { userId } = req.body;
-    
+
     if (!userId) {
       return res.status(400).json({ message: 'User ID is required' });
     }
-    
+
     // Check if user exists
-    const existingUser = await db.select().from(users).where(eq(users.id, parseInt(userId))).limit(1);
-    
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, parseInt(userId)))
+      .limit(1);
+
     if (!existingUser || existingUser.length === 0) {
       return res.status(404).json({ message: 'User not found' });
     }
-    
+
     // Delete the user
     await db.delete(users).where(eq(users.id, parseInt(userId)));
-    
+
     res.json({ message: 'User deleted successfully' });
   } catch (error) {
     console.error('Error deleting user:', error);

@@ -627,7 +627,7 @@ export async function fetchAdminAPI<T>(
       // In production, use same-domain API requests to avoid CORS issues
       // Each deployment (dubai-rose and dubai-rose-spa) should use its own /api routes
       const host = typeof window !== 'undefined' ? window.location.host : '';
-      
+
       // Always use same-domain API calls to prevent CORS issues
       // Use the regular admin endpoint which now has all functionality consolidated
       apiUrl = `/api/admin/${trimmedEndpoint}`;
@@ -657,7 +657,7 @@ export async function fetchAdminAPI<T>(
         logger.debug(`Successful 204 No Content response from ${apiUrl}`);
         return {} as T;
       }
-      
+
       if (!response.ok) {
         // Handle error response
         const contentType = response.headers.get('content-type');

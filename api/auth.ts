@@ -93,7 +93,9 @@ async function handleLogin(req: VercelRequest, res: VercelResponse) {
     }
 
     // Generate token with user ID from database
-    const token = jwt.sign({ userId: userResults[0].id.toString() }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+    const token = jwt.sign({ userId: userResults[0].id.toString() }, JWT_SECRET, {
+      expiresIn: JWT_EXPIRES_IN,
+    });
 
     // Set HTTP-only cookie
     const cookieOptions = {
@@ -145,11 +147,14 @@ async function handleMe(req: VercelRequest, res: VercelResponse) {
     }
 
     // Extract token from cookies
-    const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
-      const [key, value] = cookie.trim().split('=');
-      acc[key] = value;
-      return acc;
-    }, {} as Record<string, string>);
+    const cookies = cookieHeader.split(';').reduce(
+      (acc, cookie) => {
+        const [key, value] = cookie.trim().split('=');
+        acc[key] = value;
+        return acc;
+      },
+      {} as Record<string, string>
+    );
 
     const token = cookies.token;
     if (!token) {
@@ -169,7 +174,11 @@ async function handleMe(req: VercelRequest, res: VercelResponse) {
       const db = drizzle({ client: pool });
 
       // Find user in database
-      const userResults = await db.select().from(users).where(eq(users.id, parseInt(decoded.userId))).limit(1);
+      const userResults = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, parseInt(decoded.userId)))
+        .limit(1);
 
       if (!userResults || userResults.length === 0) {
         return res.status(401).json({ message: 'User not found' });

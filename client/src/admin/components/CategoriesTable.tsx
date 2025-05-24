@@ -40,7 +40,7 @@ export function CategoriesTable({ categories, onEdit, onDelete }: CategoriesTabl
           </TableRow>
         </TableHeader>
         <TableBody>
-          {categories.map((category) => (
+          {categories.map(category => (
             <TableRow key={category.id}>
               <TableCell className="font-medium">{category.displayOrder || 0}</TableCell>
               <TableCell className="font-medium max-w-[250px] truncate">

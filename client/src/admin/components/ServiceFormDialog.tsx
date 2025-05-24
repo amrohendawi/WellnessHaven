@@ -5,8 +5,17 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Check, ChevronsUpDown, Plus } from 'lucide-react';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '@/components/ui/command';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from '@/components/ui/command';
 import { cn } from '@/lib/utils';
+import { ImageUploader } from './ImageUploader';
 import {
   Dialog,
   DialogContent,
@@ -75,7 +84,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
   const [isLoadingCategories, setIsLoadingCategories] = useState(false);
   const [isCreatingCategory, setIsCreatingCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
-  
+
   // Fetch categories when the dialog opens
   useEffect(() => {
     const fetchCategories = async () => {
@@ -87,12 +96,12 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
         }
         const data = await response.json();
         console.log('Service groups data:', data); // Debug log
-        
+
         // Transform service groups to category format handling multilingual names
         const formattedCategories = data.map((group: any) => {
           // Handle different possible property name formats
           const id = group.id?.toString() || '';
-          
+
           // Handle the case where name might be a multilingual object
           let label = '';
           if (group.nameEn) {
@@ -108,9 +117,9 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
             // Simple string
             label = group.name;
           }
-          
+
           console.log(`Group ${id}: Label = ${label}`, group); // Debug log with full object
-          
+
           return {
             value: id,
             label: label || `Group ${id}`, // Fallback to prevent empty labels
@@ -128,7 +137,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
       fetchCategories();
     }
   }, [isOpen]);
-  
+
   const form = useForm<AdminServiceFormValues>({
     resolver: zodResolver(AdminServiceFormSchema),
     defaultValues: initialValues || defaultAdminServiceFormValues,
@@ -150,7 +159,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
   const nextStep = async () => {
     const fieldsToValidate = getFieldsForStep(currentStep);
     const isValid = await form.trigger(fieldsToValidate as any);
-    
+
     if (isValid && currentStep < steps.length - 1) {
       setCurrentStep(prev => prev + 1);
     }
@@ -182,17 +191,17 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
   // Simple form submission handler
   const handleFormSubmit = async (values: AdminServiceFormValues) => {
     try {
-      console.log("Form submitted with values:", values);
+      console.log('Form submitted with values:', values);
       await onSubmit(values);
     } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("There was a problem saving your changes. Please try again.");
+      console.error('Error submitting form:', error);
+      alert('There was a problem saving your changes. Please try again.');
     }
   };
-  
+
   // Handle manual save button click - actual submission
   const handleSaveClick = () => {
-    console.log("Save button clicked");
+    console.log('Save button clicked');
     // This will be connected to a normal button, not a submit button
     form.handleSubmit(handleFormSubmit)();
   };
@@ -201,50 +210,51 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
   const showValidationErrors = () => {
     const errors = form.formState.errors;
     const errorFields = Object.keys(errors);
-    
+
     if (errorFields.length > 0) {
       // Create a readable list of missing fields
-      const fieldNames = errorFields.map(field => {
-        // Convert camelCase to readable format
-        return field
-          .replace(/([A-Z])/g, ' $1')
-          .replace(/^./, str => str.toUpperCase());
-      }).join(', ');
-      
+      const fieldNames = errorFields
+        .map(field => {
+          // Convert camelCase to readable format
+          return field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+        })
+        .join(', ');
+
       // Use browser alert for validation errors
       alert(`Please fill in all required fields: ${fieldNames}`);
     }
   };
-  
+
   // Handle adding a new category
   const handleAddCategory = () => {
     if (!newCategoryName.trim()) return;
-    
+
     // Convert the display name to a slug
-    const newValue = newCategoryName.trim()
+    const newValue = newCategoryName
+      .trim()
       .toLowerCase()
       .replace(/\s+/g, '-') // Replace spaces with hyphens
       .replace(/[^\w\-]+/g, '') // Remove non-word chars except hyphens
       .replace(/\-\-+/g, '-') // Replace multiple hyphens with single hyphen
       .replace(/^-+/, '') // Trim hyphens from start
       .replace(/-+$/, ''); // Trim hyphens from end
-    
+
     const newCategory = {
       value: newValue,
       label: newCategoryName.trim(),
     };
-    
+
     setCategories(prev => [...prev, newCategory]);
     form.setValue('category', newValue); // Set the form value to the new category
     setNewCategoryName('');
     setIsCreatingCategory(false);
   };
-  
+
   // Check if current step is valid
   const isCurrentStepValid = () => {
     const fields = getFieldsForStep(currentStep);
     const errors = form.formState.errors;
-    
+
     return !fields.some(field => errors[field]);
   };
 
@@ -253,38 +263,47 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
       <DialogContent className="sm:max-w-[600px] lg:max-w-[700px] overflow-y-auto max-h-[90vh] px-6 py-6">
         <DialogHeader className="space-y-2 pb-5">
           <DialogTitle className="text-xl font-semibold">{dialogTitle}</DialogTitle>
-          <DialogDescription className="text-sm text-muted-foreground">{dialogDescription}</DialogDescription>
+          <DialogDescription className="text-sm text-muted-foreground">
+            {dialogDescription}
+          </DialogDescription>
         </DialogHeader>
-        
+
         {/* Step Indicator */}
         <div className="mb-8">
           <nav aria-label="Progress">
-            <ol role="list" className="flex flex-wrap space-y-0 space-x-2 md:space-x-4 justify-between md:justify-start">
+            <ol
+              role="list"
+              className="flex flex-wrap space-y-0 space-x-2 md:space-x-4 justify-between md:justify-start"
+            >
               {steps.map((step, index) => (
                 <li key={step.id} className="flex-none md:flex-1">
-                  <div 
+                  <div
                     className={cn(
-                      "group flex items-center",
-                      index !== steps.length - 1 ? "mr-0" : ""
+                      'group flex items-center',
+                      index !== steps.length - 1 ? 'mr-0' : ''
                     )}
-                    >
-                    <span 
+                  >
+                    <span
                       className={cn(
-                        "flex h-8 w-8 items-center justify-center rounded-full border-2 flex-shrink-0",
-                        index < currentStep 
-                          ? "border-blue-600 bg-blue-600 text-white" 
-                          : index === currentStep 
-                            ? "border-blue-600 text-blue-600" 
-                            : "border-gray-300 text-gray-500"
+                        'flex h-8 w-8 items-center justify-center rounded-full border-2 flex-shrink-0',
+                        index < currentStep
+                          ? 'border-blue-600 bg-blue-600 text-white'
+                          : index === currentStep
+                            ? 'border-blue-600 text-blue-600'
+                            : 'border-gray-300 text-gray-500'
                       )}
                     >
-                          {index < currentStep ? (
-                            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                            </svg>
-                          ) : (
-                            <span>{index + 1}</span>
-                          )}
+                      {index < currentStep ? (
+                        <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      ) : (
+                        <span>{index + 1}</span>
+                      )}
                     </span>
                     <span className="ml-2 text-sm font-medium hidden md:inline">{step.title}</span>
                   </div>
@@ -293,18 +312,19 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
             </ol>
           </nav>
         </div>
-        
+
         <Form {...form}>
           {/* No onSubmit handler to prevent automatic form submission */}
-          <form 
-            onSubmit={(e) => {
+          <form
+            onSubmit={e => {
               console.log('Form submit event detected');
               // Always prevent default form submission
               e.preventDefault();
               return false;
             }}
-            className="space-y-7" 
-            id="service-form">
+            className="space-y-7"
+            id="service-form"
+          >
             {/* Step-specific content */}
             <div className="min-h-[250px] max-h-[400px] overflow-y-auto px-1 pb-4">
               {/* Step 1: Basic Info */}
@@ -344,14 +364,17 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                                 variant="outline"
                                 role="combobox"
                                 className={cn(
-                                  "w-full justify-between h-10",
-                                  !field.value && "text-muted-foreground"
+                                  'w-full justify-between h-10',
+                                  !field.value && 'text-muted-foreground'
                                 )}
                               >
                                 {isLoadingCategories
                                   ? 'Loading categories...'
-                                  : field.value && categories.find((category) => category.value === field.value)?.label
-                                    ? categories.find((category) => category.value === field.value)?.label
+                                  : field.value &&
+                                      categories.find(category => category.value === field.value)
+                                        ?.label
+                                    ? categories.find(category => category.value === field.value)
+                                        ?.label
                                     : 'Select category'}
                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                               </Button>
@@ -372,7 +395,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                                       No categories available
                                     </CommandItem>
                                   ) : (
-                                    categories.map((category) => (
+                                    categories.map(category => (
                                       <CommandItem
                                         key={category.value}
                                         value={category.value}
@@ -382,10 +405,10 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                                       >
                                         <Check
                                           className={cn(
-                                            "mr-2 h-4 w-4",
+                                            'mr-2 h-4 w-4',
                                             category.value === field.value
-                                              ? "opacity-100"
-                                              : "opacity-0"
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
                                           )}
                                         />
                                         {category.label}
@@ -395,9 +418,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                                 </CommandGroup>
                                 <CommandSeparator />
                                 <CommandGroup>
-                                  <CommandItem
-                                    onSelect={() => setIsCreatingCategory(true)}
-                                  >
+                                  <CommandItem onSelect={() => setIsCreatingCategory(true)}>
                                     <Plus className="mr-2 h-4 w-4" />
                                     Create new category
                                   </CommandItem>
@@ -406,27 +427,27 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                             </Command>
                           </PopoverContent>
                         </Popover>
-                        
+
                         {isCreatingCategory && (
                           <div className="mt-2 flex items-center gap-2">
                             <Input
                               value={newCategoryName}
-                              onChange={(e) => setNewCategoryName(e.target.value)}
+                              onChange={e => setNewCategoryName(e.target.value)}
                               placeholder="New category name"
                               className="flex-1"
                             />
-                            <Button 
-                              type="button" 
-                              size="sm" 
+                            <Button
+                              type="button"
+                              size="sm"
                               onClick={handleAddCategory}
                               disabled={!newCategoryName.trim()}
                             >
                               Add
                             </Button>
-                            <Button 
-                              type="button" 
-                              variant="outline" 
-                              size="sm" 
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
                               onClick={() => {
                                 setNewCategoryName('');
                                 setIsCreatingCategory(false);
@@ -436,7 +457,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                             </Button>
                           </div>
                         )}
-                        
+
                         <FormMessage />
                       </FormItem>
                     )}
@@ -602,39 +623,21 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem className="md:col-span-2">
-                        <FormLabel>Image URL *</FormLabel>
+                        <FormLabel>Service Image *</FormLabel>
                         <FormControl>
-                          <div className="relative">
-                            <Input
-                              {...field}
-                              placeholder="https://example.com/image.jpg"
-                              className="pl-10 focus-visible:ring-gold/30"
-                            />
-                            <ImageIcon className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                          </div>
+                          <ImageUploader
+                            initialImageUrl={field.value}
+                            onImageUploaded={url => {
+                              // Set both image fields with the same URL
+                              form.setValue('imageUrl', url);
+                              form.setValue('imageLarge', url);
+                            }}
+                            label="Image"
+                          />
                         </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    name="imageLarge"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem className="md:col-span-2">
-                        <FormLabel>Large Image URL</FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Input
-                              {...field}
-                              value={field.value || ''} // Ensure controlled component
-                              placeholder="https://example.com/large-image.jpg"
-                              className="pl-10 focus-visible:ring-gold/30"
-                            />
-                            <ImageIcon className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                          </div>
-                        </FormControl>
+                        <FormDescription className="text-xs text-muted-foreground">
+                          This image will be used throughout the site to represent this service.
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -805,7 +808,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                   />
                 </div>
               )}
-              </div>
+            </div>
             <DialogFooter className="mt-6 gap-2 flex-col sm:flex-row justify-between">
               <div>
                 <Button
@@ -818,7 +821,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                   Cancel
                 </Button>
               </div>
-              
+
               <div className="flex gap-2">
                 {currentStep > 0 && (
                   <Button
@@ -831,7 +834,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     Back
                   </Button>
                 )}
-                
+
                 {currentStep < steps.length - 1 ? (
                   <Button
                     type="button"

@@ -15,13 +15,13 @@ import adminProfileRoutes from './adminProfileRoutes';
 import usersRoutes from './usersRoutes';
 import { registerRoutes } from './routes';
 import { setupVite, serveStatic, log } from './vite';
-import { requireAuth, AuthRequest } from './auth';
+import { requireAuth } from './auth';
 
 const app = express();
 
 // Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: '10mb' })); // Increased limit for image uploads
+app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 app.use(cookieParser());
 app.use(
   cors({
@@ -86,7 +86,7 @@ app.use((req, res, next) => {
 
   // Admin profile routes
   app.use('/api/admin', requireAuth, adminProfileRoutes);
-  
+
   // User management routes
   app.use('/api/admin', requireAuth, usersRoutes);
 

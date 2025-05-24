@@ -141,7 +141,8 @@ const ServicesSection = () => {
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging || !slideContainerRef.current) return;
-    const diff = dir === 'rtl' ? e.touches[0].clientX - startPosition : startPosition - e.touches[0].clientX;
+    const diff =
+      dir === 'rtl' ? e.touches[0].clientX - startPosition : startPosition - e.touches[0].clientX;
     slideContainerRef.current.scrollLeft += diff;
     setStartPosition(e.touches[0].clientX);
   };

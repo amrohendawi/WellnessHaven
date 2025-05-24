@@ -128,7 +128,7 @@ router.get('/service-groups/:id', async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     const group = await storage.getServiceGroupById(id);
     if (!group) return res.status(404).json({ message: 'Service group not found' });
-    
+
     const transformedGroup = {
       id: group.id,
       slug: group.slug,
@@ -156,20 +156,20 @@ router.get('/service-groups/:id', async (req: Request, res: Response) => {
 router.post('/service-groups', async (req: Request, res: Response) => {
   try {
     // Directly use the flat structure from the client
-    const { 
-      slug, 
-      nameEn, 
-      nameAr, 
-      nameDe, 
-      nameTr, 
-      descriptionEn, 
+    const {
+      slug,
+      nameEn,
+      nameAr,
+      nameDe,
+      nameTr,
+      descriptionEn,
       descriptionAr,
-      descriptionDe, 
-      descriptionTr, 
+      descriptionDe,
+      descriptionTr,
       displayOrder,
-      isActive 
+      isActive,
     } = req.body;
-    
+
     const serviceGroup = {
       slug,
       nameEn: nameEn || '',
@@ -181,11 +181,11 @@ router.post('/service-groups', async (req: Request, res: Response) => {
       descriptionDe: descriptionDe || '',
       descriptionTr: descriptionTr || '',
       displayOrder: displayOrder || 0,
-      isActive: isActive !== false
+      isActive: isActive !== false,
     };
-    
+
     const newGroup = await storage.createServiceGroup(serviceGroup);
-    
+
     // Return the new group directly without transforming
     res.status(201).json(newGroup);
   } catch (error) {
@@ -197,20 +197,20 @@ router.post('/service-groups', async (req: Request, res: Response) => {
 router.put('/service-groups/:id', async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    const { 
-      slug, 
-      nameEn, 
-      nameAr, 
-      nameDe, 
-      nameTr, 
-      descriptionEn, 
+    const {
+      slug,
+      nameEn,
+      nameAr,
+      nameDe,
+      nameTr,
+      descriptionEn,
       descriptionAr,
-      descriptionDe, 
-      descriptionTr, 
+      descriptionDe,
+      descriptionTr,
       displayOrder,
-      isActive 
+      isActive,
     } = req.body;
-    
+
     const serviceGroup: any = {};
     if (slug) serviceGroup.slug = slug;
     if (nameEn !== undefined) serviceGroup.nameEn = nameEn;
@@ -223,10 +223,10 @@ router.put('/service-groups/:id', async (req: Request, res: Response) => {
     if (descriptionTr !== undefined) serviceGroup.descriptionTr = descriptionTr;
     if (displayOrder !== undefined) serviceGroup.displayOrder = displayOrder;
     if (isActive !== undefined) serviceGroup.isActive = isActive;
-    
+
     const updated = await storage.updateServiceGroup(id, serviceGroup);
     if (!updated) return res.status(404).json({ message: 'Service group not found' });
-    
+
     // Return the updated group directly without transforming
     res.status(200).json(updated);
   } catch (error) {

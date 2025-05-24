@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Edit2, Trash2, User } from 'lucide-react';
-import { 
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -40,12 +40,12 @@ interface UsersTableProps {
   currentUserId?: string;
 }
 
-export default function UsersTable({ 
-  users, 
-  onEdit, 
-  onDelete, 
+export default function UsersTable({
+  users,
+  onEdit,
+  onDelete,
   isLoading = false,
-  currentUserId
+  currentUserId,
 }: UsersTableProps) {
   const [userToDelete, setUserToDelete] = useState<UserData | null>(null);
 
@@ -100,7 +100,7 @@ export default function UsersTable({
               </TableCell>
             </TableRow>
           ) : (
-            users.map((user) => (
+            users.map(user => (
               <TableRow key={user.id}>
                 <TableCell>
                   <Avatar className="h-8 w-8">
@@ -116,22 +116,22 @@ export default function UsersTable({
                 <TableCell className="font-medium">
                   {user.username}
                   {user.id === currentUserId && (
-                    <Badge variant="outline" className="ml-2">You</Badge>
+                    <Badge variant="outline" className="ml-2">
+                      You
+                    </Badge>
                   )}
                 </TableCell>
                 <TableCell>{user.email || '-'}</TableCell>
                 <TableCell>{user.firstName || '-'}</TableCell>
                 <TableCell>
-                  <Badge 
-                    variant={user.isAdmin ? "default" : "secondary"}
-                    className={user.isAdmin ? "bg-blue-600" : "bg-gray-200 text-gray-700"}
+                  <Badge
+                    variant={user.isAdmin ? 'default' : 'secondary'}
+                    className={user.isAdmin ? 'bg-blue-600' : 'bg-gray-200 text-gray-700'}
                   >
                     {user.isAdmin ? 'Admin' : 'Staff'}
                   </Badge>
                 </TableCell>
-                <TableCell>
-                  {new Date(user.createdAt).toLocaleDateString()}
-                </TableCell>
+                <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
                     <Button
@@ -142,7 +142,7 @@ export default function UsersTable({
                     >
                       <Edit2 className="h-4 w-4" />
                     </Button>
-                    
+
                     {/* Don't allow deleting your own account */}
                     {user.id !== currentUserId && (
                       <Button
@@ -169,13 +169,13 @@ export default function UsersTable({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the user <strong>{userToDelete?.username}</strong>.
-              This action cannot be undone.
+              This will permanently delete the user <strong>{userToDelete?.username}</strong>. This
+              action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={cancelDelete}>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={confirmDelete}
               className="bg-red-600 text-white hover:bg-red-700"
             >

@@ -81,7 +81,7 @@ export function CategoryFormDialog({
   // Auto-generate slug from English name
   useEffect(() => {
     if (!nameEnValue || form.getValues().slug) return;
-    
+
     const slug = nameEnValue
       .toLowerCase()
       .replace(/\s+/g, '-')
@@ -89,7 +89,7 @@ export function CategoryFormDialog({
       .replace(/\-\-+/g, '-')
       .replace(/^-+/, '')
       .replace(/-+$/, '');
-    
+
     form.setValue('slug', slug);
   }, [nameEnValue, form]);
 
@@ -97,9 +97,12 @@ export function CategoryFormDialog({
     const newValue = e.target.value;
     setNameEnValue(newValue);
     form.setValue('nameEn', newValue);
-    
+
     // Only auto-generate slug if slug is empty or was auto-generated previously
-    if (!form.getValues().slug || form.getValues().slug === nameEnValue.toLowerCase().replace(/\s+/g, '-')) {
+    if (
+      !form.getValues().slug ||
+      form.getValues().slug === nameEnValue.toLowerCase().replace(/\s+/g, '-')
+    ) {
       const slug = newValue
         .toLowerCase()
         .replace(/\s+/g, '-')
@@ -107,7 +110,7 @@ export function CategoryFormDialog({
         .replace(/\-\-+/g, '-')
         .replace(/^-+/, '')
         .replace(/-+$/, '');
-      
+
       form.setValue('slug', slug);
     }
   };
@@ -131,7 +134,7 @@ export function CategoryFormDialog({
               {/* Basic Info Section */}
               <div className="md:col-span-2 space-y-4">
                 <h3 className="text-base font-semibold">Basic Information</h3>
-                
+
                 <FormField
                   name="nameEn"
                   control={form.control}
@@ -249,7 +252,7 @@ export function CategoryFormDialog({
               {/* Translations Section */}
               <div className="md:col-span-2 space-y-4 pt-2">
                 <h3 className="text-base font-semibold">Translations</h3>
-                
+
                 <FormField
                   name="nameAr"
                   control={form.control}
@@ -309,7 +312,7 @@ export function CategoryFormDialog({
               {/* Descriptions Section */}
               <div className="md:col-span-2 space-y-4 pt-2">
                 <h3 className="text-base font-semibold">Descriptions (Optional)</h3>
-                
+
                 <FormField
                   name="descriptionEn"
                   control={form.control}
@@ -392,7 +395,7 @@ export function CategoryFormDialog({
                 />
               </div>
             </div>
-            
+
             <DialogFooter className="mt-6">
               <Button
                 type="button"

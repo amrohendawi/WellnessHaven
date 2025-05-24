@@ -31,7 +31,7 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
   // State for storing category data
   const [categories, setCategories] = useState<Record<string, string>>({});
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(false);
-  
+
   // Fetch categories when component mounts
   useEffect(() => {
     const fetchCategories = async () => {
@@ -42,18 +42,20 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
           throw new Error('Failed to fetch categories');
         }
         const data = await response.json();
-        
+
         // Create a mapping of category IDs to names
         const categoryMap: Record<string, string> = {};
         data.forEach((group: any) => {
           const id = group.id?.toString() || '';
-          const name = group.nameEn || group.name_en || 
-                      (typeof group.name === 'object' && group.name?.en) || 
-                      (typeof group.name === 'string' ? group.name : '');
-          
+          const name =
+            group.nameEn ||
+            group.name_en ||
+            (typeof group.name === 'object' && group.name?.en) ||
+            (typeof group.name === 'string' ? group.name : '');
+
           if (id) categoryMap[id] = name || `Category ${id}`;
         });
-        
+
         setCategories(categoryMap);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -61,10 +63,10 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
         setIsCategoriesLoading(false);
       }
     };
-    
+
     fetchCategories();
   }, []);
-  
+
   // Function to get category name from ID
   const getCategoryName = (categoryId: string | null | undefined): string => {
     if (!categoryId) return 'Uncategorized';
@@ -105,15 +107,21 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {services.map((service) => (
+          {services.map(service => (
             <TableRow key={service.id}>
               <TableCell className="font-medium">{service.nameEn || 'Unnamed Service'}</TableCell>
               <TableCell>{getCategoryName(service.category)}</TableCell>
               <TableCell className="text-right">EUR {(service.price || 0).toFixed(2)}</TableCell>
               <TableCell className="text-center">{service.duration || 0} min</TableCell>
               <TableCell className="text-center">
-                <Badge variant={service.isActive ? 'default' : 'outline'} 
-                       className={service.isActive ? 'bg-green-500 text-white hover:bg-green-600' : 'border-destructive text-destructive'}>
+                <Badge
+                  variant={service.isActive ? 'default' : 'outline'}
+                  className={
+                    service.isActive
+                      ? 'bg-green-500 text-white hover:bg-green-600'
+                      : 'border-destructive text-destructive'
+                  }
+                >
                   {service.isActive ? 'Active' : 'Inactive'}
                 </Badge>
               </TableCell>

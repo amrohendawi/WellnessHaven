@@ -53,18 +53,18 @@ export default function UsersPage() {
     setIsSubmitting(true);
     try {
       const endpoint = selectedUser ? 'users/update' : 'users/create';
-      
+
       const response = await fetch(`/api/admin/${endpoint}`, {
         method: 'POST',
         credentials: 'include',
         body: formData,
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || 'Failed to save user');
       }
-      
+
       toast.success(selectedUser ? 'User updated successfully' : 'User created successfully');
       setDialogOpen(false);
       fetchUsers(); // Refresh the users list
@@ -87,12 +87,12 @@ export default function UsersPage() {
         credentials: 'include',
         body: JSON.stringify({ userId }),
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || 'Failed to delete user');
       }
-      
+
       toast.success('User deleted successfully');
       fetchUsers(); // Refresh the users list
     } catch (error) {
@@ -108,10 +108,7 @@ export default function UsersPage() {
           <h2 className="text-2xl font-bold text-gray-800">User Management</h2>
           <p className="text-gray-600 mt-1">Manage staff and admin user accounts</p>
         </div>
-        <Button 
-          onClick={handleAddUser}
-          className="bg-blue-600 hover:bg-blue-700 text-white"
-        >
+        <Button onClick={handleAddUser} className="bg-blue-600 hover:bg-blue-700 text-white">
           <UserPlus className="h-4 w-4 mr-2" />
           Add User
         </Button>
@@ -122,9 +119,7 @@ export default function UsersPage() {
       <Card>
         <CardHeader>
           <CardTitle>Users</CardTitle>
-          <CardDescription>
-            Manage users and their access permissions
-          </CardDescription>
+          <CardDescription>Manage users and their access permissions</CardDescription>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -132,7 +127,7 @@ export default function UsersPage() {
               <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
             </div>
           ) : (
-            <UsersTable 
+            <UsersTable
               users={users}
               onEdit={handleEditUser}
               onDelete={handleDeleteUser}

@@ -99,7 +99,7 @@ export default function CategoriesPage() {
 
   const handleEditClick = (category: ServiceGroup) => {
     setCurrentCategory(category);
-    
+
     // Note: The form values will be handled in the CategoryFormDialog component
     // through the initialValues prop. No need to reset a form here.
     setIsEditDialogOpen(true);
@@ -161,7 +161,7 @@ export default function CategoriesPage() {
 
   // Filter categories based on search term
   const filteredCategories = categories.filter(
-    (category) =>
+    category =>
       (category.nameEn?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
       (category.nameDe?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
       (category.nameAr || '').includes(searchTerm) ||
@@ -188,13 +188,14 @@ export default function CategoriesPage() {
             Service Categories
           </CardTitle>
           <CardDescription>
-            Categories are used to organize services and help customers find what they're looking for
+            Categories are used to organize services and help customers find what they're looking
+            for
           </CardDescription>
           <div className="mt-2">
             <Input
               placeholder="Search categories..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={e => setSearchTerm(e.target.value)}
               className="max-w-sm"
             />
           </div>
@@ -231,20 +232,24 @@ export default function CategoriesPage() {
         isOpen={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
         onSubmit={handleEditSubmit}
-        initialValues={currentCategory ? {
-          id: currentCategory.id,
-          slug: currentCategory.slug || '',
-          nameEn: currentCategory.nameEn || '',
-          nameAr: currentCategory.nameAr || '',
-          nameDe: currentCategory.nameDe || '',
-          nameTr: currentCategory.nameTr || '',
-          descriptionEn: currentCategory.descriptionEn || '',
-          descriptionAr: currentCategory.descriptionAr || '',
-          descriptionDe: currentCategory.descriptionDe || '',
-          descriptionTr: currentCategory.descriptionTr || '',
-          displayOrder: currentCategory.displayOrder || 0,
-          isActive: currentCategory.isActive !== false,
-        } : defaultCategoryFormValues}
+        initialValues={
+          currentCategory
+            ? {
+                id: currentCategory.id,
+                slug: currentCategory.slug || '',
+                nameEn: currentCategory.nameEn || '',
+                nameAr: currentCategory.nameAr || '',
+                nameDe: currentCategory.nameDe || '',
+                nameTr: currentCategory.nameTr || '',
+                descriptionEn: currentCategory.descriptionEn || '',
+                descriptionAr: currentCategory.descriptionAr || '',
+                descriptionDe: currentCategory.descriptionDe || '',
+                descriptionTr: currentCategory.descriptionTr || '',
+                displayOrder: currentCategory.displayOrder || 0,
+                isActive: currentCategory.isActive !== false,
+              }
+            : defaultCategoryFormValues
+        }
         dialogTitle="Edit Category"
         dialogDescription="Update a service category and its translations."
         submitButtonText="Save Changes"

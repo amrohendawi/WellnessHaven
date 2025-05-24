@@ -42,7 +42,10 @@ export interface IStorage {
   deleteService(id: number): Promise<void>;
   // Service group management for admin
   createServiceGroup(serviceGroup: Partial<ServiceGroup>): Promise<ServiceGroup>;
-  updateServiceGroup(id: number, serviceGroup: Partial<ServiceGroup>): Promise<ServiceGroup | undefined>;
+  updateServiceGroup(
+    id: number,
+    serviceGroup: Partial<ServiceGroup>
+  ): Promise<ServiceGroup | undefined>;
   deleteServiceGroup(id: number): Promise<void>;
   getServiceGroupById(id: number): Promise<ServiceGroup | undefined>;
   getBookingById(id: number): Promise<Booking | undefined>;
@@ -50,7 +53,6 @@ export interface IStorage {
     id: number,
     update: Partial<InsertBooking> & { status?: string }
   ): Promise<Booking | undefined>;
-
 }
 
 export class DatabaseStorage implements IStorage {
@@ -160,8 +162,15 @@ export class DatabaseStorage implements IStorage {
     return newGroup;
   }
 
-  async updateServiceGroup(id: number, group: Partial<ServiceGroup>): Promise<ServiceGroup | undefined> {
-    const [updated] = await db.update(serviceGroups).set(group).where(eq(serviceGroups.id, id)).returning();
+  async updateServiceGroup(
+    id: number,
+    group: Partial<ServiceGroup>
+  ): Promise<ServiceGroup | undefined> {
+    const [updated] = await db
+      .update(serviceGroups)
+      .set(group)
+      .where(eq(serviceGroups.id, id))
+      .returning();
     return updated;
   }
 
