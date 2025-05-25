@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { fetchAdminAPI } from '@/lib/api';
 import { Loader2, UserPlus } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import UserFormDialog from './components/UserFormDialog';
 import UsersTable, { UserData } from './components/UsersTable';
@@ -16,6 +17,7 @@ export default function UsersPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserData | undefined>(undefined);
+  const { t } = useTranslation();
 
   // Fetch users data
   const fetchUsers = async () => {
@@ -25,7 +27,7 @@ export default function UsersPage() {
       setUsers(data);
     } catch (error) {
       console.error('Failed to fetch users:', error);
-      toast.error('Failed to load users');
+      toast.error(t('adminUsers.failedToLoadUsers'));
     } finally {
       setIsLoading(false);
     }
@@ -65,12 +67,12 @@ export default function UsersPage() {
         throw new Error(error.message || 'Failed to save user');
       }
 
-      toast.success(selectedUser ? 'User updated successfully' : 'User created successfully');
+      toast.success(selectedUser ? t('adminUsers.userUpdatedSuccess') : t('adminUsers.userCreatedSuccess'));
       setDialogOpen(false);
       fetchUsers(); // Refresh the users list
     } catch (error) {
       console.error('Error saving user:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to save user');
+      toast.error(error instanceof Error ? error.message : t('adminUsers.failedToSaveUser'));
     } finally {
       setIsSubmitting(false);
     }
@@ -93,11 +95,11 @@ export default function UsersPage() {
         throw new Error(error.message || 'Failed to delete user');
       }
 
-      toast.success('User deleted successfully');
+      toast.success(t('adminUsers.userDeletedSuccess'));
       fetchUsers(); // Refresh the users list
     } catch (error) {
       console.error('Error deleting user:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to delete user');
+      toast.error(error instanceof Error ? error.message : t('adminUsers.failedToDeleteUser'));
     }
   };
 
@@ -105,12 +107,12 @@ export default function UsersPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">User Management</h2>
-          <p className="text-gray-600 mt-1">Manage staff and admin user accounts</p>
+          <h2 className="text-2xl font-bold text-gray-800">{t('adminUsers.title')}</h2>
+          <p className="text-gray-600 mt-1">{t('adminUsers.subtitle')}</p>
         </div>
         <Button onClick={handleAddUser} className="bg-blue-600 hover:bg-blue-700 text-white">
           <UserPlus className="h-4 w-4 mr-2" />
-          Add User
+          {t('adminUsers.addUser')}
         </Button>
       </div>
 
@@ -118,8 +120,8 @@ export default function UsersPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Users</CardTitle>
-          <CardDescription>Manage users and their access permissions</CardDescription>
+          <CardTitle>{t('adminUsers.usersTableTitle')}</CardTitle>
+          <CardDescription>{t('adminUsers.usersTableDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
           {isLoading ? (

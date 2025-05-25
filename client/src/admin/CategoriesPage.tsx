@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { FolderTree, Loader2, Plus } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { fetchAdminAPI } from '@/lib/api';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { ServiceGroup } from '@shared/schema';
 import { CategoriesTable } from '@/admin/components/CategoriesTable';
 import { CategoryFormDialog } from '@/admin/components/CategoryFormDialog';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
+import { fetchAdminAPI } from '@/lib/api';
+import { ServiceGroup } from '@shared/schema';
+import { FolderTree, Loader2, Plus } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // Category form values type
 export interface CategoryFormValues {
@@ -74,6 +75,7 @@ export default function CategoriesPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const fetchCategories = async () => {
     setIsLoading(true);
@@ -81,7 +83,7 @@ export default function CategoriesPage() {
       const data = await fetchAdminAPI<ServiceGroup[]>('service-groups');
       setCategories(data);
     } catch (error) {
-      toast({ title: 'Error', description: 'Failed to fetch categories', variant: 'destructive' });
+      toast({ title: t('adminMessages.errorTitle'), description: t('adminMessages.failedToFetchCategories'), variant: 'destructive' });
       console.error('Fetch categories error:', error);
     } finally {
       setIsLoading(false);
@@ -106,16 +108,16 @@ export default function CategoriesPage() {
   };
 
   const handleDeleteClick = async (categoryId: number) => {
-    if (!window.confirm('Are you sure you want to delete this category?')) return;
+    if (!window.confirm(t('adminCategories.deleteConfirmation'))) return;
 
     try {
       await fetchAdminAPI(`service-groups/${categoryId}`, {
         method: 'DELETE',
       });
-      toast({ title: 'Success', description: 'Category deleted successfully' });
+      toast({ title: t('adminMessages.successTitle'), description: t('adminMessages.categoryDeleted') });
       fetchCategories();
     } catch (error) {
-      toast({ title: 'Error', description: 'Failed to delete category', variant: 'destructive' });
+      toast({ title: t('adminMessages.errorTitle'), description: t('adminMessages.failedToDeleteCategory'), variant: 'destructive' });
       console.error('Delete category error:', error);
     }
   };
@@ -128,11 +130,11 @@ export default function CategoriesPage() {
         method: 'POST',
         body: JSON.stringify(values),
       });
-      toast({ title: 'Success', description: 'Category created successfully' });
+      toast({ title: t('adminMessages.successTitle'), description: t('adminMessages.categoryCreated') });
       setIsCreateDialogOpen(false);
       fetchCategories();
     } catch (error) {
-      toast({ title: 'Error', description: 'Failed to create category', variant: 'destructive' });
+      toast({ title: t('adminMessages.errorTitle'), description: t('adminMessages.failedToCreateCategory'), variant: 'destructive' });
       console.error('Create category error:', error);
     } finally {
       setIsSubmitting(false);
@@ -148,11 +150,11 @@ export default function CategoriesPage() {
         method: 'PUT',
         body: JSON.stringify(values),
       });
-      toast({ title: 'Success', description: 'Category updated successfully' });
+      toast({ title: t('adminMessages.successTitle'), description: t('adminMessages.categoryUpdated') });
       setIsEditDialogOpen(false);
       fetchCategories();
     } catch (error) {
-      toast({ title: 'Error', description: 'Failed to update category', variant: 'destructive' });
+      toast({ title: t('adminMessages.errorTitle'), description: t('adminMessages.failedToUpdateCategory'), variant: 'destructive' });
       console.error('Update category error:', error);
     } finally {
       setIsSubmitting(false);
@@ -173,11 +175,11 @@ export default function CategoriesPage() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Categories</h1>
-          <p className="text-muted-foreground">Manage service categories and their translations</p>
+          <h1 className="text-2xl font-bold tracking-tight">{t('adminCategories.title')}</h1>
+          <p className="text-muted-foreground">{t('adminCategories.subtitle')}</p>
         </div>
         <Button onClick={handleAddNewCategoryClick} className="md:self-end">
-          <Plus className="mr-2 h-4 w-4" /> Add New Category
+          <Plus className="mr-2 h-4 w-4" /> {t('adminCategories.addNewCategory')}
         </Button>
       </div>
 
@@ -185,15 +187,14 @@ export default function CategoriesPage() {
         <CardHeader className="pb-3">
           <CardTitle className="text-lg font-medium flex items-center gap-2">
             <FolderTree className="h-5 w-5 text-gold" />
-            Service Categories
+            {t('adminCategories.serviceCategoriesTitle')}
           </CardTitle>
           <CardDescription>
-            Categories are used to organize services and help customers find what they're looking
-            for
+            {t('adminCategories.serviceCategoriesDescription')}
           </CardDescription>
           <div className="mt-2">
             <Input
-              placeholder="Search categories..."
+              placeholder={t('adminCategories.searchPlaceholder')}
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               className="max-w-sm"
@@ -221,9 +222,9 @@ export default function CategoriesPage() {
         onOpenChange={setIsCreateDialogOpen}
         onSubmit={handleCreateSubmit}
         initialValues={defaultCategoryFormValues}
-        dialogTitle="Add New Category"
-        dialogDescription="Add a new service category with translations."
-        submitButtonText="Create Category"
+        dialogTitle={t('adminCategories.createCategoryTitle')}
+        dialogDescription={t('adminCategories.createCategoryDescription')}
+        submitButtonText={t('adminCategories.createCategoryButton')}
         isLoadingOnSubmit={isSubmitting}
       />
 
@@ -250,9 +251,9 @@ export default function CategoriesPage() {
               }
             : defaultCategoryFormValues
         }
-        dialogTitle="Edit Category"
-        dialogDescription="Update a service category and its translations."
-        submitButtonText="Save Changes"
+        dialogTitle={t('adminCategories.editCategoryTitle')}
+        dialogDescription={t('adminCategories.editCategoryDescription')}
+        submitButtonText={t('adminCategories.saveChangesButton')}
         isLoadingOnSubmit={isSubmitting}
       />
     </div>

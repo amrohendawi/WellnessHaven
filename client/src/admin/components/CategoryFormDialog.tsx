@@ -1,28 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Input } from '@/components/ui/input';
-import { Loader2, ImageIcon } from 'lucide-react';
-import { z } from 'zod';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogDescription,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
 } from '@/components/ui/dialog';
 import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-  FormDescription,
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ImageIcon, Loader2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
 import { CategoryFormValues } from '../CategoriesPage';
 
 // Validation schema for the category form
@@ -63,6 +64,7 @@ export function CategoryFormDialog({
   submitButtonText,
   isLoadingOnSubmit,
 }: CategoryFormDialogProps) {
+  const { t } = useTranslation();
   const [nameEnValue, setNameEnValue] = useState(initialValues.nameEn || '');
 
   const form = useForm<CategoryFormValues>({
@@ -133,20 +135,20 @@ export function CategoryFormDialog({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Basic Info Section */}
               <div className="md:col-span-2 space-y-4">
-                <h3 className="text-base font-semibold">Basic Information</h3>
+                <h3 className="text-base font-semibold">{t('adminCategoryForm.sections.basicInfo')}</h3>
 
                 <FormField
                   name="nameEn"
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Name (English) *</FormLabel>
+                      <FormLabel>{t('adminCategoryForm.fields.nameEn.label')} *</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           value={nameEnValue}
                           onChange={handleNameEnChange}
-                          placeholder="e.g., Facials"
+                          placeholder={t('adminCategoryForm.fields.nameEn.placeholder')}
                           className="focus-visible:ring-gold/30"
                         />
                       </FormControl>
@@ -160,16 +162,16 @@ export function CategoryFormDialog({
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Slug *</FormLabel>
+                      <FormLabel>{t('adminCategoryForm.fields.slug.label')} *</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder="facials"
+                          placeholder={t('adminCategoryForm.fields.slug.placeholder')}
                           className="focus-visible:ring-gold/30"
                         />
                       </FormControl>
                       <FormDescription className="text-xs">
-                        URL-friendly identifier (lowercase, hyphens)
+                        {t('adminCategoryForm.fields.slug.description')}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -182,7 +184,7 @@ export function CategoryFormDialog({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Display Order *</FormLabel>
+                        <FormLabel>{t('adminCategoryForm.fields.displayOrder.label')} *</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
@@ -193,7 +195,7 @@ export function CategoryFormDialog({
                           />
                         </FormControl>
                         <FormDescription className="text-xs">
-                          Controls display order in menus (lower numbers first)
+                          {t('adminCategoryForm.fields.displayOrder.description')}
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -206,9 +208,9 @@ export function CategoryFormDialog({
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 md:p-4">
                         <div className="space-y-0.5">
-                          <FormLabel className="text-sm md:text-base">Active</FormLabel>
+                          <FormLabel className="text-sm md:text-base">{t('adminCategoryForm.fields.isActive.label')}</FormLabel>
                           <FormDescription className="text-xs">
-                            This category will be visible to customers
+                            {t('adminCategoryForm.fields.isActive.description')}
                           </FormDescription>
                         </div>
                         <FormControl>
@@ -228,20 +230,20 @@ export function CategoryFormDialog({
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Image URL</FormLabel>
+                      <FormLabel>{t('adminCategoryForm.fields.imageUrl.label')}</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
                             {...field}
                             value={field.value || ''}
-                            placeholder="https://example.com/image.jpg"
+                            placeholder={t('adminCategoryForm.fields.imageUrl.placeholder')}
                             className="pl-10 focus-visible:ring-gold/30"
                           />
                           <ImageIcon className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                         </div>
                       </FormControl>
                       <FormDescription className="text-xs">
-                        Image to represent this category (optional)
+                        {t('adminCategoryForm.fields.imageUrl.description')}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -251,19 +253,19 @@ export function CategoryFormDialog({
 
               {/* Translations Section */}
               <div className="md:col-span-2 space-y-4 pt-2">
-                <h3 className="text-base font-semibold">Translations</h3>
+                <h3 className="text-base font-semibold">{t('adminCategoryForm.sections.translations')}</h3>
 
                 <FormField
                   name="nameAr"
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Name (العربية) *</FormLabel>
+                      <FormLabel>{t('adminCategoryForm.fields.nameAr.label')} *</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           dir="rtl"
-                          placeholder="تدليك"
+                          placeholder={t('adminCategoryForm.fields.nameAr.placeholder')}
                           className="focus-visible:ring-gold/30"
                         />
                       </FormControl>
@@ -277,11 +279,11 @@ export function CategoryFormDialog({
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Name (Deutsch) *</FormLabel>
+                      <FormLabel>{t('adminCategoryForm.fields.nameDe.label')} *</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder="Gesichtsbehandlungen"
+                          placeholder={t('adminCategoryForm.fields.nameDe.placeholder')}
                           className="focus-visible:ring-gold/30"
                         />
                       </FormControl>
@@ -295,11 +297,11 @@ export function CategoryFormDialog({
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Name (Türkçe) *</FormLabel>
+                      <FormLabel>{t('adminCategoryForm.fields.nameTr.label')} *</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder="Yüz Bakımı"
+                          placeholder={t('adminCategoryForm.fields.nameTr.placeholder')}
                           className="focus-visible:ring-gold/30"
                         />
                       </FormControl>
@@ -311,21 +313,21 @@ export function CategoryFormDialog({
 
               {/* Descriptions Section */}
               <div className="md:col-span-2 space-y-4 pt-2">
-                <h3 className="text-base font-semibold">Descriptions (Optional)</h3>
+                <h3 className="text-base font-semibold">{t('adminCategoryForm.sections.descriptions')}</h3>
 
                 <FormField
                   name="descriptionEn"
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description (English)</FormLabel>
+                      <FormLabel>{t('adminCategoryForm.fields.descriptionEn.label')}</FormLabel>
                       <FormControl>
                         <textarea
                           {...field}
                           value={field.value || ''}
                           rows={2}
                           className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/30 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                          placeholder="A brief description in English"
+                          placeholder={t('adminCategoryForm.fields.descriptionEn.placeholder')}
                         />
                       </FormControl>
                       <FormMessage />
@@ -338,7 +340,7 @@ export function CategoryFormDialog({
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description (العربية)</FormLabel>
+                      <FormLabel>{t('adminCategoryForm.fields.descriptionAr.label')}</FormLabel>
                       <FormControl>
                         <textarea
                           {...field}
@@ -346,7 +348,7 @@ export function CategoryFormDialog({
                           rows={2}
                           dir="rtl"
                           className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/30 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                          placeholder="وصف قصير بالعربية"
+                          placeholder={t('adminCategoryForm.fields.descriptionAr.placeholder')}
                         />
                       </FormControl>
                       <FormMessage />
@@ -359,14 +361,14 @@ export function CategoryFormDialog({
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description (Deutsch)</FormLabel>
+                      <FormLabel>{t('adminCategoryForm.fields.descriptionDe.label')}</FormLabel>
                       <FormControl>
                         <textarea
                           {...field}
                           value={field.value || ''}
                           rows={2}
                           className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/30 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                          placeholder="Kurze Beschreibung auf Deutsch"
+                          placeholder={t('adminCategoryForm.fields.descriptionDe.placeholder')}
                         />
                       </FormControl>
                       <FormMessage />
@@ -379,14 +381,14 @@ export function CategoryFormDialog({
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description (Türkçe)</FormLabel>
+                      <FormLabel>{t('adminCategoryForm.fields.descriptionTr.label')}</FormLabel>
                       <FormControl>
                         <textarea
                           {...field}
                           value={field.value || ''}
                           rows={2}
                           className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/30 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                          placeholder="Kısa açıklama Türkçe"
+                          placeholder={t('adminCategoryForm.fields.descriptionTr.placeholder')}
                         />
                       </FormControl>
                       <FormMessage />
@@ -404,7 +406,7 @@ export function CategoryFormDialog({
                 className="mr-2"
                 disabled={isLoadingOnSubmit}
               >
-                Cancel
+                {t('adminCategoryForm.actions.cancel')}
               </Button>
               <Button
                 type="submit"
@@ -414,7 +416,7 @@ export function CategoryFormDialog({
                 {isLoadingOnSubmit ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Processing...
+                    {t('adminCategoryForm.actions.processing')}
                   </>
                 ) : (
                   submitButtonText

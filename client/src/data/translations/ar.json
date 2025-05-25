@@ -131,5 +131,470 @@
   "loading": "جاري التحميل...",
 
   "breadcrumbHome": "الرئيسية",
-  "breadcrumbServices": "الخدمات"
+  "breadcrumbServices": "الخدمات",
+
+  "adminDashboard": "لوحة الإدارة",
+  "dashboardOverview": "نظرة عامة على لوحة الإدارة",
+  "liveData": "البيانات المباشرة",
+  "totalBookings": "إجمالي الحجوزات",
+  "allTimeAppointmentCount": "عدد المواعيد الإجمالي",
+  "lifetimeTotal": "الإجمالي مدى الحياة",
+  "confirmed": "مؤكد",
+  "approvedAppointments": "المواعيد المعتمدة",
+  "ofTotal": "من الإجمالي",
+  "pending": "قيد الانتظار",
+  "awaitingConfirmation": "في انتظار التأكيد",
+  "services": "الخدمات",
+  "activeSpatreatments": "علاجات السبا النشطة",
+  "availableTreatments": "العلاجات المتاحة",
+  "bookingActivity": "نشاط الحجوزات",
+  "atAGlance": "نظرة سريعة",
+  "bookingChartWillAppearHere": "سيظهر مخطط الحجوزات هنا",
+  "comingSoon": "قريباً",
+  "blockedSlots": "الفترات المحجوبة",
+  "unavailablePeriods": "الفترات غير المتاحة",
+  "manage": "إدارة",
+  "view": "عرض",
+
+  "adminNavDashboard": "لوحة الإدارة",
+  "adminNavBookings": "الحجوزات",
+  "adminNavAvailability": "التوفر",
+  "adminNavServices": "الخدمات",
+  "adminNavCategories": "الفئات",
+  "adminNavUsers": "المستخدمون",
+  "adminNavProfile": "الملف الشخصي",
+  "signOut": "تسجيل الخروج",
+
+  "bookingDetails": "تفاصيل الحجز",
+  "name": "الاسم",
+  "email": "البريد الإلكتروني",
+  "phone": "الهاتف",
+  "serviceId": "معرف الخدمة",
+  "bookingDate": "التاريخ",
+  "bookingTime": "الوقت",
+  "status": "الحالة",
+  "createdAt": "تاريخ الإنشاء",
+  "updateStatus": "تحديث الحالة",
+  "selectStatus": "اختر الحالة",
+  "updated": "تم التحديث",
+  "statusUpdated": "تم تحديث الحالة",
+  "failedToUpdateStatus": "فشل في تحديث الحالة",
+  "loadingDashboard": "جاري تحميل لوحة الإدارة...",
+
+  "bookingStatuses": {
+    "pending": "قيد الانتظار",
+    "confirmed": "مؤكد",
+    "completed": "مكتمل",
+    "cancelled": "ملغي"
+  },
+
+  "adminMessages": {
+    "errorLoadingDashboard": "فشل في تحميل ملخص لوحة الإدارة",
+    "errorTitle": "خطأ",
+    "successTitle": "نجح",
+    "bookingUpdated": "تم تحديث الحجز",
+    "categoryCreated": "تم إنشاء الفئة بنجاح",
+    "categoryUpdated": "تم تحديث الفئة بنجاح",
+    "categoryDeleted": "تم حذف الفئة بنجاح",
+    "serviceCreated": "تم إنشاء الخدمة بنجاح",
+    "serviceUpdated": "تم تحديث الخدمة بنجاح",
+    "serviceDeleted": "تم حذف الخدمة بنجاح",
+    "userCreated": "تم إنشاء المستخدم بنجاح",
+    "userUpdated": "تم تحديث المستخدم بنجاح",
+    "userDeleted": "تم حذف المستخدم بنجاح",
+    "failedToFetchServices": "فشل في جلب الخدمات",
+    "failedToDeleteService": "فشل في حذف الخدمة",
+    "failedToCreateService": "فشل في إنشاء الخدمة",
+    "failedToUpdateService": "فشل في تحديث الخدمة",
+    "failedToFetchCategories": "فشل في جلب الفئات",
+    "failedToDeleteCategory": "فشل في حذف الفئة",
+    "failedToCreateCategory": "فشل في إنشاء الفئة",
+    "failedToUpdateCategory": "فشل في تحديث الفئة"
+  },
+
+  "adminServices": {
+    "title": "الخدمات",
+    "addNewService": "إضافة خدمة جديدة",
+    "editService": "تحرير الخدمة",
+    "createServiceTitle": "إضافة خدمة جديدة",
+    "createServiceDescription": "املأ التفاصيل لإنشاء خدمة جديدة.",
+    "editServiceTitle": "تحرير الخدمة",
+    "editServiceDescription": "تحديث التفاصيل لـ",
+    "createServiceButton": "إنشاء خدمة",
+    "saveChangesButton": "حفظ التغييرات",
+    "deleteConfirmation": "هل أنت متأكد من أنك تريد حذف هذه الخدمة؟",
+    "searchPlaceholder": "البحث في الخدمات...",
+    "tableHeaders": {
+      "name": "الاسم (AR)",
+      "category": "الفئة",
+      "price": "السعر",
+      "duration": "المدة",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "uncategorized": "بدون فئة",
+    "loadingServices": "جاري تحميل الخدمات...",
+    "noServicesFound": "لم يتم العثور على خدمات",
+    "noServicesMessage": "لا توجد خدمات حاليا للعرض. جرب إضافة خدمة جديدة.",
+    "unnamedService": "خدمة بدون اسم",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "edit": "تحرير",
+    "delete": "حذف"
+  },
+
+  "adminCategories": {
+    "title": "الفئات",
+    "subtitle": "إدارة فئات الخدمات وترجماتها",
+    "addNewCategory": "إضافة فئة جديدة",
+    "editCategory": "تحرير الفئة",
+    "createCategoryTitle": "إضافة فئة جديدة",
+    "createCategoryDescription": "إضافة فئة خدمة جديدة مع الترجمات.",
+    "editCategoryTitle": "تحرير الفئة",
+    "editCategoryDescription": "تحديث فئة خدمة وترجماتها.",
+    "createCategoryButton": "إنشاء فئة",
+    "saveChangesButton": "حفظ التغييرات",
+    "deleteConfirmation": "هل أنت متأكد من أنك تريد حذف هذه الفئة؟",
+    "serviceCategoriesTitle": "فئات الخدمات",
+    "serviceCategoriesDescription": "تُستخدم الفئات لتنظيم الخدمات ومساعدة العملاء في العثور على ما يبحثون عنه",
+    "searchPlaceholder": "البحث في الفئات..."
+  },
+
+  "adminUsers": {
+    "title": "إدارة المستخدمين",
+    "subtitle": "إدارة حسابات الموظفين والمديرين",
+    "addUser": "إضافة مستخدم",
+    "editUser": "تحرير المستخدم",
+    "createUserTitle": "إضافة مستخدم جديد",
+    "createUserDescription": "إنشاء حساب مستخدم جديد للموظفين أو المديرين.",
+    "editUserTitle": "تحرير المستخدم",
+    "editUserDescription": "تحديث معلومات المستخدم والصلاحيات.",
+    "createUserButton": "إنشاء مستخدم",
+    "saveChangesButton": "حفظ التغييرات",
+    "deleteConfirmation": "هل أنت متأكد من أنك تريد حذف هذا المستخدم؟",
+    "usersTableTitle": "المستخدمون",
+    "usersTableDescription": "إدارة المستخدمين وصلاحيات الوصول الخاصة بهم",
+    "userCreatedSuccess": "تم إنشاء المستخدم بنجاح",
+    "userUpdatedSuccess": "تم تحديث المستخدم بنجاح",
+    "userDeletedSuccess": "تم حذف المستخدم بنجاح",
+    "failedToLoadUsers": "فشل في تحميل المستخدمين",
+    "failedToSaveUser": "فشل في حفظ المستخدم",
+    "failedToDeleteUser": "فشل في حذف المستخدم"
+  },
+
+  "adminBookings": {
+    "title": "الحجوزات",
+    "searchPlaceholder": "البحث بالاسم أو البريد الإلكتروني",
+    "allStatusesPlaceholder": "جميع الحالات",
+    "allStatuses": "الكل",
+    "tableHeaders": {
+      "id": "الرقم",
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "service": "الخدمة",
+      "date": "التاريخ",
+      "time": "الوقت",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "viewButton": "عرض",
+    "failedToFetchBookings": "فشل في جلب الحجوزات",
+    "failedToUpdateStatus": "فشل في تحديث الحالة",
+    "statusUpdatedSuccess": "تم تحديث حالة الحجز."
+  },
+
+  "adminAvailability": {
+    "title": "التوفر (الأوقات المحجوبة)",
+    "datePlaceholder": "اختر التاريخ",
+    "timePlaceholder": "اختر الوقت",
+    "blockSlotButton": "حجب الوقت",
+    "unblockButton": "إلغاء الحجب",
+    "tableHeaders": {
+      "id": "المعرف",
+      "date": "التاريخ",
+      "time": "الوقت",
+      "actions": "الإجراءات"
+    },
+    "failedToLoadSlots": "فشل في تحميل الأوقات المحجوبة",
+    "failedToBlockSlot": "فشل في حجب الوقت",
+    "failedToRemoveSlot": "فشل في إزالة حجب الوقت",
+    "slotBlockedSuccess": "تم حجب الوقت.",
+    "slotUnblockedSuccess": "تم إلغاء حجب الوقت."
+  },
+
+  "adminProfile": {
+    "title": "إعدادات الملف الشخصي",
+    "basicInfo": "المعلومات الأساسية",
+    "basicInfoDescription": "قم بتحديث تفاصيل حسابك وتفضيلاتك",
+    "securitySettings": "إعدادات الأمان",
+    "securityDescription": "قم بتغيير كلمة المرور وتفضيلات الأمان",
+    "profilePicture": "صورة الملف الشخصي",
+    "profilePictureDescription": "رفع صورة جديدة للملف الشخصي",
+    "username": "اسم المستخدم",
+    "firstName": "الاسم الأول",
+    "email": "البريد الإلكتروني",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "currentPassword": "كلمة المرور الحالية",
+    "updateProfile": "تحديث الملف الشخصي",
+    "changePassword": "تغيير كلمة المرور",
+    "uploadImage": "رفع صورة",
+    "removeImage": "إزالة الصورة",
+    "updating": "جاري التحديث...",
+    "loading": "جاري تحميل الملف الشخصي...",
+    "failedToLoadProfile": "فشل في تحميل بيانات الملف الشخصي",
+    "failedToUpdateProfile": "فشل في تحديث الملف الشخصي",
+    "profileUpdatedSuccess": "تم تحديث الملف الشخصي بنجاح",
+    "passwordsDoNotMatch": "كلمات المرور غير متطابقة",
+    "passwordChangedSuccess": "تم تغيير كلمة المرور بنجاح",
+    "imageUploadedSuccess": "تم تحديث صورة الملف الشخصي بنجاح",
+    "imageRemovedSuccess": "تم إزالة صورة الملف الشخصي بنجاح",
+    "accountSettings": "إعدادات الحساب",
+    "accountSettingsDescription": "إدارة تفضيلات حسابك",
+    "accountType": "نوع الحساب",
+    "administrator": "مدير",
+    "accountStatus": "حالة الحساب",
+    "active": "نشط"
+  },
+
+  "adminServiceForm": {
+    "steps": {
+      "basicInfo": "المعلومات الأساسية",
+      "translations": "الترجمات",
+      "details": "التفاصيل والصور",
+      "shortDescriptions": "الوصف المختصر",
+      "longDescriptions": "الوصف الكامل"
+    },
+    "basicInfo": {
+      "slug": "رمز الخدمة",
+      "slugPlaceholder": "علاج-الوجه",
+      "category": "الفئة",
+      "selectCategory": "اختر الفئة",
+      "searchCategories": "البحث في الفئات...",
+      "noCategoriesFound": "لم يتم العثور على فئات",
+      "createNewCategory": "إنشاء جديد",
+      "newCategoryName": "اسم الفئة الجديدة",
+      "addCategory": "إضافة فئة",
+      "status": "الحالة",
+      "statusDescription": "تفعيل أو إلغاء تفعيل هذه الخدمة"
+    },
+    "names": {
+      "nameEn": "الاسم (English)",
+      "nameEnPlaceholder": "علاج الوجه",
+      "nameAr": "الاسم (العربية)",
+      "nameArPlaceholder": "علاج الوجه",
+      "nameDe": "الاسم (Deutsch)",
+      "nameDePlaceholder": "Gesichtsbehandlung",
+      "nameTr": "الاسم (Türkçe)",
+      "nameTrPlaceholder": "Yüz Bakımı"
+    },
+    "pricing": {
+      "price": "السعر (يورو)",
+      "duration": "المدة (دقيقة)",
+      "durationPlaceholder": "60",
+      "imageUrl": "صورة الخدمة",
+      "imageDescription": "رفع صورة لهذه الخدمة"
+    },
+    "descriptions": {
+      "descriptionEn": "الوصف المختصر (English)",
+      "descriptionEnPlaceholder": "وصف مختصر بالإنجليزية",
+      "descriptionAr": "الوصف المختصر (العربية)",
+      "descriptionArPlaceholder": "وصف قصير بالعربية",
+      "descriptionDe": "الوصف المختصر (Deutsch)",
+      "descriptionDePlaceholder": "وصف مختصر بالألمانية",
+      "descriptionTr": "الوصف المختصر (Türkçe)",
+      "descriptionTrPlaceholder": "وصف مختصر بالتركية"
+    },
+    "longDescriptions": {
+      "longDescriptionEn": "الوصف الكامل (English)",
+      "longDescriptionEnPlaceholder": "وصف تفصيلي بالإنجليزية",
+      "longDescriptionAr": "الوصف الكامل (العربية)",
+      "longDescriptionArPlaceholder": "وصف مفصل بالعربية",
+      "longDescriptionDe": "الوصف الكامل (Deutsch)",
+      "longDescriptionDePlaceholder": "وصف مفصل بالألمانية",
+      "longDescriptionTr": "الوصف الكامل (Türkçe)",
+      "longDescriptionTrPlaceholder": "وصف مفصل بالتركية"
+    },
+    "navigation": {
+      "next": "التالي",
+      "back": "السابق",
+      "cancel": "إلغاء",
+      "processing": "جاري المعالجة..."
+    }
+  },
+
+  "adminCategoriesTable": {
+    "noCategories": "لم يتم العثور على فئات. أنشئ واحدة للبدء.",
+    "tableHeaders": {
+      "order": "الترتيب",
+      "nameEn": "الاسم (English)",
+      "slug": "الرمز",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "unnamedCategory": "فئة بدون اسم",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "editCategory": "تعديل الفئة",
+    "deleteCategory": "حذف الفئة"
+  },
+
+  "adminUsersTable": {
+    "tableHeaders": {
+      "avatar": "",
+      "username": "اسم المستخدم",
+      "email": "البريد الإلكتروني",
+      "name": "الاسم",
+      "role": "الدور",
+      "created": "تاريخ الإنشاء",
+      "actions": "الإجراءات"
+    },
+    "loadingUsers": "جاري تحميل المستخدمين...",
+    "noUsersFound": "لم يتم العثور على مستخدمين",
+    "you": "أنت",
+    "admin": "مدير",
+    "staff": "موظف",
+    "editUser": "تعديل المستخدم",
+    "deleteUser": "حذف المستخدم",
+    "deleteConfirmTitle": "هل أنت متأكد؟",
+    "deleteConfirmDescription": "سيؤدي هذا إلى حذف المستخدم {username} نهائياً. لا يمكن التراجع عن هذا الإجراء.",
+    "deleteButton": "حذف"
+  },
+
+  "adminCategoryForm": {
+    "sections": {
+      "basicInfo": "المعلومات الأساسية",
+      "translations": "الترجمات",
+      "descriptions": "الوصف (اختياري)"
+    },
+    "fields": {
+      "nameEn": {
+        "label": "الاسم (English)",
+        "placeholder": "مثل، علاج الوجه"
+      },
+      "slug": {
+        "label": "الرمز المميز",
+        "placeholder": "علاج-الوجه",
+        "description": "معرف مناسب لعناوين الويب (أحرف صغيرة، شرطات)"
+      },
+      "displayOrder": {
+        "label": "ترتيب العرض",
+        "description": "يتحكم في ترتيب العرض في القوائم (الأرقام الأقل أولاً)"
+      },
+      "isActive": {
+        "label": "نشط",
+        "description": "ستكون هذه الفئة مرئية للعملاء"
+      },
+      "imageUrl": {
+        "label": "رابط الصورة",
+        "placeholder": "https://example.com/image.jpg",
+        "description": "صورة لتمثيل هذه الفئة (اختياري)"
+      },
+      "nameAr": {
+        "label": "الاسم (العربية)",
+        "placeholder": "تدليك"
+      },
+      "nameDe": {
+        "label": "الاسم (Deutsch)",
+        "placeholder": "Gesichtsbehandlungen"
+      },
+      "nameTr": {
+        "label": "الاسم (Türkçe)",
+        "placeholder": "Yüz Bakımı"
+      },
+      "descriptionEn": {
+        "label": "الوصف (English)",
+        "placeholder": "وصف مختصر بالإنجليزية"
+      },
+      "descriptionAr": {
+        "label": "الوصف (العربية)",
+        "placeholder": "وصف قصير بالعربية"
+      },
+      "descriptionDe": {
+        "label": "الوصف (Deutsch)",
+        "placeholder": "Kurze Beschreibung auf Deutsch"
+      },
+      "descriptionTr": {
+        "label": "الوصف (Türkçe)",
+        "placeholder": "Kısa açıklama Türkçe"
+      }
+    },
+    "actions": {
+      "cancel": "إلغاء",
+      "processing": "جاري المعالجة..."
+    }
+  },
+
+  "adminUserForm": {
+    "titles": {
+      "create": "إضافة مستخدم جديد",
+      "edit": "تحرير المستخدم"
+    },
+    "descriptions": {
+      "create": "إنشاء حساب مستخدم جديد بالصلاحيات المناسبة.",
+      "edit": "تحديث تفاصيل المستخدم والصلاحيات."
+    },
+    "fields": {
+      "username": {
+        "label": "عنوان البريد الإلكتروني*",
+        "placeholder": "user@example.com",
+        "description": "سيتم استخدام هذا كاسم المستخدم لتسجيل الدخول."
+      },
+      "firstName": {
+        "label": "الاسم الكامل",
+        "placeholder": "أحمد محمد"
+      },
+      "password": {
+        "labelNew": "كلمة المرور*",
+        "labelEdit": "كلمة مرور جديدة",
+        "placeholderNew": "أدخل كلمة المرور",
+        "placeholderEdit": "اتركه فارغاً للاحتفاظ بكلمة المرور الحالية",
+        "description": "اتركه فارغاً للاحتفاظ بكلمة المرور الحالية."
+      },
+      "confirmPassword": {
+        "labelNew": "تأكيد كلمة المرور*",
+        "labelEdit": "تأكيد كلمة المرور الجديدة",
+        "placeholder": "تأكيد كلمة المرور"
+      },
+      "isAdmin": {
+        "label": "صلاحية المدير",
+        "description": "يمكن للمديرين إدارة المستخدمين ولديهم وصول كامل لجميع الميزات."
+      }
+    },
+    "validation": {
+      "usernameRequired": "يجب أن يكون اسم المستخدم 3 أحرف على الأقل.",
+      "validEmail": "يرجى إدخال عنوان بريد إلكتروني صالح.",
+      "passwordRequired": "يجب أن تكون كلمة المرور 6 أحرف على الأقل.",
+      "passwordsMatch": "كلمات المرور غير متطابقة"
+    },
+    "actions": {
+      "cancel": "إلغاء",
+      "createUser": "إنشاء مستخدم",
+      "saveChanges": "حفظ التغييرات",
+      "creating": "جاري الإنشاء...",
+      "saving": "جاري الحفظ..."
+    }
+  },
+
+  "adminImageUploader": {
+    "uploadFromDevice": "رفع من جهازك",
+    "enterImageUrl": "أو أدخل رابط الصورة",
+    "imageUrlPlaceholder": "https://example.com/image.jpg",
+    "addUrl": "إضافة رابط",
+    "currentImage": "الصورة الحالية",
+    "changeImage": "تغيير الصورة",
+    "removeImage": "إزالة الصورة",
+    "invalidFileType": "نوع ملف غير صالح",
+    "invalidFileTypeDesc": "يرجى رفع ملف صورة (JPEG، PNG، إلخ)",
+    "fileTooLarge": "الملف كبير جداً",
+    "fileTooLargeDesc": "يرجى رفع صورة أصغر من 5 ميجابايت",
+    "uploadError": "خطأ في الرفع",
+    "uploadErrorDesc": "فشل في رفع الصورة. يرجى المحاولة مرة أخرى.",
+    "imageUploaded": "تم رفع الصورة",
+    "imageUploadedDesc": "تم رفع صورتك بنجاح",
+    "imageUrlAdded": "تم إضافة رابط الصورة",
+    "imageUrlAddedDesc": "تم إضافة رابط الصورة بنجاح",
+    "invalidUrl": "رابط غير صالح",
+    "invalidUrlDesc": "يرجى إدخال رابط صورة صالح"
+  }
 }

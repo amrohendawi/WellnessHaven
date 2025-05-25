@@ -1,16 +1,19 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/table';
-import { AdminService } from '@shared/schema';
+import { useLanguage } from '@/context/LanguageContext';
+import { getLocalizedName } from '@/lib/localization';
+import type { AdminService, ServiceGroup } from '@shared/schema';
 import { Info, Loader2, Pencil, Trash2 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import { React, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ServicesTableProps {
   services: AdminService[];
@@ -27,8 +30,10 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
   isLoading,
   // isDeleting,
 }) => {
+  const { t } = useTranslation();
+  const { language } = useLanguage();
   // State for storing category data
-  const [categories, setCategories] = useState<Record<string, string>>({});
+  const [categories, setCategories] = useState<Record<string, ServiceGroup>>({});
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(false);
 
   // Fetch categories when component mounts
@@ -42,17 +47,11 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
         }
         const data = await response.json();
 
-        // Create a mapping of category IDs to names
-        const categoryMap: Record<string, string> = {};
-        data.forEach((group: any) => {
+        // Create a mapping of category IDs to category objects
+        const categoryMap: Record<string, ServiceGroup> = {};
+        data.forEach((group: ServiceGroup) => {
           const id = group.id?.toString() || '';
-          const name =
-            group.nameEn ||
-            group.name_en ||
-            (typeof group.name === 'object' && group.name?.en) ||
-            (typeof group.name === 'string' ? group.name : '');
-
-          if (id) categoryMap[id] = name || `Category ${id}`;
+          if (id) categoryMap[id] = group;
         });
 
         setCategories(categoryMap);
@@ -66,16 +65,21 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
     fetchCategories();
   }, []);
 
-  // Function to get category name from ID
+  // Function to get localized category name from ID
   const getCategoryName = (categoryId: string | null | undefined): string => {
-    if (!categoryId) return 'Uncategorized';
-    return categories[categoryId] || categoryId;
+    if (!categoryId) return t('adminServices.uncategorized');
+    
+    const category = categories[categoryId];
+    if (!category) return categoryId;
+    
+    // Use getLocalizedName to get the name in the current language
+    return getLocalizedName(category, language) || `Category ${categoryId}`;
   };
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64 border rounded-md">
         <Loader2 className="h-8 w-8 animate-spin text-gold" />
-        <p className="ml-2 text-muted-foreground">Loading services...</p>
+        <p className="ml-2 text-muted-foreground">{t('adminServices.loadingServices')}</p>
       </div>
     );
   }
@@ -84,10 +88,10 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
     return (
       <div className="flex flex-col items-center justify-center h-64 border rounded-md p-4 text-center">
         <Info className="h-12 w-12 text-gold mb-4" />
-        <h3 className="text-xl font-semibold text-gold-darker">No Services Found</h3>
-        <p className="text-muted-foreground mt-1">
-          There are currently no services to display. Try adding a new service.
-        </p>
+        <h3 className="text-xl font-semibold text-gold-darker">
+          {t('adminServices.noServicesFound')}
+        </h3>
+        <p className="text-muted-foreground mt-1">{t('adminServices.noServicesMessage')}</p>
       </div>
     );
   }
@@ -97,21 +101,29 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[250px]">Name (EN)</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead className="text-right">Price</TableHead>
-            <TableHead className="text-center">Duration</TableHead>
-            <TableHead className="text-center">Status</TableHead>
-            <TableHead className="text-right w-[120px]">Actions</TableHead>
+            <TableHead className="w-[250px]">{t('adminServices.tableHeaders.name')}</TableHead>
+            <TableHead>{t('adminServices.tableHeaders.category')}</TableHead>
+            <TableHead className="text-right">{t('adminServices.tableHeaders.price')}</TableHead>
+            <TableHead className="text-center">
+              {t('adminServices.tableHeaders.duration')}
+            </TableHead>
+            <TableHead className="text-center">{t('adminServices.tableHeaders.status')}</TableHead>
+            <TableHead className="text-right w-[120px]">
+              {t('adminServices.tableHeaders.actions')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {services.map(service => (
             <TableRow key={service.id}>
-              <TableCell className="font-medium">{service.nameEn || 'Unnamed Service'}</TableCell>
+              <TableCell className="font-medium">
+                {getLocalizedName(service, language) || t('adminServices.unnamedService')}
+              </TableCell>
               <TableCell>{getCategoryName(service.category)}</TableCell>
               <TableCell className="text-right">EUR {(service.price || 0).toFixed(2)}</TableCell>
-              <TableCell className="text-center">{service.duration || 0} min</TableCell>
+              <TableCell className="text-center">
+                {service.duration || 0} {t('minutes')}
+              </TableCell>
               <TableCell className="text-center">
                 <Badge
                   variant={service.isActive ? 'default' : 'outline'}
@@ -121,7 +133,7 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
                       : 'border-destructive text-destructive'
                   }
                 >
-                  {service.isActive ? 'Active' : 'Inactive'}
+                  {service.isActive ? t('adminServices.active') : t('adminServices.inactive')}
                 </Badge>
               </TableCell>
               <TableCell className="text-right">
@@ -132,7 +144,7 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
                   className="hover:text-gold-dark h-8 w-8"
                 >
                   <Pencil className="h-4 w-4" />
-                  <span className="sr-only">Edit</span>
+                  <span className="sr-only">{t('adminServices.edit')}</span>
                 </Button>
                 <Button
                   variant="ghost"
@@ -146,7 +158,7 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
                     <Trash2 className="h-4 w-4" />
                   } */}
                   <Trash2 className="h-4 w-4" />
-                  <span className="sr-only">Delete</span>
+                  <span className="sr-only">{t('adminServices.delete')}</span>
                 </Button>
               </TableCell>
             </TableRow>

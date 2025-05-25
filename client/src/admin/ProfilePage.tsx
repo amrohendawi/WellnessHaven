@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { fetchAdminAPI } from '@/lib/api';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { useAuth } from '@/contexts/AuthContext';
+import { fetchAdminAPI } from '@/lib/api';
+import { ImagePlus, Loader2, User } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { User, Loader2, ImagePlus } from 'lucide-react';
 
 interface ProfileData {
   username: string;
@@ -19,6 +20,7 @@ interface ProfileData {
 
 export default function ProfilePage() {
   const { isAuthenticated } = useAuth();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [profile, setProfile] = useState<ProfileData | null>(null);
@@ -41,7 +43,7 @@ export default function ProfilePage() {
         }
       } catch (error) {
         console.error('Failed to fetch profile:', error);
-        toast.error('Failed to load profile data');
+        toast.error(t('adminProfile.failedToLoadProfile'));
       } finally {
         setIsLoading(false);
       }
@@ -55,7 +57,7 @@ export default function ProfilePage() {
     e.preventDefault();
 
     if (newPassword && newPassword !== confirmPassword) {
-      toast.error('Passwords do not match');
+      toast.error(t('adminProfile.passwordsDoNotMatch'));
       return;
     }
 
@@ -84,12 +86,12 @@ export default function ProfilePage() {
       });
 
       // Visual feedback that something is happening
-      toast.loading('Updating profile...', { id: 'profile-update' });
+      toast.loading(t('adminProfile.updating'), { id: 'profile-update' });
 
       if (response.ok) {
         // Dismiss the loading toast and show success
         toast.dismiss('profile-update');
-        toast.success('Profile updated successfully', {
+        toast.success(t('adminProfile.profileUpdatedSuccess'), {
           duration: 3000,
           position: 'top-center',
         });
@@ -105,14 +107,14 @@ export default function ProfilePage() {
         }
       } else {
         const error = await response.json();
-        throw new Error(error.message || 'Failed to update profile');
+        throw new Error(error.message || t('adminProfile.failedToUpdateProfile'));
       }
     } catch (error) {
       console.error('Error updating profile:', error);
 
       // Dismiss the loading toast and show error
       toast.dismiss('profile-update');
-      toast.error(error instanceof Error ? error.message : 'Failed to update profile', {
+      toast.error(error instanceof Error ? error.message : t('adminProfile.failedToUpdateProfile'), {
         duration: 5000,
         position: 'top-center',
       });
@@ -142,6 +144,7 @@ export default function ProfilePage() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <Loader2 className="h-12 w-12 animate-spin text-gold" />
+        <span className="ml-2">{t('adminProfile.loading')}</span>
       </div>
     );
   }
@@ -149,8 +152,8 @@ export default function ProfilePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-800">Admin Profile</h2>
-        <p className="text-gray-600 mt-1">Manage your account settings and preferences</p>
+        <h2 className="text-2xl font-bold text-gray-800">{t('adminProfile.title')}</h2>
+        <p className="text-gray-600 mt-1">{t('adminProfile.basicInfoDescription')}</p>
       </div>
 
       <Separator />
@@ -158,8 +161,8 @@ export default function ProfilePage() {
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Profile Information</CardTitle>
-            <CardDescription>Update your account information</CardDescription>
+            <CardTitle>{t('adminProfile.basicInfo')}</CardTitle>
+            <CardDescription>{t('adminProfile.basicInfoDescription')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <form onSubmit={handleUpdateProfile} className="space-y-6">
@@ -186,14 +189,14 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold">Profile Photo</h3>
-                  <p className="text-sm text-gray-500 mt-1">Click to upload a new profile photo</p>
+                  <h3 className="font-semibold">{t('adminProfile.profilePicture')}</h3>
+                  <p className="text-sm text-gray-500 mt-1">{t('adminProfile.profilePictureDescription')}</p>
                 </div>
               </div>
 
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="username">Username</Label>
+                  <Label htmlFor="username">{t('adminProfile.username')}</Label>
                   <Input
                     id="username"
                     value={profile?.username || ''}
@@ -205,7 +208,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">Name</Label>
+                  <Label htmlFor="firstName">{t('adminProfile.firstName')}</Label>
                   <Input
                     id="firstName"
                     value={profile?.firstName || ''}
@@ -217,7 +220,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t('adminProfile.email')}</Label>
                   <Input
                     id="email"
                     type="email"
@@ -234,26 +237,26 @@ export default function ProfilePage() {
 
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="newPassword">New Password</Label>
+                  <Label htmlFor="newPassword">{t('adminProfile.newPassword')}</Label>
                   <Input
                     id="newPassword"
                     type="password"
                     value={newPassword}
                     onChange={e => setNewPassword(e.target.value)}
                     className="w-full"
-                    placeholder="Leave blank to keep current password"
+                    placeholder={t('adminProfile.newPassword')}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
+                  <Label htmlFor="confirmPassword">{t('adminProfile.confirmPassword')}</Label>
                   <Input
                     id="confirmPassword"
                     type="password"
                     value={confirmPassword}
                     onChange={e => setConfirmPassword(e.target.value)}
                     className="w-full"
-                    placeholder="Confirm your new password"
+                    placeholder={t('adminProfile.confirmPassword')}
                   />
                 </div>
               </div>
@@ -266,10 +269,10 @@ export default function ProfilePage() {
                 {isSaving ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Saving...
+                    {t('adminProfile.updating')}
                   </>
                 ) : (
-                  'Save Changes'
+                  t('adminProfile.updateProfile')
                 )}
               </Button>
             </form>
@@ -278,21 +281,21 @@ export default function ProfilePage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Account Settings</CardTitle>
-            <CardDescription>Manage your account preferences</CardDescription>
+            <CardTitle>{t('adminProfile.accountSettings')}</CardTitle>
+            <CardDescription>{t('adminProfile.accountSettingsDescription')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-4">
               <div>
-                <h3 className="font-semibold">Account Type</h3>
-                <p className="text-gray-500">Administrator</p>
+                <h3 className="font-semibold">{t('adminProfile.accountType')}</h3>
+                <p className="text-gray-500">{t('adminProfile.administrator')}</p>
               </div>
 
               <div>
-                <h3 className="font-semibold">Account Status</h3>
+                <h3 className="font-semibold">{t('adminProfile.accountStatus')}</h3>
                 <div className="flex items-center gap-2 mt-1">
                   <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                  <span className="text-green-600">Active</span>
+                  <span className="text-green-600">{t('adminProfile.active')}</span>
                 </div>
               </div>
             </div>

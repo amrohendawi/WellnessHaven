@@ -131,5 +131,473 @@
   "loading": "Laden...",
 
   "breadcrumbHome": "Startseite",
-  "breadcrumbServices": "Leistungen"
+  "breadcrumbServices": "Leistungen",
+
+  "adminDashboard": "Admin-Dashboard",
+  "dashboardOverview": "Dashboard-Übersicht",
+  "liveData": "Live-Daten",
+  "totalBookings": "Gesamtbuchungen",
+  "allTimeAppointmentCount": "Gesamtzahl aller Termine",
+  "lifetimeTotal": "Lebenszeitgesamtsumme",
+  "confirmed": "Bestätigt",
+  "approvedAppointments": "Genehmigte Termine",
+  "ofTotal": "von gesamt",
+  "pending": "Ausstehend",
+  "awaitingConfirmation": "Warten auf Bestätigung",
+  "services": "Leistungen",
+  "activeSpatreatments": "Aktive Spa-Behandlungen",
+  "availableTreatments": "Verfügbare Behandlungen",
+  "bookingActivity": "Buchungsaktivität",
+  "atAGlance": "Auf einen Blick",
+  "bookingChartWillAppearHere": "Buchungsdiagramm wird hier angezeigt",
+  "comingSoon": "Demnächst verfügbar",
+  "blockedSlots": "Gesperrte Zeitfenster",
+  "unavailablePeriods": "Nicht verfügbare Zeiträume",
+  "manage": "Verwalten",
+  "view": "Anzeigen",
+
+  "adminNavDashboard": "Dashboard",
+  "adminNavBookings": "Buchungen",
+  "adminNavAvailability": "Verfügbarkeit",
+  "adminNavServices": "Leistungen",
+  "adminNavCategories": "Kategorien",
+  "adminNavUsers": "Benutzer",
+  "adminNavProfile": "Profil",
+  "signOut": "Abmelden",
+
+  "bookingDetails": "Buchungsdetails",
+  "name": "Name",
+  "email": "E-Mail",
+  "serviceId": "Service-ID",
+  "bookingDate": "Datum",
+  "bookingTime": "Uhrzeit",
+  "status": "Status",
+  "createdAt": "Erstellt am",
+  "updateStatus": "Status aktualisieren",
+  "selectStatus": "Status auswählen",
+  "updated": "Aktualisiert",
+  "statusUpdated": "Status aktualisiert",
+  "failedToUpdateStatus": "Status-Update fehlgeschlagen",
+  "loadingDashboard": "Dashboard wird geladen...",
+
+  "bookingStatuses": {
+    "pending": "Ausstehend",
+    "confirmed": "Bestätigt",
+    "completed": "Abgeschlossen",
+    "cancelled": "Storniert"
+  },
+
+  "adminMessages": {
+    "errorLoadingDashboard": "Fehler beim Laden der Dashboard-Zusammenfassung",
+    "errorTitle": "Fehler",
+    "successTitle": "Erfolgreich",
+    "bookingUpdated": "Buchung wurde aktualisiert",
+    "categoryCreated": "Kategorie erfolgreich erstellt",
+    "categoryUpdated": "Kategorie erfolgreich aktualisiert",
+    "categoryDeleted": "Kategorie erfolgreich gelöscht",
+    "serviceCreated": "Leistung erfolgreich erstellt",
+    "serviceUpdated": "Leistung erfolgreich aktualisiert",
+    "serviceDeleted": "Leistung erfolgreich gelöscht",
+    "userCreated": "Benutzer erfolgreich erstellt",
+    "userUpdated": "Benutzer erfolgreich aktualisiert",
+    "userDeleted": "Benutzer erfolgreich gelöscht",
+    "failedToFetchServices": "Fehler beim Laden der Leistungen",
+    "failedToDeleteService": "Fehler beim Löschen der Leistung",
+    "failedToCreateService": "Fehler beim Erstellen der Leistung",
+    "failedToUpdateService": "Fehler beim Aktualisieren der Leistung",
+    "failedToFetchCategories": "Fehler beim Laden der Kategorien",
+    "failedToDeleteCategory": "Fehler beim Löschen der Kategorie",
+    "failedToCreateCategory": "Fehler beim Erstellen der Kategorie",
+    "failedToUpdateCategory": "Fehler beim Aktualisieren der Kategorie",
+    "updated": "Aktualisiert"
+  },
+
+  "adminServices": {
+    "title": "Leistungen",
+    "addNewService": "Neue Leistung hinzufügen",
+    "editService": "Leistung bearbeiten",
+    "createServiceTitle": "Neue Leistung hinzufügen",
+    "createServiceDescription": "Füllen Sie die Details aus, um eine neue Leistung zu erstellen.",
+    "editServiceTitle": "Leistung bearbeiten",
+    "editServiceDescription": "Aktualisieren Sie die Details für",
+    "createServiceButton": "Leistung erstellen",
+    "saveChangesButton": "Änderungen speichern",
+    "deleteConfirmation": "Sind Sie sicher, dass Sie diese Leistung löschen möchten?",
+    "searchPlaceholder": "Leistungen suchen...",
+    "tableHeaders": {
+      "name": "Name (DE)",
+      "category": "Kategorie",
+      "price": "Preis",
+      "duration": "Dauer",
+      "status": "Status",
+      "actions": "Aktionen"
+    },
+    "uncategorized": "Unkategorisiert",
+    "loadingServices": "Leistungen werden geladen...",
+    "noServicesFound": "Keine Leistungen gefunden",
+    "noServicesMessage": "Es gibt derzeit keine Leistungen anzuzeigen. Versuchen Sie, eine neue Leistung hinzuzufügen.",
+    "unnamedService": "Unbenannte Leistung",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "edit": "Bearbeiten",
+    "delete": "Löschen"
+  },
+
+  "adminCategories": {
+    "title": "Kategorien",
+    "subtitle": "Service-Kategorien und ihre Übersetzungen verwalten",
+    "addNewCategory": "Neue Kategorie hinzufügen",
+    "editCategory": "Kategorie bearbeiten",
+    "createCategoryTitle": "Neue Kategorie hinzufügen",
+    "createCategoryDescription": "Eine neue Service-Kategorie mit Übersetzungen hinzufügen.",
+    "editCategoryTitle": "Kategorie bearbeiten",
+    "editCategoryDescription": "Eine Service-Kategorie und ihre Übersetzungen aktualisieren.",
+    "createCategoryButton": "Kategorie erstellen",
+    "saveChangesButton": "Änderungen speichern",
+    "deleteConfirmation": "Sind Sie sicher, dass Sie diese Kategorie löschen möchten?",
+    "serviceCategoriesTitle": "Service-Kategorien",
+    "serviceCategoriesDescription": "Kategorien werden verwendet, um Leistungen zu organisieren und Kunden zu helfen, das zu finden, was sie suchen",
+    "searchPlaceholder": "Kategorien suchen..."
+  },
+
+  "adminUsers": {
+    "title": "Benutzerverwaltung",
+    "subtitle": "Personal- und Admin-Benutzerkonten verwalten",
+    "addUser": "Benutzer hinzufügen",
+    "editUser": "Benutzer bearbeiten",
+    "createUserTitle": "Neuen Benutzer hinzufügen",
+    "createUserDescription": "Ein neues Personal- oder Admin-Benutzerkonto erstellen.",
+    "editUserTitle": "Benutzer bearbeiten",
+    "editUserDescription": "Benutzerinformationen und Berechtigungen aktualisieren.",
+    "createUserButton": "Benutzer erstellen",
+    "saveChangesButton": "Änderungen speichern",
+    "deleteConfirmation": "Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?",
+    "usersTableTitle": "Benutzer",
+    "usersTableDescription": "Benutzer und ihre Zugriffsberechtigungen verwalten",
+    "userCreatedSuccess": "Benutzer erfolgreich erstellt",
+    "userUpdatedSuccess": "Benutzer erfolgreich aktualisiert",
+    "userDeletedSuccess": "Benutzer erfolgreich gelöscht",
+    "failedToLoadUsers": "Fehler beim Laden der Benutzer",
+    "failedToSaveUser": "Fehler beim Speichern des Benutzers",
+    "failedToDeleteUser": "Fehler beim Löschen des Benutzers"
+  },
+
+  "adminBookings": {
+    "title": "Buchungen",
+    "searchPlaceholder": "Nach Name oder E-Mail suchen",
+    "allStatusesPlaceholder": "Alle Status",
+    "allStatuses": "Alle",
+    "tableHeaders": {
+      "id": "ID",
+      "name": "Name",
+      "email": "E-Mail",
+      "service": "Leistung",
+      "date": "Datum",
+      "time": "Zeit",
+      "status": "Status",
+      "actions": "Aktionen"
+    },
+    "viewButton": "Anzeigen",
+    "failedToFetchBookings": "Fehler beim Laden der Buchungen",
+    "failedToUpdateStatus": "Fehler beim Aktualisieren des Status",
+    "statusUpdatedSuccess": "Buchungsstatus aktualisiert."
+  },
+
+  "adminAvailability": {
+    "title": "Verfügbarkeit (Blockierte Zeitslots)",
+    "datePlaceholder": "Datum auswählen",
+    "timePlaceholder": "Zeit auswählen",
+    "blockSlotButton": "Zeitslot blockieren",
+    "unblockButton": "Freigeben",
+    "tableHeaders": {
+      "id": "ID",
+      "date": "Datum",
+      "time": "Zeit",
+      "actions": "Aktionen"
+    },
+    "failedToLoadSlots": "Fehler beim Laden der blockierten Zeitslots",
+    "failedToBlockSlot": "Fehler beim Blockieren des Zeitslots",
+    "failedToRemoveSlot": "Fehler beim Entfernen des Zeitslots",
+    "slotBlockedSuccess": "Zeitslot blockiert.",
+    "slotUnblockedSuccess": "Zeitslot freigegeben."
+  },
+
+  "adminProfile": {
+    "title": "Profileinstellungen",
+    "basicInfo": "Grundlegende Informationen",
+    "basicInfoDescription": "Aktualisieren Sie Ihre Kontodaten und Einstellungen",
+    "securitySettings": "Sicherheitseinstellungen",
+    "securityDescription": "Ändern Sie Ihr Passwort und Ihre Sicherheitseinstellungen",
+    "profilePicture": "Profilbild",
+    "profilePictureDescription": "Neues Profilbild hochladen",
+    "username": "Benutzername",
+    "firstName": "Vorname",
+    "email": "E-Mail",
+    "newPassword": "Neues Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "currentPassword": "Aktuelles Passwort",
+    "updateProfile": "Profil aktualisieren",
+    "changePassword": "Passwort ändern",
+    "uploadImage": "Bild hochladen",
+    "removeImage": "Bild entfernen",
+    "updating": "Wird aktualisiert...",
+    "loading": "Profil wird geladen...",
+    "failedToLoadProfile": "Fehler beim Laden der Profildaten",
+    "failedToUpdateProfile": "Fehler beim Aktualisieren des Profils",
+    "profileUpdatedSuccess": "Profil erfolgreich aktualisiert",
+    "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
+    "passwordChangedSuccess": "Passwort erfolgreich geändert",
+    "imageUploadedSuccess": "Profilbild erfolgreich aktualisiert",
+    "imageRemovedSuccess": "Profilbild erfolgreich entfernt",
+    "accountSettings": "Kontoeinstellungen",
+    "accountSettingsDescription": "Verwalten Sie Ihre Kontoeinstellungen",
+    "accountType": "Kontotyp",
+    "administrator": "Administrator",
+    "accountStatus": "Kontostatus",
+    "active": "Aktiv"
+  },
+
+  "adminServiceForm": {
+    "steps": {
+      "basicInfo": "Grundinfo",
+      "translations": "Übersetzungen",
+      "details": "Details & Bilder",
+      "shortDescriptions": "Kurzbeschreibungen",
+      "longDescriptions": "Vollständige Beschreibungen"
+    },
+    "basicInfo": {
+      "slug": "Service-Slug",
+      "slugPlaceholder": "gesichtsbehandlung",
+      "category": "Kategorie",
+      "selectCategory": "Kategorie auswählen",
+      "searchCategories": "Kategorien suchen...",
+      "noCategoriesFound": "Keine Kategorien gefunden",
+      "createNewCategory": "Neue erstellen",
+      "newCategoryName": "Name der neuen Kategorie",
+      "addCategory": "Kategorie hinzufügen",
+      "status": "Status",
+      "statusDescription": "Diesen Service aktivieren oder deaktivieren"
+    },
+    "names": {
+      "nameEn": "Name (Englisch)",
+      "nameEnPlaceholder": "Gesichtsbehandlung",
+      "nameAr": "Name (العربية)",
+      "nameArPlaceholder": "علاج الوجه",
+      "nameDe": "Name (Deutsch)",
+      "nameDePlaceholder": "Gesichtsbehandlung",
+      "nameTr": "Name (Türkçe)",
+      "nameTrPlaceholder": "Yüz Bakımı"
+    },
+    "pricing": {
+      "price": "Preis (EUR)",
+      "duration": "Dauer (Minuten)",
+      "durationPlaceholder": "60",
+      "imageUrl": "Service-Bild",
+      "imageDescription": "Laden Sie ein Bild für diesen Service hoch"
+    },
+    "descriptions": {
+      "descriptionEn": "Kurzbeschreibung (Englisch)",
+      "descriptionEnPlaceholder": "Kurze Beschreibung auf Englisch",
+      "descriptionAr": "Kurzbeschreibung (العربية)",
+      "descriptionArPlaceholder": "وصف قصير بالعربية",
+      "descriptionDe": "Kurzbeschreibung (Deutsch)",
+      "descriptionDePlaceholder": "Kurze Beschreibung auf Deutsch",
+      "descriptionTr": "Kurzbeschreibung (Türkçe)",
+      "descriptionTrPlaceholder": "Kısa açıklama Türkçe"
+    },
+    "longDescriptions": {
+      "longDescriptionEn": "Ausführliche Beschreibung (Englisch)",
+      "longDescriptionEnPlaceholder": "Detaillierte Beschreibung auf Englisch",
+      "longDescriptionAr": "Ausführliche Beschreibung (العربية)",
+      "longDescriptionArPlaceholder": "وصف مفصل بالعربية",
+      "longDescriptionDe": "Ausführliche Beschreibung (Deutsch)",
+      "longDescriptionDePlaceholder": "Ausführliche Beschreibung auf Deutsch",
+      "longDescriptionTr": "Ausführliche Beschreibung (Türkçe)",
+      "longDescriptionTrPlaceholder": "Ayrıntılı açıklama Türkçe"
+    },
+    "navigation": {
+      "next": "Weiter",
+      "back": "Zurück",
+      "cancel": "Abbrechen",
+      "processing": "Verarbeitung..."
+    }
+  },
+
+  "adminCategoriesTable": {
+    "noCategories": "Keine Kategorien gefunden. Erstellen Sie eine, um zu beginnen.",
+    "tableHeaders": {
+      "order": "Reihenfolge",
+      "nameEn": "Name (Englisch)",
+      "slug": "Slug",
+      "status": "Status",
+      "actions": "Aktionen"
+    },
+    "unnamedCategory": "Unbenannte Kategorie",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "editCategory": "Kategorie bearbeiten",
+    "deleteCategory": "Kategorie löschen"
+  },
+
+  "adminUsersTable": {
+    "tableHeaders": {
+      "avatar": "",
+      "username": "Benutzername",
+      "email": "E-Mail",
+      "name": "Name",
+      "role": "Rolle",
+      "created": "Erstellt",
+      "actions": "Aktionen"
+    },
+    "loadingUsers": "Benutzer werden geladen...",
+    "noUsersFound": "Keine Benutzer gefunden",
+    "you": "Sie",
+    "admin": "Administrator",
+    "staff": "Personal",
+    "editUser": "Benutzer bearbeiten",
+    "deleteUser": "Benutzer löschen",
+    "deleteConfirmTitle": "Sind Sie sicher?",
+    "deleteConfirmDescription": "Dies wird den Benutzer {username} dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteButton": "Löschen",
+    "actions": {
+      "cancel": "Abbrechen"
+    }
+  },
+
+  "adminCategoryForm": {
+    "sections": {
+      "basicInfo": "Grundlegende Informationen",
+      "translations": "Übersetzungen",
+      "descriptions": "Beschreibungen (Optional)"
+    },
+    "fields": {
+      "nameEn": {
+        "label": "Name (Englisch)",
+        "placeholder": "z.B. Gesichtsbehandlungen"
+      },
+      "slug": {
+        "label": "Slug",
+        "placeholder": "gesichtsbehandlungen",
+        "description": "URL-freundlicher Identifikator (Kleinbuchstaben, Bindestriche)"
+      },
+      "displayOrder": {
+        "label": "Anzeigereihenfolge",
+        "description": "Steuert die Anzeigereihenfolge in Menüs (niedrigere Zahlen zuerst)"
+      },
+      "isActive": {
+        "label": "Aktiv",
+        "description": "Diese Kategorie wird für Kunden sichtbar sein"
+      },
+      "imageUrl": {
+        "label": "Bild-URL",
+        "placeholder": "https://beispiel.com/bild.jpg",
+        "description": "Bild zur Darstellung dieser Kategorie (optional)"
+      },
+      "nameAr": {
+        "label": "Name (العربية)",
+        "placeholder": "تدليك"
+      },
+      "nameDe": {
+        "label": "Name (Deutsch)",
+        "placeholder": "Gesichtsbehandlungen"
+      },
+      "nameTr": {
+        "label": "Name (Türkçe)",
+        "placeholder": "Yüz Bakımı"
+      },
+      "descriptionEn": {
+        "label": "Beschreibung (Englisch)",
+        "placeholder": "Eine kurze Beschreibung auf Englisch"
+      },
+      "descriptionAr": {
+        "label": "Beschreibung (العربية)",
+        "placeholder": "وصف قصير بالعربية"
+      },
+      "descriptionDe": {
+        "label": "Beschreibung (Deutsch)",
+        "placeholder": "Kurze Beschreibung auf Deutsch"
+      },
+      "descriptionTr": {
+        "label": "Beschreibung (Türkçe)",
+        "placeholder": "Kısa açıklama Türkçe"
+      }
+    },
+    "actions": {
+      "cancel": "Abbrechen",
+      "processing": "Verarbeitung..."
+    }
+  },
+
+  "adminUserForm": {
+    "titles": {
+      "create": "Neuen Benutzer hinzufügen",
+      "edit": "Benutzer bearbeiten"
+    },
+    "descriptions": {
+      "create": "Ein neues Benutzerkonto mit den entsprechenden Berechtigungen erstellen.",
+      "edit": "Benutzerdetails und Berechtigungen aktualisieren."
+    },
+    "fields": {
+      "username": {
+        "label": "E-Mail-Adresse*",
+        "placeholder": "benutzer@beispiel.de",
+        "description": "Diese wird als Benutzername für die Anmeldung verwendet."
+      },
+      "firstName": {
+        "label": "Vollständiger Name",
+        "placeholder": "Max Mustermann"
+      },
+      "password": {
+        "labelNew": "Passwort*",
+        "labelEdit": "Neues Passwort",
+        "placeholderNew": "Passwort eingeben",
+        "placeholderEdit": "Leer lassen, um das aktuelle Passwort zu behalten",
+        "description": "Leer lassen, um das aktuelle Passwort zu behalten."
+      },
+      "confirmPassword": {
+        "labelNew": "Passwort bestätigen*",
+        "labelEdit": "Neues Passwort bestätigen",
+        "placeholder": "Passwort bestätigen"
+      },
+      "isAdmin": {
+        "label": "Administrator-Zugang",
+        "description": "Administratoren können Benutzer verwalten und haben vollen Zugang zu allen Funktionen."
+      }
+    },
+    "validation": {
+      "usernameRequired": "Benutzername muss mindestens 3 Zeichen lang sein.",
+      "validEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+      "passwordRequired": "Passwort muss mindestens 6 Zeichen lang sein.",
+      "passwordsMatch": "Passwörter stimmen nicht überein"
+    },
+    "actions": {
+      "cancel": "Abbrechen",
+      "createUser": "Benutzer erstellen",
+      "saveChanges": "Änderungen speichern",
+      "creating": "Erstelle...",
+      "saving": "Speichere..."
+    }
+  },
+
+  "adminImageUploader": {
+    "uploadFromDevice": "Von Ihrem Gerät hochladen",
+    "enterImageUrl": "Oder Bild-URL eingeben",
+    "imageUrlPlaceholder": "https://beispiel.com/bild.jpg",
+    "addUrl": "URL hinzufügen",
+    "currentImage": "Aktuelles Bild",
+    "changeImage": "Bild ändern",
+    "removeImage": "Bild entfernen",
+    "invalidFileType": "Ungültiger Dateityp",
+    "invalidFileTypeDesc": "Bitte laden Sie eine Bilddatei hoch (JPEG, PNG, etc.)",
+    "fileTooLarge": "Datei zu groß",
+    "fileTooLargeDesc": "Bitte laden Sie ein Bild kleiner als 5MB hoch",
+    "uploadError": "Upload-Fehler",
+    "uploadErrorDesc": "Bild konnte nicht hochgeladen werden. Bitte versuchen Sie es erneut.",
+    "imageUploaded": "Bild hochgeladen",
+    "imageUploadedDesc": "Ihr Bild wurde erfolgreich hochgeladen",
+    "imageUrlAdded": "Bild-URL hinzugefügt",
+    "imageUrlAddedDesc": "Die Bild-URL wurde erfolgreich hinzugefügt",
+    "invalidUrl": "Ungültige URL",
+    "invalidUrlDesc": "Bitte geben Sie eine gültige Bild-URL ein"
+  }
 }

@@ -1,25 +1,25 @@
-import type React from 'react';
-import { useEffect, useState, useRef } from 'react';
-import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 // Icons
 import {
-  Home,
   Calendar,
-  Clock,
-  Package,
-  LogOut,
-  ChevronRight,
   ChevronLeft,
+  ChevronRight,
+  Clock,
+  FolderTree,
+  Home,
+  LogOut,
   Menu,
-  X,
+  Package,
   Settings,
   User,
-  FolderTree,
+  X,
 } from 'lucide-react';
 
 // Import pages
@@ -44,6 +44,7 @@ export default function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, isLoading, logout } = useAuth();
+  const { t } = useTranslation();
   const [user, setUser] = useState<AdminUser | null>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -87,13 +88,13 @@ export default function AdminLayout() {
 
   // Navigation items
   const navItems: NavItem[] = [
-    { name: 'Dashboard', icon: Home, href: '/admin/dashboard' },
-    { name: 'Bookings', icon: Calendar, href: '/admin/bookings' },
-    { name: 'Availability', icon: Clock, href: '/admin/availability' },
-    { name: 'Services', icon: Package, href: '/admin/services' },
-    { name: 'Categories', icon: FolderTree, href: '/admin/categories' },
-    { name: 'Users', icon: User, href: '/admin/users' },
-    { name: 'Profile', icon: Settings, href: '/admin/profile' },
+    { name: t('adminNavDashboard'), icon: Home, href: '/admin/dashboard' },
+    { name: t('adminNavBookings'), icon: Calendar, href: '/admin/bookings' },
+    { name: t('adminNavAvailability'), icon: Clock, href: '/admin/availability' },
+    { name: t('adminNavServices'), icon: Package, href: '/admin/services' },
+    { name: t('adminNavCategories'), icon: FolderTree, href: '/admin/categories' },
+    { name: t('adminNavUsers'), icon: User, href: '/admin/users' },
+    { name: t('adminNavProfile'), icon: Settings, href: '/admin/profile' },
   ];
 
   // Set active nav item based on current route
@@ -328,10 +329,10 @@ export default function AdminLayout() {
             variant="ghost"
             className="w-full flex items-center justify-center gap-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50"
             onClick={handleLogout}
-            title="Sign out"
+            title={t('signOut')}
           >
             <LogOut className="h-4 w-4" />
-            {!collapsed && <span>Sign out</span>}
+            {!collapsed && <span>{t('signOut')}</span>}
           </Button>
         </div>
       </aside>

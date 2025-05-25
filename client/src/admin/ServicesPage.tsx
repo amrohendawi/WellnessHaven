@@ -3,6 +3,7 @@ import { fetchAdminAPI } from '@/lib/api';
 import { AdminService, AdminServiceFormValues } from '@shared/schema';
 import { Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ServiceFormDialog } from './components/ServiceFormDialog';
 import { ServicesPageHeader } from './components/ServicesPageHeader';
 import { ServicesTable } from './components/ServicesTable';
@@ -18,6 +19,7 @@ export default function ServicesPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const fetchServices = async () => {
     setIsLoading(true);
@@ -25,7 +27,7 @@ export default function ServicesPage() {
       const data = await fetchAdminAPI<AdminService[]>('services');
       setServices(data);
     } catch (error) {
-      toast({ title: 'Error', description: 'Failed to fetch services', variant: 'destructive' });
+      toast({ title: t('adminMessages.errorTitle'), description: t('adminMessages.failedToFetchServices'), variant: 'destructive' });
       console.error('Fetch services error:', error);
     } finally {
       setIsLoading(false);
@@ -47,13 +49,13 @@ export default function ServicesPage() {
   };
 
   const handleDelete = async (serviceId: string) => {
-    if (!confirm('Are you sure you want to delete this service?')) return;
+    if (!confirm(t('adminServices.deleteConfirmation'))) return;
     try {
       await fetchAdminAPI(`services/${serviceId}`, { method: 'DELETE' });
-      toast({ title: 'Success', description: 'Service deleted successfully.' });
+      toast({ title: t('adminMessages.successTitle'), description: t('adminMessages.serviceDeleted') });
       fetchServices();
     } catch (error) {
-      toast({ title: 'Error', description: 'Failed to delete service', variant: 'destructive' });
+      toast({ title: t('adminMessages.errorTitle'), description: t('adminMessages.failedToDeleteService'), variant: 'destructive' });
       console.error('Delete service error:', error);
     }
   };
@@ -74,10 +76,10 @@ export default function ServicesPage() {
         }),
       });
       setIsCreateDialogOpen(false);
-      toast({ title: 'Success', description: 'Service created successfully.' });
+      toast({ title: t('adminMessages.successTitle'), description: t('adminMessages.serviceCreated') });
       fetchServices();
     } catch (error) {
-      toast({ title: 'Error', description: 'Failed to create service', variant: 'destructive' });
+      toast({ title: t('adminMessages.errorTitle'), description: t('adminMessages.failedToCreateService'), variant: 'destructive' });
       console.error('Create service error:', error);
     } finally {
       setIsSubmitting(false);
@@ -102,10 +104,10 @@ export default function ServicesPage() {
       });
       setIsEditDialogOpen(false);
       setCurrentService(null);
-      toast({ title: 'Success', description: 'Service updated successfully.' });
+      toast({ title: t('adminMessages.successTitle'), description: t('adminMessages.serviceUpdated') });
       fetchServices();
     } catch (error) {
-      toast({ title: 'Error', description: 'Failed to update service', variant: 'destructive' });
+      toast({ title: t('adminMessages.errorTitle'), description: t('adminMessages.failedToUpdateService'), variant: 'destructive' });
       console.error('Update service error:', error);
     } finally {
       setIsSubmitting(false);
@@ -148,9 +150,9 @@ export default function ServicesPage() {
           isOpen={isCreateDialogOpen}
           onOpenChange={setIsCreateDialogOpen}
           onSubmit={handleCreateSubmit}
-          dialogTitle="Add New Service"
-          dialogDescription="Fill in the details to create a new service."
-          submitButtonText="Create Service"
+          dialogTitle={t('adminServices.createServiceTitle')}
+          dialogDescription={t('adminServices.createServiceDescription')}
+          submitButtonText={t('adminServices.createServiceButton')}
           isLoadingOnSubmit={isSubmitting}
         />
       )}
@@ -171,9 +173,9 @@ export default function ServicesPage() {
             longDescriptionTr: currentService.longDescriptionTr || undefined,
             imageLarge: currentService.imageLarge || undefined,
           }}
-          dialogTitle="Edit Service"
-          dialogDescription={`Update the details for ${currentService.nameEn}.`}
-          submitButtonText="Save Changes"
+          dialogTitle={t('adminServices.editServiceTitle')}
+          dialogDescription={`${t('adminServices.editServiceDescription')} ${currentService.nameEn}.`}
+          submitButtonText={t('adminServices.saveChangesButton')}
           isLoadingOnSubmit={isSubmitting}
         />
       )}

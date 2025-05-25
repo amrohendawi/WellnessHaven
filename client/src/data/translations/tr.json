@@ -12,7 +12,7 @@
   "bookNow": "Randevu Al",
   "womenOnly": "Sadece Kadınlara Özel Merkez",
 
-  "servicesTitle": "Hizmetlerimiz",
+  "servicesTitle": "Hizmetlerim",
   "servicesSubtitle": "Size özel lüks tedaviler",
   "viewAllServices": "Tüm Hizmetleri Görüntüle",
   "all": "Tümü",
@@ -131,5 +131,473 @@
   "loading": "Yükleniyor...",
 
   "breadcrumbHome": "Ana Sayfa",
-  "breadcrumbServices": "Hizmetler"
+  "breadcrumbServices": "Hizmetler",
+
+  "adminDashboard": "Yönetici Paneli",
+  "dashboardOverview": "Panel Genel Bakış",
+  "liveData": "Canlı Veriler",
+  "totalBookings": "Toplam Rezervasyonlar",
+  "allTimeAppointmentCount": "Tüm zamanların randevu sayısı",
+  "lifetimeTotal": "Yaşam boyu toplam",
+  "confirmed": "Onaylandı",
+  "approvedAppointments": "Onaylanmış randevular",
+  "ofTotal": "toplam",
+  "pending": "Beklemede",
+  "awaitingConfirmation": "Onay bekleniyor",
+  "services": "Hizmetler",
+  "activeSpatreatments": "Aktif spa tedavileri",
+  "availableTreatments": "Mevcut tedaviler",
+  "bookingActivity": "Rezervasyon Aktivitesi",
+  "atAGlance": "Bir bakışta",
+  "bookingChartWillAppearHere": "Rezervasyon grafiği burada görünecek",
+  "comingSoon": "Yakında gelecek",
+  "blockedSlots": "Engellenen Slotlar",
+  "unavailablePeriods": "Müsait olmayan dönemler",
+  "manage": "Yönet",
+  "view": "Görüntüle",
+
+  "adminNavDashboard": "Panel",
+  "adminNavBookings": "Rezervasyonlar",
+  "adminNavAvailability": "Müsaitlik",
+  "adminNavServices": "Hizmetler",
+  "adminNavCategories": "Kategoriler",
+  "adminNavUsers": "Kullanıcılar",
+  "adminNavProfile": "Profil",
+  "signOut": "Çıkış Yap",
+
+  "bookingDetails": "Rezervasyon Detayları",
+  "name": "İsim",
+  "email": "E-posta",
+  "serviceId": "Hizmet ID",
+  "bookingDate": "Tarih",
+  "bookingTime": "Saat",
+  "status": "Durum",
+  "createdAt": "Oluşturulma Tarihi",
+  "updateStatus": "Durumu Güncelle",
+  "selectStatus": "Durum seç",
+  "updated": "Güncellendi",
+  "statusUpdated": "Durum güncellendi",
+  "failedToUpdateStatus": "Durum güncellenemedi",
+  "loadingDashboard": "Panel yükleniyor...",
+
+  "bookingStatuses": {
+    "pending": "Beklemede",
+    "confirmed": "Onaylandı",
+    "completed": "Tamamlandı",
+    "cancelled": "İptal edildi"
+  },
+
+  "adminMessages": {
+    "errorLoadingDashboard": "Panel özeti yüklenemedi",
+    "errorTitle": "Hata",
+    "successTitle": "Başarılı",
+    "bookingUpdated": "Rezervasyon güncellendi",
+    "categoryCreated": "Kategori başarıyla oluşturuldu",
+    "categoryUpdated": "Kategori başarıyla güncellendi",
+    "categoryDeleted": "Kategori başarıyla silindi",
+    "serviceCreated": "Hizmet başarıyla oluşturuldu",
+    "serviceUpdated": "Hizmet başarıyla güncellendi",
+    "serviceDeleted": "Hizmet başarıyla silindi",
+    "userCreated": "Kullanıcı başarıyla oluşturuldu",
+    "userUpdated": "Kullanıcı başarıyla güncellendi",
+    "userDeleted": "Kullanıcı başarıyla silindi",
+    "failedToFetchServices": "Hizmetler yüklenemedi",
+    "failedToDeleteService": "Hizmet silinemedi",
+    "failedToCreateService": "Hizmet oluşturulamadı",
+    "failedToUpdateService": "Hizmet güncellenemedi",
+    "failedToFetchCategories": "Kategoriler yüklenemedi",
+    "failedToDeleteCategory": "Kategori silinemedi",
+    "failedToCreateCategory": "Kategori oluşturulamadı",
+    "failedToUpdateCategory": "Kategori güncellenemedi",
+    "updated": "Güncellendi"
+  },
+
+  "adminServices": {
+    "title": "Hizmetler",
+    "addNewService": "Yeni Hizmet Ekle",
+    "editService": "Hizmeti Düzenle",
+    "createServiceTitle": "Yeni Hizmet Ekle",
+    "createServiceDescription": "Yeni bir hizmet oluşturmak için detayları doldurun.",
+    "editServiceTitle": "Hizmeti Düzenle",
+    "editServiceDescription": "Detayları güncelle:",
+    "createServiceButton": "Hizmet Oluştur",
+    "saveChangesButton": "Değişiklikleri Kaydet",
+    "deleteConfirmation": "Bu hizmeti silmek istediğinizden emin misiniz?",
+    "searchPlaceholder": "Hizmetleri ara...",
+    "tableHeaders": {
+      "name": "İsim (TR)",
+      "category": "Kategori",
+      "price": "Fiyat",
+      "duration": "Süre",
+      "status": "Durum",
+      "actions": "İşlemler"
+    },
+    "uncategorized": "Kategorisiz",
+    "loadingServices": "Hizmetler yükleniyor...",
+    "noServicesFound": "Hizmet Bulunamadı",
+    "noServicesMessage": "Şu anda görüntülenecek hizmet yok. Yeni bir hizmet eklemeyi deneyin.",
+    "unnamedService": "İsimsiz Hizmet",
+    "active": "Aktif",
+    "inactive": "Pasif",
+    "edit": "Düzenle",
+    "delete": "Sil"
+  },
+
+  "adminCategories": {
+    "title": "Kategoriler",
+    "subtitle": "Hizmet kategorilerini ve çevirilerini yönetin",
+    "addNewCategory": "Yeni Kategori Ekle",
+    "editCategory": "Kategoriyi Düzenle",
+    "createCategoryTitle": "Yeni Kategori Ekle",
+    "createCategoryDescription": "Çevirileri ile yeni bir hizmet kategorisi ekleyin.",
+    "editCategoryTitle": "Kategoriyi Düzenle",
+    "editCategoryDescription": "Bir hizmet kategorisini ve çevirilerini güncelleyin.",
+    "createCategoryButton": "Kategori Oluştur",
+    "saveChangesButton": "Değişiklikleri Kaydet",
+    "deleteConfirmation": "Bu kategoriyi silmek istediğinizden emin misiniz?",
+    "serviceCategoriesTitle": "Hizmet Kategorileri",
+    "serviceCategoriesDescription": "Kategoriler hizmetleri düzenlemek ve müşterilerin aradıklarını bulmalarına yardımcı olmak için kullanılır",
+    "searchPlaceholder": "Kategorileri ara..."
+  },
+
+  "adminUsers": {
+    "title": "Kullanıcı Yönetimi",
+    "subtitle": "Personel ve yönetici kullanıcı hesaplarını yönetin",
+    "addUser": "Kullanıcı Ekle",
+    "editUser": "Kullanıcıyı Düzenle",
+    "createUserTitle": "Yeni Kullanıcı Ekle",
+    "createUserDescription": "Yeni bir personel veya yönetici kullanıcı hesabı oluşturun.",
+    "editUserTitle": "Kullanıcıyı Düzenle",
+    "editUserDescription": "Kullanıcı bilgilerini ve izinlerini güncelleyin.",
+    "createUserButton": "Kullanıcı Oluştur",
+    "saveChangesButton": "Değişiklikleri Kaydet",
+    "deleteConfirmation": "Bu kullanıcıyı silmek istediğinizden emin misiniz?",
+    "usersTableTitle": "Kullanıcılar",
+    "usersTableDescription": "Kullanıcıları ve erişim izinlerini yönetin",
+    "userCreatedSuccess": "Kullanıcı başarıyla oluşturuldu",
+    "userUpdatedSuccess": "Kullanıcı başarıyla güncellendi",
+    "userDeletedSuccess": "Kullanıcı başarıyla silindi",
+    "failedToLoadUsers": "Kullanıcılar yüklenemedi",
+    "failedToSaveUser": "Kullanıcı kaydedilemedi",
+    "failedToDeleteUser": "Kullanıcı silinemedi"
+  },
+
+  "adminBookings": {
+    "title": "Rezervasyonlar",
+    "searchPlaceholder": "İsim veya e-posta ile ara",
+    "allStatusesPlaceholder": "Tüm Durumlar",
+    "allStatuses": "Tümü",
+    "tableHeaders": {
+      "id": "ID",
+      "name": "İsim",
+      "email": "E-posta",
+      "service": "Hizmet",
+      "date": "Tarih",
+      "time": "Saat",
+      "status": "Durum",
+      "actions": "İşlemler"
+    },
+    "viewButton": "Görüntüle",
+    "failedToFetchBookings": "Rezervasyonlar yüklenemedi",
+    "failedToUpdateStatus": "Durum güncellenemedi",
+    "statusUpdatedSuccess": "Rezervasyon durumu güncellendi."
+  },
+
+  "adminAvailability": {
+    "title": "Müsaitlik (Bloklanmış Saatler)",
+    "datePlaceholder": "Tarih seçin",
+    "timePlaceholder": "Saat seçin",
+    "blockSlotButton": "Saati Blokla",
+    "unblockButton": "Bloku Kaldır",
+    "tableHeaders": {
+      "id": "ID",
+      "date": "Tarih",
+      "time": "Saat",
+      "actions": "İşlemler"
+    },
+    "failedToLoadSlots": "Bloklanmış saatler yüklenemedi",
+    "failedToBlockSlot": "Saat bloklanamadı",
+    "failedToRemoveSlot": "Saat bloku kaldırılamadı",
+    "slotBlockedSuccess": "Saat bloklandı.",
+    "slotUnblockedSuccess": "Saat bloku kaldırıldı."
+  },
+
+  "adminProfile": {
+    "title": "Profil Ayarları",
+    "basicInfo": "Temel Bilgiler",
+    "basicInfoDescription": "Hesap bilgilerinizi ve tercihlerinizi güncelleyin",
+    "securitySettings": "Güvenlik Ayarları",
+    "securityDescription": "Şifrenizi ve güvenlik tercihlerinizi değiştirin",
+    "profilePicture": "Profil Resmi",
+    "profilePictureDescription": "Yeni profil resmi yükleyin",
+    "username": "Kullanıcı Adı",
+    "firstName": "Ad",
+    "email": "E-posta",
+    "newPassword": "Yeni Şifre",
+    "confirmPassword": "Şifreyi Onayla",
+    "currentPassword": "Mevcut Şifre",
+    "updateProfile": "Profili Güncelle",
+    "changePassword": "Şifreyi Değiştir",
+    "uploadImage": "Resim Yükle",
+    "removeImage": "Resmi Kaldır",
+    "updating": "Güncelleniyor...",
+    "loading": "Profil yükleniyor...",
+    "failedToLoadProfile": "Profil verileri yüklenemedi",
+    "failedToUpdateProfile": "Profil güncellenemedi",
+    "profileUpdatedSuccess": "Profil başarıyla güncellendi",
+    "passwordsDoNotMatch": "Şifreler eşleşmiyor",
+    "passwordChangedSuccess": "Şifre başarıyla değiştirildi",
+    "imageUploadedSuccess": "Profil resmi başarıyla güncellendi",
+    "imageRemovedSuccess": "Profil resmi başarıyla kaldırıldı",
+    "accountSettings": "Hesap Ayarları",
+    "accountSettingsDescription": "Hesap tercihlerinizi yönetin",
+    "accountType": "Hesap Türü",
+    "administrator": "Yönetici",
+    "accountStatus": "Hesap Durumu",
+    "active": "Aktif"
+  },
+
+  "adminServiceForm": {
+    "steps": {
+      "basicInfo": "Temel Bilgi",
+      "translations": "Çeviriler",
+      "details": "Detaylar & Resimler",
+      "shortDescriptions": "Kısa Açıklamalar",
+      "longDescriptions": "Tam Açıklamalar"
+    },
+    "basicInfo": {
+      "slug": "Hizmet Slug",
+      "slugPlaceholder": "yuz-bakimi",
+      "category": "Kategori",
+      "selectCategory": "Kategori seçin",
+      "searchCategories": "Kategori ara...",
+      "noCategoriesFound": "Kategori bulunamadı",
+      "createNewCategory": "Yeni Oluştur",
+      "newCategoryName": "Yeni kategori adı",
+      "addCategory": "Kategori Ekle",
+      "status": "Durum",
+      "statusDescription": "Bu hizmeti etkinleştir veya devre dışı bırak"
+    },
+    "names": {
+      "nameEn": "Ad (İngilizce)",
+      "nameEnPlaceholder": "Yüz Bakımı",
+      "nameAr": "Ad (العربية)",
+      "nameArPlaceholder": "علاج الوجه",
+      "nameDe": "Ad (Almanca)",
+      "nameDePlaceholder": "Gesichtsbehandlung",
+      "nameTr": "Ad (Türkçe)",
+      "nameTrPlaceholder": "Yüz Bakımı"
+    },
+    "pricing": {
+      "price": "Fiyat (EUR)",
+      "duration": "Süre (dakika)",
+      "durationPlaceholder": "60",
+      "imageUrl": "Hizmet Resmi",
+      "imageDescription": "Bu hizmet için bir resim yükleyin"
+    },
+    "descriptions": {
+      "descriptionEn": "Kısa Açıklama (İngilizce)",
+      "descriptionEnPlaceholder": "İngilizce kısa açıklama",
+      "descriptionAr": "Kısa Açıklama (العربية)",
+      "descriptionArPlaceholder": "وصف قصير بالعربية",
+      "descriptionDe": "Kısa Açıklama (Almanca)",
+      "descriptionDePlaceholder": "Almanca kısa açıklama",
+      "descriptionTr": "Kısa Açıklama (Türkçe)",
+      "descriptionTrPlaceholder": "Türkçe kısa açıklama"
+    },
+    "longDescriptions": {
+      "longDescriptionEn": "Uzun Açıklama (İngilizce)",
+      "longDescriptionEnPlaceholder": "İngilizce detaylı açıklama",
+      "longDescriptionAr": "Uzun Açıklama (العربية)",
+      "longDescriptionArPlaceholder": "وصف مفصل بالعربية",
+      "longDescriptionDe": "Uzun Açıklama (Almanca)",
+      "longDescriptionDePlaceholder": "Almanca ayrıntılı açıklama",
+      "longDescriptionTr": "Uzun Açıklama (Türkçe)",
+      "longDescriptionTrPlaceholder": "Türkçe ayrıntılı açıklama"
+    },
+    "navigation": {
+      "next": "İleri",
+      "back": "Geri",
+      "cancel": "İptal",
+      "processing": "İşleniyor..."
+    }
+  },
+
+  "adminCategoriesTable": {
+    "noCategories": "Kategori bulunamadı. Başlamak için bir tane oluşturun.",
+    "tableHeaders": {
+      "order": "Sıra",
+      "nameEn": "Ad (İngilizce)",
+      "slug": "Slug",
+      "status": "Durum",
+      "actions": "İşlemler"
+    },
+    "unnamedCategory": "Adsız Kategori",
+    "active": "Aktif",
+    "inactive": "İnaktif",
+    "editCategory": "Kategoriyi Düzenle",
+    "deleteCategory": "Kategoriyi Sil"
+  },
+
+  "adminUsersTable": {
+    "tableHeaders": {
+      "avatar": "",
+      "username": "Kullanıcı Adı",
+      "email": "E-posta",
+      "name": "Ad",
+      "role": "Rol",
+      "created": "Oluşturulma",
+      "actions": "İşlemler"
+    },
+    "loadingUsers": "Kullanıcılar yükleniyor...",
+    "noUsersFound": "Kullanıcı bulunamadı",
+    "you": "Siz",
+    "admin": "Yönetici",
+    "staff": "Personel",
+    "editUser": "Kullanıcıyı düzenle",
+    "deleteUser": "Kullanıcıyı sil",
+    "deleteConfirmTitle": "Emin misiniz?",
+    "deleteConfirmDescription": "Bu, {username} kullanıcısını kalıcı olarak silecektir. Bu işlem geri alınamaz.",
+    "deleteButton": "Sil",
+    "actions": {
+      "cancel": "İptal"
+    }
+  },
+
+  "adminCategoryForm": {
+    "sections": {
+      "basicInfo": "Temel Bilgiler",
+      "translations": "Çeviriler",
+      "descriptions": "Açıklamalar (İsteğe Bağlı)"
+    },
+    "fields": {
+      "nameEn": {
+        "label": "Ad (İngilizce)",
+        "placeholder": "örn. Yüz Bakımları"
+      },
+      "slug": {
+        "label": "Slug",
+        "placeholder": "yuz-bakimlari",
+        "description": "URL dostu tanımlayıcı (küçük harf, tire)"
+      },
+      "displayOrder": {
+        "label": "Görüntülenme Sırası",
+        "description": "Menülerdeki görüntülenme sırasını kontrol eder (düşük sayılar önce)"
+      },
+      "isActive": {
+        "label": "Aktif",
+        "description": "Bu kategori müşteriler tarafından görülebilir olacak"
+      },
+      "imageUrl": {
+        "label": "Resim URL'si",
+        "placeholder": "https://ornek.com/resim.jpg",
+        "description": "Bu kategoriyi temsil edecek resim (isteğe bağlı)"
+      },
+      "nameAr": {
+        "label": "Ad (العربية)",
+        "placeholder": "تدليك"
+      },
+      "nameDe": {
+        "label": "Ad (Deutsch)",
+        "placeholder": "Gesichtsbehandlungen"
+      },
+      "nameTr": {
+        "label": "Ad (Türkçe)",
+        "placeholder": "Yüz Bakımı"
+      },
+      "descriptionEn": {
+        "label": "Açıklama (İngilizce)",
+        "placeholder": "İngilizce kısa açıklama"
+      },
+      "descriptionAr": {
+        "label": "Açıklama (العربية)",
+        "placeholder": "وصف قصير بالعربية"
+      },
+      "descriptionDe": {
+        "label": "Açıklama (Deutsch)",
+        "placeholder": "Kurze Beschreibung auf Deutsch"
+      },
+      "descriptionTr": {
+        "label": "Açıklama (Türkçe)",
+        "placeholder": "Kısa açıklama Türkçe"
+      }
+    },
+    "actions": {
+      "cancel": "İptal",
+      "processing": "İşleniyor..."
+    }
+  },
+
+  "adminUserForm": {
+    "titles": {
+      "create": "Yeni Kullanıcı Ekle",
+      "edit": "Kullanıcıyı Düzenle"
+    },
+    "descriptions": {
+      "create": "Uygun izinlerle yeni bir kullanıcı hesabı oluşturun.",
+      "edit": "Kullanıcı detaylarını ve izinlerini güncelleyin."
+    },
+    "fields": {
+      "username": {
+        "label": "E-posta Adresi*",
+        "placeholder": "kullanici@ornek.com",
+        "description": "Bu, giriş için kullanıcı adı olarak kullanılacaktır."
+      },
+      "firstName": {
+        "label": "Tam İsim",
+        "placeholder": "Ahmet Yılmaz"
+      },
+      "password": {
+        "labelNew": "Şifre*",
+        "labelEdit": "Yeni Şifre",
+        "placeholderNew": "Şifre girin",
+        "placeholderEdit": "Mevcut şifreyi korumak için boş bırakın",
+        "description": "Mevcut şifreyi korumak için boş bırakın."
+      },
+      "confirmPassword": {
+        "labelNew": "Şifreyi Onayla*",
+        "labelEdit": "Yeni Şifreyi Onayla",
+        "placeholder": "Şifreyi onayla"
+      },
+      "isAdmin": {
+        "label": "Yönetici Erişimi",
+        "description": "Yöneticiler kullanıcıları yönetebilir ve tüm özelliklere tam erişime sahiptir."
+      }
+    },
+    "validation": {
+      "usernameRequired": "Kullanıcı adı en az 3 karakter olmalıdır.",
+      "validEmail": "Lütfen geçerli bir e-posta adresi girin.",
+      "passwordRequired": "Şifre en az 6 karakter olmalıdır.",
+      "passwordsMatch": "Şifreler eşleşmiyor"
+    },
+    "actions": {
+      "cancel": "İptal",
+      "createUser": "Kullanıcı Oluştur",
+      "saveChanges": "Değişiklikleri Kaydet",
+      "creating": "Oluşturuluyor...",
+      "saving": "Kaydediliyor..."
+    }
+  },
+
+  "adminImageUploader": {
+    "uploadFromDevice": "Cihazınızdan yükleyin",
+    "enterImageUrl": "Veya resim URL'si girin",
+    "imageUrlPlaceholder": "https://ornek.com/resim.jpg",
+    "addUrl": "URL Ekle",
+    "currentImage": "Mevcut Resim",
+    "changeImage": "Resmi Değiştir",
+    "removeImage": "Resmi Kaldır",
+    "invalidFileType": "Geçersiz dosya türü",
+    "invalidFileTypeDesc": "Lütfen bir resim dosyası yükleyin (JPEG, PNG, vb.)",
+    "fileTooLarge": "Dosya çok büyük",
+    "fileTooLargeDesc": "Lütfen 5MB'dan küçük bir resim yükleyin",
+    "uploadError": "Yükleme Hatası",
+    "uploadErrorDesc": "Resim yüklenemedi. Lütfen tekrar deneyin.",
+    "imageUploaded": "Resim yüklendi",
+    "imageUploadedDesc": "Resminiz başarıyla yüklendi",
+    "imageUrlAdded": "Resim URL'si eklendi",
+    "imageUrlAddedDesc": "Resim URL'si başarıyla eklendi",
+    "invalidUrl": "Geçersiz URL",
+    "invalidUrlDesc": "Lütfen geçerli bir resim URL'si girin"
+  }
 }

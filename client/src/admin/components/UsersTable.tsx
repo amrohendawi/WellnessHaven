@@ -1,26 +1,27 @@
-import React, { useState } from 'react';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { Edit2, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export interface UserData {
   id: string;
@@ -47,6 +48,7 @@ export default function UsersTable({
   isLoading = false,
   currentUserId,
 }: UsersTableProps) {
+  const { t } = useTranslation();
   const [userToDelete, setUserToDelete] = useState<UserData | null>(null);
 
   const handleDeleteClick = (user: UserData) => {
@@ -77,26 +79,26 @@ export default function UsersTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[50px]"></TableHead>
-            <TableHead>Username</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead>Created</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className="w-[50px]">{t('adminUsersTable.tableHeaders.avatar')}</TableHead>
+            <TableHead>{t('adminUsersTable.tableHeaders.username')}</TableHead>
+            <TableHead>{t('adminUsersTable.tableHeaders.email')}</TableHead>
+            <TableHead>{t('adminUsersTable.tableHeaders.name')}</TableHead>
+            <TableHead>{t('adminUsersTable.tableHeaders.role')}</TableHead>
+            <TableHead>{t('adminUsersTable.tableHeaders.created')}</TableHead>
+            <TableHead className="text-right">{t('adminUsersTable.tableHeaders.actions')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {isLoading ? (
             <TableRow>
               <TableCell colSpan={7} className="text-center py-8">
-                Loading users...
+                {t('adminUsersTable.loadingUsers')}
               </TableCell>
             </TableRow>
           ) : users.length === 0 ? (
             <TableRow>
               <TableCell colSpan={7} className="text-center py-8">
-                No users found
+                {t('adminUsersTable.noUsersFound')}
               </TableCell>
             </TableRow>
           ) : (
@@ -117,7 +119,7 @@ export default function UsersTable({
                   {user.username}
                   {user.id === currentUserId && (
                     <Badge variant="outline" className="ml-2">
-                      You
+                      {t('adminUsersTable.you')}
                     </Badge>
                   )}
                 </TableCell>
@@ -128,7 +130,7 @@ export default function UsersTable({
                     variant={user.isAdmin ? 'default' : 'secondary'}
                     className={user.isAdmin ? 'bg-blue-600' : 'bg-gray-200 text-gray-700'}
                   >
-                    {user.isAdmin ? 'Admin' : 'Staff'}
+                    {user.isAdmin ? t('adminUsersTable.admin') : t('adminUsersTable.staff')}
                   </Badge>
                 </TableCell>
                 <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
@@ -138,7 +140,7 @@ export default function UsersTable({
                       variant="ghost"
                       size="icon"
                       onClick={() => onEdit(user)}
-                      title="Edit user"
+                      title={t('adminUsersTable.editUser')}
                     >
                       <Edit2 className="h-4 w-4" />
                     </Button>
@@ -150,7 +152,7 @@ export default function UsersTable({
                         size="icon"
                         onClick={() => handleDeleteClick(user)}
                         className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                        title="Delete user"
+                        title={t('adminUsersTable.deleteUser')}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -167,19 +169,18 @@ export default function UsersTable({
       <AlertDialog open={!!userToDelete} onOpenChange={() => !userToDelete && cancelDelete()}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>{t('adminUsersTable.deleteConfirmTitle')}</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the user <strong>{userToDelete?.username}</strong>. This
-              action cannot be undone.
+              {t('adminUsersTable.deleteConfirmDescription', { username: userToDelete?.username })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={cancelDelete}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel onClick={cancelDelete}>{t('adminUsersTable.actions.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
               className="bg-red-600 text-white hover:bg-red-700"
             >
-              Delete
+              {t('adminUsersTable.deleteButton')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

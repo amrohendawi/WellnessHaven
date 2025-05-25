@@ -1,10 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Check, ChevronsUpDown, Plus } from 'lucide-react';
 import {
   Command,
   CommandEmpty,
@@ -14,32 +8,38 @@ import {
   CommandList,
   CommandSeparator,
 } from '@/components/ui/command';
-import { cn } from '@/lib/utils';
-import { ImageUploader } from './ImageUploader';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogDescription,
 } from '@/components/ui/dialog';
 import {
   Form,
+  FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
-  FormDescription,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Loader2 } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Switch } from '@/components/ui/switch';
+import { cn } from '@/lib/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  AdminServiceFormValues,
   AdminServiceFormSchema,
+  AdminServiceFormValues,
   defaultAdminServiceFormValues,
 } from '@shared/schema';
+import { Check, ChevronsUpDown, Loader2, Plus } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { ImageUploader } from './ImageUploader';
 
 interface Category {
   value: string;
@@ -58,13 +58,6 @@ interface ServiceFormDialogProps {
 }
 
 // Define the steps for the multi-step form
-const steps = [
-  { id: 'basic-info', title: 'Basic Info' },
-  { id: 'translations', title: 'Translations' },
-  { id: 'details', title: 'Details & Images' },
-  { id: 'short-descriptions', title: 'Short Descriptions' },
-  { id: 'long-descriptions', title: 'Full Descriptions' },
-];
 
 // Define the steps for the multi-step form
 
@@ -78,7 +71,18 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
   submitButtonText,
   isLoadingOnSubmit,
 }) => {
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(0);
+
+  // Define the steps for the multi-step form
+  const steps = [
+    { id: 'basic-info', title: t('adminServiceForm.steps.basicInfo') },
+    { id: 'translations', title: t('adminServiceForm.steps.translations') },
+    { id: 'details', title: t('adminServiceForm.steps.details') },
+    { id: 'short-descriptions', title: t('adminServiceForm.steps.shortDescriptions') },
+    { id: 'long-descriptions', title: t('adminServiceForm.steps.longDescriptions') },
+  ];
+
   // Fetch categories from the API
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(false);
@@ -335,16 +339,16 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Slug *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.slug.label')} *</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="facial-treatment"
+                            placeholder={t('adminServiceForm.fields.slug.placeholder')}
                             className="focus-visible:ring-blue-600/30 h-10"
                           />
                         </FormControl>
                         <FormDescription className="text-xs text-muted-foreground">
-                          URL-friendly identifier (lowercase, hyphens)
+                          {t('adminServiceForm.fields.slug.description')}
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -356,7 +360,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem className="flex flex-col">
-                        <FormLabel>Category *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.category.label')} *</FormLabel>
                         <Popover>
                           <PopoverTrigger asChild>
                             <FormControl>
@@ -369,30 +373,32 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                                 )}
                               >
                                 {isLoadingCategories
-                                  ? 'Loading categories...'
+                                  ? t('adminServiceForm.loading.categories')
                                   : field.value &&
                                       categories.find(category => category.value === field.value)
                                         ?.label
                                     ? categories.find(category => category.value === field.value)
                                         ?.label
-                                    : 'Select category'}
+                                    : t('adminServiceForm.placeholder.selectCategory')}
                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                               </Button>
                             </FormControl>
                           </PopoverTrigger>
                           <PopoverContent className="w-full p-0">
                             <Command>
-                              <CommandInput placeholder="Search category..." />
+                              <CommandInput
+                                placeholder={t('adminServiceForm.placeholder.searchCategory')}
+                              />
                               <CommandList>
-                                <CommandEmpty>No category found.</CommandEmpty>
-                                <CommandGroup heading="Categories">
+                                <CommandEmpty>{t('adminServiceForm.noCategoryFound')}</CommandEmpty>
+                                <CommandGroup heading={t('adminServiceForm.categories')}>
                                   {isLoadingCategories ? (
                                     <CommandItem key="loading" value="loading">
-                                      Loading categories...
+                                      {t('adminServiceForm.loading.categories')}
                                     </CommandItem>
                                   ) : categories.length === 0 ? (
                                     <CommandItem key="no-categories" value="no-categories">
-                                      No categories available
+                                      {t('adminServiceForm.noCategoriesAvailable')}
                                     </CommandItem>
                                   ) : (
                                     categories.map(category => (
@@ -420,7 +426,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                                 <CommandGroup>
                                   <CommandItem onSelect={() => setIsCreatingCategory(true)}>
                                     <Plus className="mr-2 h-4 w-4" />
-                                    Create new category
+                                    {t('adminServiceForm.createNewCategory')}
                                   </CommandItem>
                                 </CommandGroup>
                               </CommandList>
@@ -433,7 +439,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                             <Input
                               value={newCategoryName}
                               onChange={e => setNewCategoryName(e.target.value)}
-                              placeholder="New category name"
+                              placeholder={t('adminServiceForm.placeholder.newCategoryName')}
                               className="flex-1"
                             />
                             <Button
@@ -442,7 +448,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                               onClick={handleAddCategory}
                               disabled={!newCategoryName.trim()}
                             >
-                              Add
+                              {t('adminServiceForm.actions.add')}
                             </Button>
                             <Button
                               type="button"
@@ -453,7 +459,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                                 setIsCreatingCategory(false);
                               }}
                             >
-                              Cancel
+                              {t('adminServiceForm.actions.cancel')}
                             </Button>
                           </div>
                         )}
@@ -469,9 +475,11 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 shadow-sm md:col-span-2 mt-4">
                         <div className="space-y-0.5">
-                          <FormLabel className="text-sm md:text-base">Active</FormLabel>
+                          <FormLabel className="text-sm md:text-base">
+                            {t('adminServiceForm.fields.isActive.label')}
+                          </FormLabel>
                           <FormDescription className="text-xs text-muted-foreground">
-                            This service will be visible to customers
+                            {t('adminServiceForm.fields.isActive.description')}
                           </FormDescription>
                         </div>
                         <FormControl>
@@ -495,11 +503,11 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Name (English) *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.nameEn.label')} *</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Facial Treatment"
+                            placeholder={t('adminServiceForm.fields.nameEn.placeholder')}
                             className="focus-visible:ring-gold/30"
                           />
                         </FormControl>
@@ -513,12 +521,12 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Name (العربية) *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.nameAr.label')} *</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             dir="rtl"
-                            placeholder="علاج الوجه"
+                            placeholder={t('adminServiceForm.fields.nameAr.placeholder')}
                             className="focus-visible:ring-gold/30"
                           />
                         </FormControl>
@@ -532,11 +540,11 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Name (Deutsch) *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.nameDe.label')} *</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Gesichtsbehandlung"
+                            placeholder={t('adminServiceForm.fields.nameDe.placeholder')}
                             className="focus-visible:ring-gold/30"
                           />
                         </FormControl>
@@ -550,11 +558,11 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Name (Türkçe) *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.nameTr.label')} *</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Yüz Bakımı"
+                            placeholder={t('adminServiceForm.fields.nameTr.placeholder')}
                             className="focus-visible:ring-gold/30"
                           />
                         </FormControl>
@@ -573,7 +581,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Price (EUR) *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.price.label')} *</FormLabel>
                         <FormControl>
                           <div className="relative">
                             <span className="absolute left-3 top-2.5 text-muted-foreground text-xs">
@@ -598,7 +606,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Duration (minutes) *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.duration.label')} *</FormLabel>
                         <FormControl>
                           <div className="relative">
                             <Input
@@ -623,7 +631,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem className="md:col-span-2">
-                        <FormLabel>Service Image *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.imageUrl.label')} *</FormLabel>
                         <FormControl>
                           <ImageUploader
                             initialImageUrl={field.value}
@@ -632,11 +640,11 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                               form.setValue('imageUrl', url);
                               form.setValue('imageLarge', url);
                             }}
-                            label="Image"
+                            label={t('adminServiceForm.fields.imageUrl.uploadLabel')}
                           />
                         </FormControl>
                         <FormDescription className="text-xs text-muted-foreground">
-                          This image will be used throughout the site to represent this service.
+                          {t('adminServiceForm.fields.imageUrl.description')}
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -653,11 +661,11 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Short Description (English) *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.descriptionEn.label')} *</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="A brief description in English"
+                            placeholder={t('adminServiceForm.fields.descriptionEn.placeholder')}
                             className="focus-visible:ring-gold/30"
                           />
                         </FormControl>
@@ -671,12 +679,12 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Short Description (العربية) *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.descriptionAr.label')} *</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             dir="rtl"
-                            placeholder="وصف قصير بالعربية"
+                            placeholder={t('adminServiceForm.fields.descriptionAr.placeholder')}
                             className="focus-visible:ring-gold/30"
                           />
                         </FormControl>
@@ -690,11 +698,11 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Short Description (Deutsch) *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.descriptionDe.label')} *</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Kurze Beschreibung auf Deutsch"
+                            placeholder={t('adminServiceForm.fields.descriptionDe.placeholder')}
                             className="focus-visible:ring-gold/30"
                           />
                         </FormControl>
@@ -708,11 +716,11 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Short Description (Türkçe) *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.descriptionTr.label')} *</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Kısa açıklama Türkçe"
+                            placeholder={t('adminServiceForm.fields.descriptionTr.placeholder')}
                             className="focus-visible:ring-gold/30"
                           />
                         </FormControl>
@@ -731,14 +739,16 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Long Description (English)</FormLabel>
+                        <FormLabel>
+                          {t('adminServiceForm.fields.longDescriptionEn.label')}
+                        </FormLabel>
                         <FormControl>
                           <textarea
                             {...field}
                             value={field.value || ''}
                             rows={3}
                             className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/30 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                            placeholder="Detailed description in English"
+                            placeholder={t('adminServiceForm.fields.longDescriptionEn.placeholder')}
                           />
                         </FormControl>
                         <FormMessage />
@@ -751,7 +761,9 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Long Description (العربية)</FormLabel>
+                        <FormLabel>
+                          {t('adminServiceForm.fields.longDescriptionAr.label')}
+                        </FormLabel>
                         <FormControl>
                           <textarea
                             {...field}
@@ -759,7 +771,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                             rows={3}
                             dir="rtl"
                             className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/30 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                            placeholder="وصف مفصل بالعربية"
+                            placeholder={t('adminServiceForm.fields.longDescriptionAr.placeholder')}
                           />
                         </FormControl>
                         <FormMessage />
@@ -772,14 +784,16 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Long Description (Deutsch)</FormLabel>
+                        <FormLabel>
+                          {t('adminServiceForm.fields.longDescriptionDe.label')}
+                        </FormLabel>
                         <FormControl>
                           <textarea
                             {...field}
                             value={field.value || ''}
                             rows={3}
                             className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/30 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                            placeholder="Ausführliche Beschreibung auf Deutsch"
+                            placeholder={t('adminServiceForm.fields.longDescriptionDe.placeholder')}
                           />
                         </FormControl>
                         <FormMessage />
@@ -792,14 +806,16 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Long Description (Türkçe)</FormLabel>
+                        <FormLabel>
+                          {t('adminServiceForm.fields.longDescriptionTr.label')}
+                        </FormLabel>
                         <FormControl>
                           <textarea
                             {...field}
                             value={field.value || ''}
                             rows={3}
                             className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/30 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                            placeholder="Ayrıntılı açıklama Türkçe"
+                            placeholder={t('adminServiceForm.fields.longDescriptionTr.placeholder')}
                           />
                         </FormControl>
                         <FormMessage />
@@ -818,7 +834,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                   className="mr-2"
                   disabled={isLoadingOnSubmit}
                 >
-                  Cancel
+                  {t('adminServiceForm.actions.cancel')}
                 </Button>
               </div>
 
@@ -831,7 +847,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     className="px-5 h-10"
                     disabled={isLoadingOnSubmit || currentStep === 0}
                   >
-                    Back
+                    {t('adminServiceForm.navigation.back')}
                   </Button>
                 )}
 
@@ -842,7 +858,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     onClick={nextStep}
                     disabled={isLoadingOnSubmit || !isCurrentStepValid()}
                   >
-                    Next
+                    {t('adminServiceForm.navigation.next')}
                   </Button>
                 ) : (
                   <Button
@@ -854,7 +870,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     {isLoadingOnSubmit ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Processing...
+                        {t('adminServiceForm.loading.processing')}
                       </>
                     ) : (
                       submitButtonText

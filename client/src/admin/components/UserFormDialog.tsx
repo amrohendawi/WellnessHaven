@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -20,46 +18,50 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Loader2, User, ImagePlus } from 'lucide-react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ImagePlus, Loader2, User } from 'lucide-react';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import * as z from 'zod';
 import { UserData } from './UsersTable';
 
-// Form validation schema
-const userFormSchema = z
-  .object({
-    username: z
-      .string()
-      .min(3, {
-        message: 'Username must be at least 3 characters.',
-      })
-      .email({
-        message: 'Please enter a valid email address.',
-      }),
-    firstName: z.string().optional(),
-    email: z
-      .string()
-      .email({
-        message: 'Please enter a valid email address.',
-      })
-      .optional(),
-    password: z
-      .string()
-      .min(6, {
-        message: 'Password must be at least 6 characters.',
-      })
-      .optional()
-      .or(z.literal('')),
-    confirmPassword: z.string().optional().or(z.literal('')),
-    isAdmin: z.boolean().default(false),
-  })
-  .refine(data => !data.password || data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  });
+// Form validation schema factory (to use translations)
+const createUserFormSchema = (t: (key: string) => string) =>
+  z
+    .object({
+      username: z
+        .string()
+        .min(3, {
+          message: t('adminUserForm.validation.usernameRequired'),
+        })
+        .email({
+          message: t('adminUserForm.validation.validEmail'),
+        }),
+      firstName: z.string().optional(),
+      email: z
+        .string()
+        .email({
+          message: t('adminUserForm.validation.validEmail'),
+        })
+        .optional(),
+      password: z
+        .string()
+        .min(6, {
+          message: t('adminUserForm.validation.passwordRequired'),
+        })
+        .optional()
+        .or(z.literal('')),
+      confirmPassword: z.string().optional().or(z.literal('')),
+      isAdmin: z.boolean().default(false),
+    })
+    .refine(data => !data.password || data.password === data.confirmPassword, {
+      message: t('adminUserForm.validation.passwordsMatch'),
+      path: ['confirmPassword'],
+    });
 
-type UserFormValues = z.infer<typeof userFormSchema>;
+type UserFormValues = z.infer<ReturnType<typeof createUserFormSchema>>;
 
 interface UserFormDialogProps {
   isOpen: boolean;
@@ -76,9 +78,13 @@ export default function UserFormDialog({
   user,
   isLoading = false,
 }: UserFormDialogProps) {
+  const { t } = useTranslation();
   const [imagePreview, setImagePreview] = useState<string | null>(user?.imageUrl || null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const isNewUser = !user;
+
+  // Create schema with translations
+  const userFormSchema = createUserFormSchema(t);
 
   // Set up form with default values
   const form = useForm<UserFormValues>({
@@ -144,11 +150,13 @@ export default function UserFormDialog({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>{isNewUser ? 'Add New User' : 'Edit User'}</DialogTitle>
+          <DialogTitle>
+            {isNewUser ? t('adminUserForm.titles.create') : t('adminUserForm.titles.edit')}
+          </DialogTitle>
           <DialogDescription>
             {isNewUser
-              ? 'Create a new user account with the appropriate permissions.'
-              : 'Update user details and permissions.'}
+              ? t('adminUserForm.descriptions.create')
+              : t('adminUserForm.descriptions.edit')}
           </DialogDescription>
         </DialogHeader>
 
@@ -185,11 +193,17 @@ export default function UserFormDialog({
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email Address*</FormLabel>
+                  <FormLabel>{t('adminUserForm.fields.username.label')}</FormLabel>
                   <FormControl>
-                    <Input {...field} type="email" placeholder="user@example.com" />
+                    <Input
+                      {...field}
+                      type="email"
+                      placeholder={t('adminUserForm.fields.username.placeholder')}
+                    />
                   </FormControl>
-                  <FormDescription>This will be used as the username for login.</FormDescription>
+                  <FormDescription>
+                    {t('adminUserForm.fields.username.description')}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -201,9 +215,12 @@ export default function UserFormDialog({
               name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+                  <FormLabel>{t('adminUserForm.fields.firstName.label')}</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="John Doe" />
+                    <Input
+                      {...field}
+                      placeholder={t('adminUserForm.fields.firstName.placeholder')}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -216,18 +233,26 @@ export default function UserFormDialog({
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{isNewUser ? 'Password*' : 'New Password'}</FormLabel>
+                  <FormLabel>
+                    {isNewUser
+                      ? t('adminUserForm.fields.password.labelNew')
+                      : t('adminUserForm.fields.password.labelEdit')}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="password"
                       placeholder={
-                        isNewUser ? 'Enter password' : 'Leave blank to keep current password'
+                        isNewUser
+                          ? t('adminUserForm.fields.password.placeholderNew')
+                          : t('adminUserForm.fields.password.placeholderEdit')
                       }
                     />
                   </FormControl>
                   {!isNewUser && (
-                    <FormDescription>Leave blank to keep the current password.</FormDescription>
+                    <FormDescription>
+                      {t('adminUserForm.fields.password.description')}
+                    </FormDescription>
                   )}
                   <FormMessage />
                 </FormItem>
@@ -240,9 +265,17 @@ export default function UserFormDialog({
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{isNewUser ? 'Confirm Password*' : 'Confirm New Password'}</FormLabel>
+                  <FormLabel>
+                    {isNewUser
+                      ? t('adminUserForm.fields.confirmPassword.labelNew')
+                      : t('adminUserForm.fields.confirmPassword.labelEdit')}
+                  </FormLabel>
                   <FormControl>
-                    <Input {...field} type="password" placeholder="Confirm password" />
+                    <Input
+                      {...field}
+                      type="password"
+                      placeholder={t('adminUserForm.fields.confirmPassword.placeholder')}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -256,9 +289,11 @@ export default function UserFormDialog({
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">Administrator Access</FormLabel>
+                    <FormLabel className="text-base">
+                      {t('adminUserForm.fields.isAdmin.label')}
+                    </FormLabel>
                     <FormDescription>
-                      Administrators can manage users and have full access to all features.
+                      {t('adminUserForm.fields.isAdmin.description')}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -270,7 +305,7 @@ export default function UserFormDialog({
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                Cancel
+                {t('adminUserForm.actions.cancel')}
               </Button>
               <Button
                 type="submit"
@@ -280,12 +315,14 @@ export default function UserFormDialog({
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {isNewUser ? 'Creating...' : 'Saving...'}
+                    {isNewUser
+                      ? t('adminUserForm.actions.creating')
+                      : t('adminUserForm.actions.saving')}
                   </>
                 ) : isNewUser ? (
-                  'Create User'
+                  t('adminUserForm.actions.createUser')
                 ) : (
-                  'Save Changes'
+                  t('adminUserForm.actions.saveChanges')
                 )}
               </Button>
             </DialogFooter>

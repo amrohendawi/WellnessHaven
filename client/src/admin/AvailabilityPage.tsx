@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { fetchAPI } from '@/lib/api';
-import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
 import {
   Table,
-  TableHeader,
-  TableRow,
-  TableHead,
   TableBody,
   TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { fetchAPI } from '@/lib/api';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface Slot {
   id: number;
@@ -20,6 +21,7 @@ interface Slot {
 export default function AvailabilityPage() {
   const [slots, setSlots] = useState<Slot[]>([]);
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
 
@@ -33,8 +35,8 @@ export default function AvailabilityPage() {
       setSlots(data);
     } catch {
       toast({
-        title: 'Error',
-        description: 'Failed to load blocked slots',
+        title: t('adminMessages.errorTitle'),
+        description: t('adminAvailability.failedToLoadSlots'),
         variant: 'destructive',
       });
     }
@@ -49,9 +51,16 @@ export default function AvailabilityPage() {
       setSlots(prev => [...prev, newSlot]);
       setDate('');
       setTime('');
-      toast({ title: 'Added', description: 'Slot blocked.' });
+      toast({ 
+        title: t('adminMessages.successTitle'), 
+        description: t('adminAvailability.slotBlockedSuccess') 
+      });
     } catch {
-      toast({ title: 'Error', description: 'Failed to block slot', variant: 'destructive' });
+      toast({ 
+        title: t('adminMessages.errorTitle'), 
+        description: t('adminAvailability.failedToBlockSlot'), 
+        variant: 'destructive' 
+      });
     }
   }
 
@@ -59,37 +68,46 @@ export default function AvailabilityPage() {
     try {
       await fetchAPI(`/admin/blocked-slots/${id}`, { method: 'DELETE' });
       setSlots(prev => prev.filter(s => s.id !== id));
-      toast({ title: 'Removed', description: 'Slot unblocked.' });
+      toast({ 
+        title: t('adminMessages.successTitle'), 
+        description: t('adminAvailability.slotUnblockedSuccess') 
+      });
     } catch {
-      toast({ title: 'Error', description: 'Failed to remove slot', variant: 'destructive' });
+      toast({ 
+        title: t('adminMessages.errorTitle'), 
+        description: t('adminAvailability.failedToRemoveSlot'), 
+        variant: 'destructive' 
+      });
     }
   }
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Availability (Blocked Slots)</h1>
+      <h1 className="text-2xl font-bold">{t('adminAvailability.title')}</h1>
       <div className="flex gap-2">
         <input
           type="date"
           className="border p-2 rounded"
           value={date}
           onChange={e => setDate(e.target.value)}
+          placeholder={t('adminAvailability.datePlaceholder')}
         />
         <input
           type="time"
           className="border p-2 rounded"
           value={time}
           onChange={e => setTime(e.target.value)}
+          placeholder={t('adminAvailability.timePlaceholder')}
         />
-        <Button onClick={addSlot}>Block Slot</Button>
+        <Button onClick={addSlot}>{t('adminAvailability.blockSlotButton')}</Button>
       </div>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>Time</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead>{t('adminAvailability.tableHeaders.id')}</TableHead>
+            <TableHead>{t('adminAvailability.tableHeaders.date')}</TableHead>
+            <TableHead>{t('adminAvailability.tableHeaders.time')}</TableHead>
+            <TableHead>{t('adminAvailability.tableHeaders.actions')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -100,7 +118,7 @@ export default function AvailabilityPage() {
               <TableCell>{s.time}</TableCell>
               <TableCell>
                 <Button variant="ghost" size="sm" onClick={() => removeSlot(s.id)}>
-                  Unblock
+                  {t('adminAvailability.unblockButton')}
                 </Button>
               </TableCell>
             </TableRow>

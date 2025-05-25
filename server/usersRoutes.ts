@@ -125,7 +125,7 @@ router.get('/users/:userId', requireAuth, async (req, res) => {
 // Create a new user
 router.post('/users/create', requireAuth, upload.single('profileImage'), async (req, res) => {
   try {
-    const { username, firstName, email, password, isAdmin } = req.body;
+    const { username, password, isAdmin } = req.body;
 
     // Validate required fields
     if (!username || !password) {
@@ -143,12 +143,6 @@ router.post('/users/create', requireAuth, upload.single('profileImage'), async (
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create new user
-    const result = await db.insert(users).values({
-      username,
-      password: hashedPassword,
-      isAdmin: isAdmin === 'true',
-      createdAt: new Date(),
-    });
 
     // Handle profile image if uploaded
     // For a real app, you'd store this in the database and handle file paths
@@ -163,7 +157,7 @@ router.post('/users/create', requireAuth, upload.single('profileImage'), async (
 // Update a user
 router.post('/users/update', requireAuth, upload.single('profileImage'), async (req, res) => {
   try {
-    const { userId, username, firstName, email, password, isAdmin } = req.body;
+    const { userId, username, password, isAdmin } = req.body;
 
     if (!userId) {
       return res.status(400).json({ message: 'User ID is required' });

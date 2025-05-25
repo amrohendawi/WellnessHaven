@@ -1,4 +1,5 @@
-import React from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -7,10 +8,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/context/LanguageContext';
+import { getLocalizedName } from '@/lib/localization';
+import type { ServiceGroup } from '@shared/schema';
 import { Edit, Trash2 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { ServiceGroup } from '@shared/schema';
+import { useTranslation } from 'react-i18next';
 
 interface CategoriesTableProps {
   categories: ServiceGroup[];
@@ -19,10 +21,13 @@ interface CategoriesTableProps {
 }
 
 export function CategoriesTable({ categories, onEdit, onDelete }: CategoriesTableProps) {
+  const { t } = useTranslation();
+  const { language } = useLanguage();
+
   if (categories.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">
-        No categories found. Create one to get started.
+        {t('adminCategoriesTable.noCategories')}
       </div>
     );
   }
@@ -32,11 +37,19 @@ export function CategoriesTable({ categories, onEdit, onDelete }: CategoriesTabl
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Order</TableHead>
-            <TableHead>Name (English)</TableHead>
-            <TableHead className="hidden md:table-cell">Slug</TableHead>
-            <TableHead className="hidden md:table-cell">Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className="w-[100px]">
+              {t('adminCategoriesTable.tableHeaders.order')}
+            </TableHead>
+            <TableHead>{t('adminCategoriesTable.tableHeaders.nameEn')}</TableHead>
+            <TableHead className="hidden md:table-cell">
+              {t('adminCategoriesTable.tableHeaders.slug')}
+            </TableHead>
+            <TableHead className="hidden md:table-cell">
+              {t('adminCategoriesTable.tableHeaders.status')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('adminCategoriesTable.tableHeaders.actions')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -44,17 +57,24 @@ export function CategoriesTable({ categories, onEdit, onDelete }: CategoriesTabl
             <TableRow key={category.id}>
               <TableCell className="font-medium">{category.displayOrder || 0}</TableCell>
               <TableCell className="font-medium max-w-[250px] truncate">
-                {category.nameEn || 'Unnamed Category'}
+                <div className="font-medium">
+                  {getLocalizedName(category, language) || t('adminCategoriesTable.unnamedCategory')}
+                </div>
+                <div className="text-xs text-muted-foreground md:hidden mt-1">
+                  {category.slug || ''}
+                </div>
               </TableCell>
               <TableCell className="hidden md:table-cell text-muted-foreground text-sm font-mono">
                 {category.slug || ''}
               </TableCell>
               <TableCell className="hidden md:table-cell">
                 {category.isActive !== false ? (
-                  <Badge className="bg-green-500 hover:bg-green-600">Active</Badge>
+                  <Badge className="bg-green-500 hover:bg-green-600">
+                    {t('adminCategoriesTable.active')}
+                  </Badge>
                 ) : (
                   <Badge variant="outline" className="text-gray-500">
-                    Inactive
+                    {t('adminCategoriesTable.inactive')}
                   </Badge>
                 )}
               </TableCell>
@@ -64,7 +84,7 @@ export function CategoriesTable({ categories, onEdit, onDelete }: CategoriesTabl
                     variant="outline"
                     size="icon"
                     onClick={() => onEdit(category)}
-                    title="Edit Category"
+                    title={t('adminCategoriesTable.editCategory')}
                   >
                     <Edit className="h-4 w-4" />
                   </Button>
@@ -73,7 +93,7 @@ export function CategoriesTable({ categories, onEdit, onDelete }: CategoriesTabl
                     size="icon"
                     className="text-red-600 hover:text-red-700"
                     onClick={() => onDelete(category.id)}
-                    title="Delete Category"
+                    title={t('adminCategoriesTable.deleteCategory')}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

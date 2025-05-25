@@ -149,5 +149,474 @@
   "loading": "Loading...",
 
   "breadcrumbHome": "Home",
-  "breadcrumbServices": "Services"
+  "breadcrumbServices": "Services",
+
+  "adminDashboard": "Admin Dashboard",
+  "dashboardOverview": "Dashboard Overview",
+  "liveData": "Live Data",
+  "totalBookings": "Total Bookings",
+  "allTimeAppointmentCount": "All-time appointment count",
+  "lifetimeTotal": "Lifetime total",
+  "confirmed": "Confirmed",
+  "approvedAppointments": "Approved appointments",
+  "ofTotal": "of total",
+  "pending": "Pending",
+  "awaitingConfirmation": "Awaiting confirmation",
+  "services": "Services",
+  "activeSpatreatments": "Active spa treatments",
+  "availableTreatments": "Available treatments",
+  "bookingActivity": "Booking Activity",
+  "atAGlance": "At a glance",
+  "bookingChartWillAppearHere": "Booking chart will appear here",
+  "comingSoon": "Coming soon",
+  "blockedSlots": "Blocked Slots",
+  "unavailablePeriods": "Unavailable periods",
+  "manage": "Manage",
+  "view": "View",
+
+  "adminNavDashboard": "Dashboard",
+  "adminNavBookings": "Bookings",
+  "adminNavAvailability": "Availability",
+  "adminNavServices": "Services",
+  "adminNavCategories": "Categories",
+  "adminNavUsers": "Users",
+  "adminNavProfile": "Profile",
+  "signOut": "Sign out",
+
+  "bookingDetails": "Booking Details",
+  "name": "Name",
+  "email": "Email",
+  "phone": "Phone",
+  "serviceId": "Service ID",
+  "bookingDate": "Date",
+  "bookingTime": "Time",
+  "status": "Status",
+  "createdAt": "Created At",
+  "updateStatus": "Update Status",
+  "selectStatus": "Select status",
+  "updated": "Updated",
+  "statusUpdated": "Status updated",
+  "failedToUpdateStatus": "Failed to update status",
+  "loadingDashboard": "Loading dashboard...",
+
+  "bookingStatuses": {
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
+  },
+
+  "adminMessages": {
+    "errorLoadingDashboard": "Failed to load dashboard summary",
+    "errorTitle": "Error",
+    "successTitle": "Success",
+    "bookingUpdated": "Booking has been updated",
+    "categoryCreated": "Category created successfully",
+    "categoryUpdated": "Category updated successfully",
+    "categoryDeleted": "Category deleted successfully",
+    "serviceCreated": "Service created successfully",
+    "serviceUpdated": "Service updated successfully",
+    "serviceDeleted": "Service deleted successfully",
+    "userCreated": "User created successfully",
+    "userUpdated": "User updated successfully",
+    "userDeleted": "User deleted successfully",
+    "failedToFetchServices": "Failed to fetch services",
+    "failedToDeleteService": "Failed to delete service",
+    "failedToCreateService": "Failed to create service",
+    "failedToUpdateService": "Failed to update service",
+    "failedToFetchCategories": "Failed to fetch categories",
+    "failedToDeleteCategory": "Failed to delete category",
+    "failedToCreateCategory": "Failed to create category",
+    "failedToUpdateCategory": "Failed to update category",
+    "updated": "Updated"
+  },
+
+  "adminServices": {
+    "title": "Services",
+    "addNewService": "Add New Service",
+    "editService": "Edit Service",
+    "createServiceTitle": "Add New Service",
+    "createServiceDescription": "Fill in the details to create a new service.",
+    "editServiceTitle": "Edit Service",
+    "editServiceDescription": "Update the details for",
+    "createServiceButton": "Create Service",
+    "saveChangesButton": "Save Changes",
+    "deleteConfirmation": "Are you sure you want to delete this service?",
+    "searchPlaceholder": "Search services...",
+    "tableHeaders": {
+      "name": "Name (EN)",
+      "category": "Category",
+      "price": "Price",
+      "duration": "Duration",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "uncategorized": "Uncategorized",
+    "loadingServices": "Loading services...",
+    "noServicesFound": "No Services Found",
+    "noServicesMessage": "There are currently no services to display. Try adding a new service.",
+    "unnamedService": "Unnamed Service",
+    "active": "Active",
+    "inactive": "Inactive",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+
+  "adminCategories": {
+    "title": "Categories",
+    "subtitle": "Manage service categories and their translations",
+    "addNewCategory": "Add New Category",
+    "editCategory": "Edit Category",
+    "createCategoryTitle": "Add New Category",
+    "createCategoryDescription": "Add a new service category with translations.",
+    "editCategoryTitle": "Edit Category",
+    "editCategoryDescription": "Update a service category and its translations.",
+    "createCategoryButton": "Create Category",
+    "saveChangesButton": "Save Changes",
+    "deleteConfirmation": "Are you sure you want to delete this category?",
+    "serviceCategoriesTitle": "Service Categories",
+    "serviceCategoriesDescription": "Categories are used to organize services and help customers find what they're looking for",
+    "searchPlaceholder": "Search categories..."
+  },
+
+  "adminUsers": {
+    "title": "User Management",
+    "subtitle": "Manage staff and admin user accounts",
+    "addUser": "Add User",
+    "editUser": "Edit User",
+    "createUserTitle": "Add New User",
+    "createUserDescription": "Create a new staff or admin user account.",
+    "editUserTitle": "Edit User",
+    "editUserDescription": "Update user information and permissions.",
+    "createUserButton": "Create User",
+    "saveChangesButton": "Save Changes",
+    "deleteConfirmation": "Are you sure you want to delete this user?",
+    "usersTableTitle": "Users",
+    "usersTableDescription": "Manage users and their access permissions",
+    "userCreatedSuccess": "User created successfully",
+    "userUpdatedSuccess": "User updated successfully",
+    "userDeletedSuccess": "User deleted successfully",
+    "failedToLoadUsers": "Failed to load users",
+    "failedToSaveUser": "Failed to save user",
+    "failedToDeleteUser": "Failed to delete user"
+  },
+
+  "adminBookings": {
+    "title": "Bookings",
+    "searchPlaceholder": "Search by name or email",
+    "allStatusesPlaceholder": "All Statuses",
+    "allStatuses": "All",
+    "tableHeaders": {
+      "id": "ID",
+      "name": "Name",
+      "email": "Email",
+      "service": "Service",
+      "date": "Date",
+      "time": "Time",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "viewButton": "View",
+    "failedToFetchBookings": "Failed to fetch bookings",
+    "failedToUpdateStatus": "Failed to update status",
+    "statusUpdatedSuccess": "Booking status updated."
+  },
+
+  "adminAvailability": {
+    "title": "Availability (Blocked Slots)",
+    "datePlaceholder": "Select date",
+    "timePlaceholder": "Select time",
+    "blockSlotButton": "Block Slot",
+    "unblockButton": "Unblock",
+    "tableHeaders": {
+      "id": "ID",
+      "date": "Date",
+      "time": "Time",
+      "actions": "Actions"
+    },
+    "failedToLoadSlots": "Failed to load blocked slots",
+    "failedToBlockSlot": "Failed to block slot",
+    "failedToRemoveSlot": "Failed to remove slot",
+    "slotBlockedSuccess": "Slot blocked.",
+    "slotUnblockedSuccess": "Slot unblocked."
+  },
+
+  "adminProfile": {
+    "title": "Profile Settings",
+    "basicInfo": "Basic Information",
+    "basicInfoDescription": "Update your account details and preferences",
+    "securitySettings": "Security Settings",
+    "securityDescription": "Change your password and security preferences",
+    "profilePicture": "Profile Picture",
+    "profilePictureDescription": "Upload a new profile picture",
+    "username": "Username",
+    "firstName": "First Name",
+    "email": "Email",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "currentPassword": "Current Password",
+    "updateProfile": "Update Profile",
+    "changePassword": "Change Password",
+    "uploadImage": "Upload Image",
+    "removeImage": "Remove Image",
+    "updating": "Updating...",
+    "loading": "Loading profile...",
+    "failedToLoadProfile": "Failed to load profile data",
+    "failedToUpdateProfile": "Failed to update profile",
+    "profileUpdatedSuccess": "Profile updated successfully",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "passwordChangedSuccess": "Password changed successfully",
+    "imageUploadedSuccess": "Profile picture updated successfully",
+    "imageRemovedSuccess": "Profile picture removed successfully",
+    "accountSettings": "Account Settings",
+    "accountSettingsDescription": "Manage your account preferences",
+    "accountType": "Account Type",
+    "administrator": "Administrator",
+    "accountStatus": "Account Status",
+    "active": "Active"
+  },
+
+  "adminServiceForm": {
+    "steps": {
+      "basicInfo": "Basic Info",
+      "translations": "Translations",
+      "details": "Details & Images",
+      "shortDescriptions": "Short Descriptions",
+      "longDescriptions": "Full Descriptions"
+    },
+    "basicInfo": {
+      "slug": "Service Slug",
+      "slugPlaceholder": "facial-treatment",
+      "category": "Category",
+      "selectCategory": "Select category",
+      "searchCategories": "Search categories...",
+      "noCategoriesFound": "No categories found",
+      "createNewCategory": "Create New",
+      "newCategoryName": "New category name",
+      "addCategory": "Add Category",
+      "status": "Status",
+      "statusDescription": "Enable or disable this service"
+    },
+    "names": {
+      "nameEn": "Name (English)",
+      "nameEnPlaceholder": "Facial Treatment",
+      "nameAr": "Name (العربية)",
+      "nameArPlaceholder": "علاج الوجه",
+      "nameDe": "Name (Deutsch)",
+      "nameDePlaceholder": "Gesichtsbehandlung",
+      "nameTr": "Name (Türkçe)",
+      "nameTrPlaceholder": "Yüz Bakımı"
+    },
+    "pricing": {
+      "price": "Price (EUR)",
+      "duration": "Duration (minutes)",
+      "durationPlaceholder": "60",
+      "imageUrl": "Service Image",
+      "imageDescription": "Upload an image for this service"
+    },
+    "descriptions": {
+      "descriptionEn": "Short Description (English)",
+      "descriptionEnPlaceholder": "Brief description in English",
+      "descriptionAr": "Short Description (العربية)",
+      "descriptionArPlaceholder": "وصف قصير بالعربية",
+      "descriptionDe": "Short Description (Deutsch)",
+      "descriptionDePlaceholder": "Kurze Beschreibung auf Deutsch",
+      "descriptionTr": "Short Description (Türkçe)",
+      "descriptionTrPlaceholder": "Kısa açıklama Türkçe"
+    },
+    "longDescriptions": {
+      "longDescriptionEn": "Long Description (English)",
+      "longDescriptionEnPlaceholder": "Detailed description in English",
+      "longDescriptionAr": "Long Description (العربية)",
+      "longDescriptionArPlaceholder": "وصف مفصل بالعربية",
+      "longDescriptionDe": "Long Description (Deutsch)",
+      "longDescriptionDePlaceholder": "Ausführliche Beschreibung auf Deutsch",
+      "longDescriptionTr": "Long Description (Türkçe)",
+      "longDescriptionTrPlaceholder": "Ayrıntılı açıklama Türkçe"
+    },
+    "navigation": {
+      "next": "Next",
+      "back": "Back",
+      "cancel": "Cancel",
+      "processing": "Processing..."
+    }
+  },
+
+  "adminCategoriesTable": {
+    "noCategories": "No categories found. Create one to get started.",
+    "tableHeaders": {
+      "order": "Order",
+      "nameEn": "Name (English)",
+      "slug": "Slug",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "unnamedCategory": "Unnamed Category",
+    "active": "Active",
+    "inactive": "Inactive",
+    "editCategory": "Edit Category",
+    "deleteCategory": "Delete Category"
+  },
+
+  "adminUsersTable": {
+    "tableHeaders": {
+      "avatar": "",
+      "username": "Username",
+      "email": "Email",
+      "name": "Name",
+      "role": "Role",
+      "created": "Created",
+      "actions": "Actions"
+    },
+    "loadingUsers": "Loading users...",
+    "noUsersFound": "No users found",
+    "you": "You",
+    "admin": "Admin",
+    "staff": "Staff",
+    "editUser": "Edit user",
+    "deleteUser": "Delete user",
+    "deleteConfirmTitle": "Are you sure?",
+    "deleteConfirmDescription": "This will permanently delete the user {username}. This action cannot be undone.",
+    "deleteButton": "Delete",
+    "actions": {
+      "cancel": "Cancel"
+    }
+  },
+
+  "adminCategoryForm": {
+    "sections": {
+      "basicInfo": "Basic Information",
+      "translations": "Translations",
+      "descriptions": "Descriptions (Optional)"
+    },
+    "fields": {
+      "nameEn": {
+        "label": "Name (English)",
+        "placeholder": "e.g., Facials"
+      },
+      "slug": {
+        "label": "Slug",
+        "placeholder": "facials",
+        "description": "URL-friendly identifier (lowercase, hyphens)"
+      },
+      "displayOrder": {
+        "label": "Display Order",
+        "description": "Controls display order in menus (lower numbers first)"
+      },
+      "isActive": {
+        "label": "Active",
+        "description": "This category will be visible to customers"
+      },
+      "imageUrl": {
+        "label": "Image URL",
+        "placeholder": "https://example.com/image.jpg",
+        "description": "Image to represent this category (optional)"
+      },
+      "nameAr": {
+        "label": "Name (العربية)",
+        "placeholder": "تدليك"
+      },
+      "nameDe": {
+        "label": "Name (Deutsch)",
+        "placeholder": "Gesichtsbehandlungen"
+      },
+      "nameTr": {
+        "label": "Name (Türkçe)",
+        "placeholder": "Yüz Bakımı"
+      },
+      "descriptionEn": {
+        "label": "Description (English)",
+        "placeholder": "A brief description in English"
+      },
+      "descriptionAr": {
+        "label": "Description (العربية)",
+        "placeholder": "وصف قصير بالعربية"
+      },
+      "descriptionDe": {
+        "label": "Description (Deutsch)",
+        "placeholder": "Kurze Beschreibung auf Deutsch"
+      },
+      "descriptionTr": {
+        "label": "Description (Türkçe)",
+        "placeholder": "Kısa açıklama Türkçe"
+      }
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "processing": "Processing..."
+    }
+  },
+
+  "adminUserForm": {
+    "titles": {
+      "create": "Add New User",
+      "edit": "Edit User"
+    },
+    "descriptions": {
+      "create": "Create a new user account with the appropriate permissions.",
+      "edit": "Update user details and permissions."
+    },
+    "fields": {
+      "username": {
+        "label": "Email Address*",
+        "placeholder": "user@example.com",
+        "description": "This will be used as the username for login."
+      },
+      "firstName": {
+        "label": "Full Name",
+        "placeholder": "John Doe"
+      },
+      "password": {
+        "labelNew": "Password*",
+        "labelEdit": "New Password",
+        "placeholderNew": "Enter password",
+        "placeholderEdit": "Leave blank to keep current password",
+        "description": "Leave blank to keep the current password."
+      },
+      "confirmPassword": {
+        "labelNew": "Confirm Password*",
+        "labelEdit": "Confirm New Password",
+        "placeholder": "Confirm password"
+      },
+      "isAdmin": {
+        "label": "Administrator Access",
+        "description": "Administrators can manage users and have full access to all features."
+      }
+    },
+    "validation": {
+      "usernameRequired": "Username must be at least 3 characters.",
+      "validEmail": "Please enter a valid email address.",
+      "passwordRequired": "Password must be at least 6 characters.",
+      "passwordsMatch": "Passwords don't match"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "createUser": "Create User",
+      "saveChanges": "Save Changes",
+      "creating": "Creating...",
+      "saving": "Saving..."
+    }
+  },
+
+  "adminImageUploader": {
+    "uploadFromDevice": "Upload from your device",
+    "enterImageUrl": "Or enter image URL",
+    "imageUrlPlaceholder": "https://example.com/image.jpg",
+    "addUrl": "Add URL",
+    "currentImage": "Current Image",
+    "changeImage": "Change Image",
+    "removeImage": "Remove Image",
+    "invalidFileType": "Invalid file type",
+    "invalidFileTypeDesc": "Please upload an image file (JPEG, PNG, etc.)",
+    "fileTooLarge": "File too large",
+    "fileTooLargeDesc": "Please upload an image smaller than 5MB",
+    "uploadError": "Upload Error",
+    "uploadErrorDesc": "Failed to upload image. Please try again.",
+    "imageUploaded": "Image uploaded",
+    "imageUploadedDesc": "Your image has been uploaded successfully",
+    "imageUrlAdded": "Image URL added",
+    "imageUrlAddedDesc": "The image URL has been added successfully",
+    "invalidUrl": "Invalid URL",
+    "invalidUrlDesc": "Please enter a valid image URL"
+  }
 }

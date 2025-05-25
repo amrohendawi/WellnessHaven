@@ -1,25 +1,26 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
-import { Link } from 'wouter';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
 import { fetchAdminAPI } from '@/lib/api';
 import type { Booking } from '@shared/schema';
+import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'wouter';
 
 const STATUS_OPTIONS = ['pending', 'confirmed', 'completed', 'cancelled'] as const;
 
@@ -28,6 +29,7 @@ export default function BookingsPage() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadBookings();
@@ -38,7 +40,11 @@ export default function BookingsPage() {
       const data = await fetchAdminAPI<Booking[]>('bookings');
       setBookings(data);
     } catch {
-      toast({ title: 'Error', description: 'Failed to fetch bookings', variant: 'destructive' });
+      toast({ 
+        title: t('adminMessages.errorTitle'), 
+        description: t('adminBookings.failedToFetchBookings'), 
+        variant: 'destructive' 
+      });
     }
   }
 
@@ -46,28 +52,35 @@ export default function BookingsPage() {
     try {
       await fetchAdminAPI(`bookings/${id}`, { method: 'PUT', body: JSON.stringify({ status }) });
       setBookings(prev => prev.map(b => (b.id === id ? { ...b, status } : b)));
-      toast({ title: 'Updated', description: 'Booking status updated.' });
+      toast({ 
+        title: t('adminMessages.successTitle'), 
+        description: t('adminBookings.statusUpdatedSuccess')
+      });
     } catch {
-      toast({ title: 'Error', description: 'Failed to update status', variant: 'destructive' });
+      toast({ 
+        title: t('adminMessages.errorTitle'), 
+        description: t('adminBookings.failedToUpdateStatus'), 
+        variant: 'destructive' 
+      });
     }
   }
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Bookings</h1>
+      <h1 className="text-2xl font-bold">{t('adminBookings.title')}</h1>
       <div className="flex flex-wrap items-center gap-4">
         <Input
-          placeholder="Search by name or email"
+          placeholder={t('adminBookings.searchPlaceholder')}
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="max-w-sm"
         />
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-[150px]">
-            <SelectValue placeholder="All Statuses" />
+            <SelectValue placeholder={t('adminBookings.allStatusesPlaceholder')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="all">{t('adminBookings.allStatuses')}</SelectItem>
             {STATUS_OPTIONS.map(opt => (
               <SelectItem key={opt} value={opt}>
                 {opt}
@@ -79,14 +92,14 @@ export default function BookingsPage() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Service</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>Time</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead>{t('adminBookings.tableHeaders.id')}</TableHead>
+            <TableHead>{t('adminBookings.tableHeaders.name')}</TableHead>
+            <TableHead>{t('adminBookings.tableHeaders.email')}</TableHead>
+            <TableHead>{t('adminBookings.tableHeaders.service')}</TableHead>
+            <TableHead>{t('adminBookings.tableHeaders.date')}</TableHead>
+            <TableHead>{t('adminBookings.tableHeaders.time')}</TableHead>
+            <TableHead>{t('adminBookings.tableHeaders.status')}</TableHead>
+            <TableHead>{t('adminBookings.tableHeaders.actions')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -123,7 +136,7 @@ export default function BookingsPage() {
                     </TableCell>
                     <TableCell>
                       <Link href={`/admin/bookings/${b.id}`}>
-                        <Button size="sm">View</Button>
+                        <Button size="sm">{t('adminBookings.viewButton')}</Button>
                       </Link>
                     </TableCell>
                   </TableRow>
