@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'wouter';
 import { useLanguage } from '@/context/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
-import { ServiceDisplay } from '@shared/schema';
+import { ServiceDisplay, ServiceGroup } from '@shared/schema';
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 
@@ -15,52 +15,63 @@ const ServicesSection = () => {
   const [currentPosition, setCurrentPosition] = useState(0);
   const [autoScrollPaused, setAutoScrollPaused] = useState(false);
 
-  // Fetch services from API
+  // Fetch services and service groups in parallel
   const {
-    data: services,
-    isLoading,
-    error,
+    data: servicesData,
+    isLoading: isLoadingServices,
+    error: servicesError,
   } = useQuery({
     queryKey: ['/api/services'],
   });
 
+  const {
+    data: serviceGroupsData,
+    isLoading: isLoadingGroups,
+    error: groupsError,
+  } = useQuery({
+    queryKey: ['/api/service-groups'],
+  });
+
   // Use all services for the slideshow
-  const allServices = services ? (services as ServiceDisplay[]) : [];
+  const allServices = servicesData ? (servicesData as ServiceDisplay[]) : [];
+  const serviceGroups = serviceGroupsData ? (serviceGroupsData as ServiceGroup[]) : [];
 
-  // Format category name from slug
-  const formatCategoryName = (categorySlug: string, lang: string): string => {
-    // Convert kebab-case to Title Case
-    const formattedName = categorySlug
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+  // Loading and error states
+  const isLoading = isLoadingServices || isLoadingGroups;
+  const error = servicesError || groupsError;
 
-    return formattedName;
-  };
-
-  // Extract unique categories from services
+  // Map service groups to categories format
   const categories = useMemo(() => {
-    if (!allServices) return [];
+    if (!serviceGroups.length) return [];
 
-    const uniqueCategories = Array.from(new Set(allServices.map(s => s.category)));
-    return uniqueCategories.map(category => ({
-      id: category,
+    return serviceGroups.map(group => ({
+      id: group.id,
       name: {
-        en: formatCategoryName(category, 'en'),
-        ar: formatCategoryName(category, 'ar'),
-        de: formatCategoryName(category, 'de'),
-        tr: formatCategoryName(category, 'tr'),
+        en: group.name.en || group.name,
+        ar: group.name.ar || group.name,
+        de: group.name.de || group.name,
+        tr: group.name.tr || group.name,
       },
+      slug: group.slug,
     }));
-  }, [allServices]);
+  }, [serviceGroups]);
 
   // State for selected category
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  // Filter services by category
-  const filteredServices = selectedCategory
-    ? allServices.filter(service => service.category === selectedCategory)
-    : allServices;
+  // Filter services by selected category
+  const filteredServices = useMemo(() => {
+    if (!selectedCategory) return allServices;
+
+    const selectedGroup = serviceGroups.find(group => group.id === selectedCategory);
+    if (!selectedGroup) return allServices;
+
+    return allServices.filter(
+      service =>
+        service.groupId === selectedCategory ||
+        (Array.isArray(service.groups) && service.groups.includes(selectedCategory))
+    );
+  }, [allServices, selectedCategory, serviceGroups]);
 
   // Auto-scroll effect
   useEffect(() => {
@@ -212,11 +223,15 @@ const ServicesSection = () => {
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t('servicesSubtitle')}</p>
         </div>
 
-        {isLoading && (
+        {isLoading ? (
           <div className="flex justify-center items-center p-12">
             <div className="w-16 h-16 border-4 border-gold border-t-transparent rounded-full animate-spin"></div>
           </div>
-        )}
+        ) : categories.length === 0 && !isLoading ? (
+          <div className="text-center p-8">
+            <p className="text-gray-600">{t('noServiceCategories')}</p>
+          </div>
+        ) : null}
 
         {error && (
           <div className="text-center p-8">
@@ -249,7 +264,9 @@ const ServicesSection = () => {
                 onClick={() => setSelectedCategory(category.id)}
                 className="rounded-full px-4"
               >
-                {category.name[language as keyof typeof category.name] || category.name.en}
+                {typeof category.name === 'string'
+                  ? category.name
+                  : category.name[language as keyof typeof category.name] || category.name.en}
               </Button>
             ))}
           </div>
