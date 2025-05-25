@@ -40,6 +40,20 @@
   --royal-purple-light: 270 50% 90%;
   --black-gold: 40 30% 15%;
   --cream: 40 30% 96%;
+
+  /* Gradient variables for enhanced cards */
+  --gold-gradient: linear-gradient(
+    135deg,
+    hsl(var(--gold-light)) 0%,
+    hsl(var(--gold)) 50%,
+    hsl(var(--gold-dark)) 100%
+  );
+  --silver-gradient: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 50%, #c0c0c0 100%);
+  --glass-gradient: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
 }
 
 .dark {
@@ -90,6 +104,53 @@
 
 [dir='rtl'] .font-display {
   font-family: 'Tajawal', sans-serif;
+}
+
+/* Modern VIP Card with 3D tilt effect */
+.vip-card-modern {
+  @apply relative overflow-hidden transition-all duration-700 ease-out;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.vip-card-modern:hover {
+  transform: translateY(-12px) rotateX(5deg);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+.vip-card-modern::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    hsl(var(--gold)) 90deg,
+    transparent 180deg,
+    hsl(var(--gold)) 270deg,
+    transparent 360deg
+  );
+  animation: rotate 4s linear infinite;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.vip-card-modern:hover::before {
+  opacity: 0.3;
+}
+
+/* Animation for the rotating gradient */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Royal styling elements */
@@ -300,6 +361,52 @@
   }
 }
 
+/* Float animation for decorative elements */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Fade In Up Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
 /* Enhance gold effect with more depth */
 .gold-shine {
   position: relative;
@@ -440,4 +547,10 @@
 .selected-service-gradient {
   background: linear-gradient(135deg, rgba(252, 185, 212, 0.3) 0%, rgba(255, 255, 255, 0.9) 100%);
   border-color: rgba(252, 185, 212, 0.5);
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }

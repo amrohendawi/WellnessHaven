@@ -189,26 +189,26 @@ export default function CategoriesPage() {
   // Filter categories based on search term
   const filteredCategories = categories.filter(category => {
     if (!searchTerm) return true;
-    
+
     const term = searchTerm.toLowerCase();
-    
+
     // Check category name in all languages
-    const nameMatch = 
+    const nameMatch =
       (category.nameEn?.toLowerCase() || '').includes(term) ||
       (category.nameAr || '').includes(term) ||
       (category.nameDe?.toLowerCase() || '').includes(term) ||
       (category.nameTr?.toLowerCase() || '').includes(term);
-    
+
     // Check slug
     const slugMatch = (category.slug?.toLowerCase() || '').includes(term);
-    
+
     // Check description in all languages (optional, uncomment if needed)
-    // const descMatch = 
+    // const descMatch =
     //   (category.descriptionEn?.toLowerCase() || '').includes(term) ||
     //   (category.descriptionAr || '').includes(term) ||
     //   (category.descriptionDe?.toLowerCase() || '').includes(term) ||
     //   (category.descriptionTr?.toLowerCase() || '').includes(term);
-    
+
     return nameMatch || slugMatch; // Add || descMatch if enabling description search
   });
 

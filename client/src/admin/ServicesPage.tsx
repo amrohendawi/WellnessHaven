@@ -141,22 +141,22 @@ export default function ServicesPage() {
 
   const filteredServices = services.filter(service => {
     if (!searchTerm) return true;
-    
+
     const term = searchTerm.toLowerCase();
-    
+
     // Check service name in all languages
-    const nameMatch = 
+    const nameMatch =
       (service.nameEn?.toLowerCase() || '').includes(term) ||
       (service.nameAr || '').includes(term) ||
       (service.nameDe?.toLowerCase() || '').includes(term) ||
       (service.nameTr?.toLowerCase() || '').includes(term);
-    
+
     // Check category name (already handled by getCategoryName in the table)
     const categoryMatch = service.category?.toLowerCase().includes(term) || false;
-    
+
     // Check slug
     const slugMatch = (service.slug?.toLowerCase() || '').includes(term);
-    
+
     return nameMatch || categoryMatch || slugMatch;
   });
 
