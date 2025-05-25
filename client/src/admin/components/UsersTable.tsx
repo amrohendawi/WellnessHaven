@@ -1,23 +1,23 @@
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/table';
 import { Edit2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
@@ -85,7 +85,9 @@ export default function UsersTable({
             <TableHead>{t('adminUsersTable.tableHeaders.name')}</TableHead>
             <TableHead>{t('adminUsersTable.tableHeaders.role')}</TableHead>
             <TableHead>{t('adminUsersTable.tableHeaders.created')}</TableHead>
-            <TableHead className="text-right">{t('adminUsersTable.tableHeaders.actions')}</TableHead>
+            <TableHead className="text-right">
+              {t('adminUsersTable.tableHeaders.actions')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -175,7 +177,9 @@ export default function UsersTable({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={cancelDelete}>{t('adminUsersTable.actions.cancel')}</AlertDialogCancel>
+            <AlertDialogCancel onClick={cancelDelete}>
+              {t('adminUsersTable.actions.cancel')}
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
               className="bg-red-600 text-white hover:bg-red-700"

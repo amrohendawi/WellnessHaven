@@ -67,7 +67,9 @@ export default function UsersPage() {
         throw new Error(error.message || 'Failed to save user');
       }
 
-      toast.success(selectedUser ? t('adminUsers.userUpdatedSuccess') : t('adminUsers.userCreatedSuccess'));
+      toast.success(
+        selectedUser ? t('adminUsers.userUpdatedSuccess') : t('adminUsers.userCreatedSuccess')
+      );
       setDialogOpen(false);
       fetchUsers(); // Refresh the users list
     } catch (error) {

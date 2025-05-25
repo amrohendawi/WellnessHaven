@@ -114,10 +114,13 @@ export default function ProfilePage() {
 
       // Dismiss the loading toast and show error
       toast.dismiss('profile-update');
-      toast.error(error instanceof Error ? error.message : t('adminProfile.failedToUpdateProfile'), {
-        duration: 5000,
-        position: 'top-center',
-      });
+      toast.error(
+        error instanceof Error ? error.message : t('adminProfile.failedToUpdateProfile'),
+        {
+          duration: 5000,
+          position: 'top-center',
+        }
+      );
     } finally {
       setIsSaving(false);
     }
@@ -190,7 +193,9 @@ export default function ProfilePage() {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold">{t('adminProfile.profilePicture')}</h3>
-                  <p className="text-sm text-gray-500 mt-1">{t('adminProfile.profilePictureDescription')}</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {t('adminProfile.profilePictureDescription')}
+                  </p>
                 </div>
               </div>
 

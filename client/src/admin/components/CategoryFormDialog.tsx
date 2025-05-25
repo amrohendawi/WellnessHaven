@@ -1,20 +1,20 @@
 import { Button } from '@/components/ui/button';
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from '@/components/ui/dialog';
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
@@ -135,7 +135,9 @@ export function CategoryFormDialog({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Basic Info Section */}
               <div className="md:col-span-2 space-y-4">
-                <h3 className="text-base font-semibold">{t('adminCategoryForm.sections.basicInfo')}</h3>
+                <h3 className="text-base font-semibold">
+                  {t('adminCategoryForm.sections.basicInfo')}
+                </h3>
 
                 <FormField
                   name="nameEn"
@@ -208,7 +210,9 @@ export function CategoryFormDialog({
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 md:p-4">
                         <div className="space-y-0.5">
-                          <FormLabel className="text-sm md:text-base">{t('adminCategoryForm.fields.isActive.label')}</FormLabel>
+                          <FormLabel className="text-sm md:text-base">
+                            {t('adminCategoryForm.fields.isActive.label')}
+                          </FormLabel>
                           <FormDescription className="text-xs">
                             {t('adminCategoryForm.fields.isActive.description')}
                           </FormDescription>
@@ -253,7 +257,9 @@ export function CategoryFormDialog({
 
               {/* Translations Section */}
               <div className="md:col-span-2 space-y-4 pt-2">
-                <h3 className="text-base font-semibold">{t('adminCategoryForm.sections.translations')}</h3>
+                <h3 className="text-base font-semibold">
+                  {t('adminCategoryForm.sections.translations')}
+                </h3>
 
                 <FormField
                   name="nameAr"
@@ -313,7 +319,9 @@ export function CategoryFormDialog({
 
               {/* Descriptions Section */}
               <div className="md:col-span-2 space-y-4 pt-2">
-                <h3 className="text-base font-semibold">{t('adminCategoryForm.sections.descriptions')}</h3>
+                <h3 className="text-base font-semibold">
+                  {t('adminCategoryForm.sections.descriptions')}
+                </h3>
 
                 <FormField
                   name="descriptionEn"

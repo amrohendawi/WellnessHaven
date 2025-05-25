@@ -51,15 +51,15 @@ export default function AvailabilityPage() {
       setSlots(prev => [...prev, newSlot]);
       setDate('');
       setTime('');
-      toast({ 
-        title: t('adminMessages.successTitle'), 
-        description: t('adminAvailability.slotBlockedSuccess') 
+      toast({
+        title: t('adminMessages.successTitle'),
+        description: t('adminAvailability.slotBlockedSuccess'),
       });
     } catch {
-      toast({ 
-        title: t('adminMessages.errorTitle'), 
-        description: t('adminAvailability.failedToBlockSlot'), 
-        variant: 'destructive' 
+      toast({
+        title: t('adminMessages.errorTitle'),
+        description: t('adminAvailability.failedToBlockSlot'),
+        variant: 'destructive',
       });
     }
   }
@@ -68,15 +68,15 @@ export default function AvailabilityPage() {
     try {
       await fetchAPI(`/admin/blocked-slots/${id}`, { method: 'DELETE' });
       setSlots(prev => prev.filter(s => s.id !== id));
-      toast({ 
-        title: t('adminMessages.successTitle'), 
-        description: t('adminAvailability.slotUnblockedSuccess') 
+      toast({
+        title: t('adminMessages.successTitle'),
+        description: t('adminAvailability.slotUnblockedSuccess'),
       });
     } catch {
-      toast({ 
-        title: t('adminMessages.errorTitle'), 
-        description: t('adminAvailability.failedToRemoveSlot'), 
-        variant: 'destructive' 
+      toast({
+        title: t('adminMessages.errorTitle'),
+        description: t('adminAvailability.failedToRemoveSlot'),
+        variant: 'destructive',
       });
     }
   }

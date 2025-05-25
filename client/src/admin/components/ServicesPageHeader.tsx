@@ -19,7 +19,7 @@ export const ServicesPageHeader: React.FC<ServicesPageHeaderProps> = ({
   isLoading = false,
 }) => {
   const { t } = useTranslation();
-  
+
   return (
     <div className="mb-6 md:mb-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">

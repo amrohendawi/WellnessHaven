@@ -27,7 +27,11 @@ export default function ServicesPage() {
       const data = await fetchAdminAPI<AdminService[]>('services');
       setServices(data);
     } catch (error) {
-      toast({ title: t('adminMessages.errorTitle'), description: t('adminMessages.failedToFetchServices'), variant: 'destructive' });
+      toast({
+        title: t('adminMessages.errorTitle'),
+        description: t('adminMessages.failedToFetchServices'),
+        variant: 'destructive',
+      });
       console.error('Fetch services error:', error);
     } finally {
       setIsLoading(false);
@@ -52,10 +56,17 @@ export default function ServicesPage() {
     if (!confirm(t('adminServices.deleteConfirmation'))) return;
     try {
       await fetchAdminAPI(`services/${serviceId}`, { method: 'DELETE' });
-      toast({ title: t('adminMessages.successTitle'), description: t('adminMessages.serviceDeleted') });
+      toast({
+        title: t('adminMessages.successTitle'),
+        description: t('adminMessages.serviceDeleted'),
+      });
       fetchServices();
     } catch (error) {
-      toast({ title: t('adminMessages.errorTitle'), description: t('adminMessages.failedToDeleteService'), variant: 'destructive' });
+      toast({
+        title: t('adminMessages.errorTitle'),
+        description: t('adminMessages.failedToDeleteService'),
+        variant: 'destructive',
+      });
       console.error('Delete service error:', error);
     }
   };
@@ -76,10 +87,17 @@ export default function ServicesPage() {
         }),
       });
       setIsCreateDialogOpen(false);
-      toast({ title: t('adminMessages.successTitle'), description: t('adminMessages.serviceCreated') });
+      toast({
+        title: t('adminMessages.successTitle'),
+        description: t('adminMessages.serviceCreated'),
+      });
       fetchServices();
     } catch (error) {
-      toast({ title: t('adminMessages.errorTitle'), description: t('adminMessages.failedToCreateService'), variant: 'destructive' });
+      toast({
+        title: t('adminMessages.errorTitle'),
+        description: t('adminMessages.failedToCreateService'),
+        variant: 'destructive',
+      });
       console.error('Create service error:', error);
     } finally {
       setIsSubmitting(false);
@@ -104,10 +122,17 @@ export default function ServicesPage() {
       });
       setIsEditDialogOpen(false);
       setCurrentService(null);
-      toast({ title: t('adminMessages.successTitle'), description: t('adminMessages.serviceUpdated') });
+      toast({
+        title: t('adminMessages.successTitle'),
+        description: t('adminMessages.serviceUpdated'),
+      });
       fetchServices();
     } catch (error) {
-      toast({ title: t('adminMessages.errorTitle'), description: t('adminMessages.failedToUpdateService'), variant: 'destructive' });
+      toast({
+        title: t('adminMessages.errorTitle'),
+        description: t('adminMessages.failedToUpdateService'),
+        variant: 'destructive',
+      });
       console.error('Update service error:', error);
     } finally {
       setIsSubmitting(false);

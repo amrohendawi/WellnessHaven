@@ -83,7 +83,11 @@ export default function CategoriesPage() {
       const data = await fetchAdminAPI<ServiceGroup[]>('service-groups');
       setCategories(data);
     } catch (error) {
-      toast({ title: t('adminMessages.errorTitle'), description: t('adminMessages.failedToFetchCategories'), variant: 'destructive' });
+      toast({
+        title: t('adminMessages.errorTitle'),
+        description: t('adminMessages.failedToFetchCategories'),
+        variant: 'destructive',
+      });
       console.error('Fetch categories error:', error);
     } finally {
       setIsLoading(false);
@@ -114,10 +118,17 @@ export default function CategoriesPage() {
       await fetchAdminAPI(`service-groups/${categoryId}`, {
         method: 'DELETE',
       });
-      toast({ title: t('adminMessages.successTitle'), description: t('adminMessages.categoryDeleted') });
+      toast({
+        title: t('adminMessages.successTitle'),
+        description: t('adminMessages.categoryDeleted'),
+      });
       fetchCategories();
     } catch (error) {
-      toast({ title: t('adminMessages.errorTitle'), description: t('adminMessages.failedToDeleteCategory'), variant: 'destructive' });
+      toast({
+        title: t('adminMessages.errorTitle'),
+        description: t('adminMessages.failedToDeleteCategory'),
+        variant: 'destructive',
+      });
       console.error('Delete category error:', error);
     }
   };
@@ -130,11 +141,18 @@ export default function CategoriesPage() {
         method: 'POST',
         body: JSON.stringify(values),
       });
-      toast({ title: t('adminMessages.successTitle'), description: t('adminMessages.categoryCreated') });
+      toast({
+        title: t('adminMessages.successTitle'),
+        description: t('adminMessages.categoryCreated'),
+      });
       setIsCreateDialogOpen(false);
       fetchCategories();
     } catch (error) {
-      toast({ title: t('adminMessages.errorTitle'), description: t('adminMessages.failedToCreateCategory'), variant: 'destructive' });
+      toast({
+        title: t('adminMessages.errorTitle'),
+        description: t('adminMessages.failedToCreateCategory'),
+        variant: 'destructive',
+      });
       console.error('Create category error:', error);
     } finally {
       setIsSubmitting(false);
@@ -150,11 +168,18 @@ export default function CategoriesPage() {
         method: 'PUT',
         body: JSON.stringify(values),
       });
-      toast({ title: t('adminMessages.successTitle'), description: t('adminMessages.categoryUpdated') });
+      toast({
+        title: t('adminMessages.successTitle'),
+        description: t('adminMessages.categoryUpdated'),
+      });
       setIsEditDialogOpen(false);
       fetchCategories();
     } catch (error) {
-      toast({ title: t('adminMessages.errorTitle'), description: t('adminMessages.failedToUpdateCategory'), variant: 'destructive' });
+      toast({
+        title: t('adminMessages.errorTitle'),
+        description: t('adminMessages.failedToUpdateCategory'),
+        variant: 'destructive',
+      });
       console.error('Update category error:', error);
     } finally {
       setIsSubmitting(false);
@@ -189,9 +214,7 @@ export default function CategoriesPage() {
             <FolderTree className="h-5 w-5 text-gold" />
             {t('adminCategories.serviceCategoriesTitle')}
           </CardTitle>
-          <CardDescription>
-            {t('adminCategories.serviceCategoriesDescription')}
-          </CardDescription>
+          <CardDescription>{t('adminCategories.serviceCategoriesDescription')}</CardDescription>
           <div className="mt-2">
             <Input
               placeholder={t('adminCategories.searchPlaceholder')}

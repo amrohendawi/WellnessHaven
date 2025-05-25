@@ -68,10 +68,10 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
   // Function to get localized category name from ID
   const getCategoryName = (categoryId: string | null | undefined): string => {
     if (!categoryId) return t('adminServices.uncategorized');
-    
+
     const category = categories[categoryId];
     if (!category) return categoryId;
-    
+
     // Use getLocalizedName to get the name in the current language
     return getLocalizedName(category, language) || `Category ${categoryId}`;
   };

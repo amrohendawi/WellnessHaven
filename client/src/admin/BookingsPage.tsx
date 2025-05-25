@@ -1,19 +1,19 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
 import { fetchAdminAPI } from '@/lib/api';
@@ -40,10 +40,10 @@ export default function BookingsPage() {
       const data = await fetchAdminAPI<Booking[]>('bookings');
       setBookings(data);
     } catch {
-      toast({ 
-        title: t('adminMessages.errorTitle'), 
-        description: t('adminBookings.failedToFetchBookings'), 
-        variant: 'destructive' 
+      toast({
+        title: t('adminMessages.errorTitle'),
+        description: t('adminBookings.failedToFetchBookings'),
+        variant: 'destructive',
       });
     }
   }
@@ -52,15 +52,15 @@ export default function BookingsPage() {
     try {
       await fetchAdminAPI(`bookings/${id}`, { method: 'PUT', body: JSON.stringify({ status }) });
       setBookings(prev => prev.map(b => (b.id === id ? { ...b, status } : b)));
-      toast({ 
-        title: t('adminMessages.successTitle'), 
-        description: t('adminBookings.statusUpdatedSuccess')
+      toast({
+        title: t('adminMessages.successTitle'),
+        description: t('adminBookings.statusUpdatedSuccess'),
       });
     } catch {
-      toast({ 
-        title: t('adminMessages.errorTitle'), 
-        description: t('adminBookings.failedToUpdateStatus'), 
-        variant: 'destructive' 
+      toast({
+        title: t('adminMessages.errorTitle'),
+        description: t('adminBookings.failedToUpdateStatus'),
+        variant: 'destructive',
       });
     }
   }

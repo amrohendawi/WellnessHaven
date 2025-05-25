@@ -58,7 +58,8 @@ export function CategoriesTable({ categories, onEdit, onDelete }: CategoriesTabl
               <TableCell className="font-medium">{category.displayOrder || 0}</TableCell>
               <TableCell className="font-medium max-w-[250px] truncate">
                 <div className="font-medium">
-                  {getLocalizedName(category, language) || t('adminCategoriesTable.unnamedCategory')}
+                  {getLocalizedName(category, language) ||
+                    t('adminCategoriesTable.unnamedCategory')}
                 </div>
                 <div className="text-xs text-muted-foreground md:hidden mt-1">
                   {category.slug || ''}
