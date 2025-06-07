@@ -1,15 +1,15 @@
-import { useEffect } from 'react';
-import { useRoute, useLocation } from 'wouter';
-import { useTranslation } from 'react-i18next';
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 import { Button } from '@/components/ui/button';
-import { servicesList } from '@/data/services'; // Keep as fallback for related services
-import { useLanguage } from '@/context/LanguageContext';
-import { useQuery } from '@tanstack/react-query';
-import { ServiceDisplay } from '@shared/schema';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useLanguage } from '@/context/LanguageContext';
+import { servicesList } from '@/data/services'; // Keep as fallback for related services
 import { getServices } from '@/lib/api';
+import { ServiceDisplay } from '@shared/schema';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useLocation, useRoute } from 'wouter';
 
 const ServiceDetails = () => {
   const [, setLocation] = useLocation();
