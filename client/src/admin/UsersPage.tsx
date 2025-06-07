@@ -11,7 +11,7 @@ import UserFormDialog from './components/UserFormDialog';
 import UsersTable, { UserData } from './components/UsersTable';
 
 export default function UsersPage() {
-  const { isAuthenticated } = useAuth();
+  useAuth();
   const [users, setUsers] = useState<UserData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,7 +27,6 @@ export default function UsersPage() {
       setUsers(data);
     } catch (error) {
       console.error('Failed to fetch users:', error);
-      toast.error(t('adminUsers.failedToLoadUsers'));
     } finally {
       setIsLoading(false);
     }
@@ -73,7 +72,6 @@ export default function UsersPage() {
       setDialogOpen(false);
       fetchUsers(); // Refresh the users list
     } catch (error) {
-      console.error('Error saving user:', error);
       toast.error(error instanceof Error ? error.message : t('adminUsers.failedToSaveUser'));
     } finally {
       setIsSubmitting(false);
@@ -100,7 +98,6 @@ export default function UsersPage() {
       toast.success(t('adminUsers.userDeletedSuccess'));
       fetchUsers(); // Refresh the users list
     } catch (error) {
-      console.error('Error deleting user:', error);
       toast.error(error instanceof Error ? error.message : t('adminUsers.failedToDeleteUser'));
     }
   };

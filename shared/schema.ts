@@ -76,7 +76,6 @@ export const bookings = pgTable('bookings', {
   service: integer('service').notNull(), // Using service column name as in the database
   date: text('date').notNull(),
   time: text('time').notNull(),
-  vipNumber: text('vip_number'),
   status: text('status').notNull().default('pending'), // pending, confirmed, completed, cancelled
   createdAt: timestamp('created_at').defaultNow(),
 });
@@ -159,7 +158,6 @@ export const insertBookingSchema = createInsertSchema(bookings).pick({
   service: true,
   date: true,
   time: true,
-  vipNumber: true,
   status: true,
 });
 

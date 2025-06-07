@@ -57,9 +57,6 @@
   "beautyServices": "Güzellik Hizmetleri",
   "beautyServicesDesc": "Makyaj, kirpikler ve kaşlar",
 
-  "vipMember": "VIP Üye misiniz?",
-  "enterMembershipNumber": "İndiriminizi almak için üyelik numaranızı girin",
-  "membershipPlaceholder": "Üyelik No",
   "continue": "Devam Et",
   "cancel": "İptal",
   "back": "Geri",
@@ -68,7 +65,6 @@
   "service": "Hizmet",
   "date": "Tarih",
   "time": "Saat",
-  "vipDiscount": "VIP İndirimi",
   "applied": "Uygulandı",
   "bookingConfirmation": "Rezervasyonunuz onaylandı! Kısa süre içinde size bir onay mesajı göndereceğiz.",
 
@@ -121,7 +117,6 @@
   "sessionDuration": "Seans Süresi",
   "minutes": "dakika",
   "price": "Fiyat",
-  "vipPrice": "VIP Fiyatı",
   "off": "indirim",
   "bookThisService": "Bu Hizmeti Ayırt",
   "includes": "İçerir",

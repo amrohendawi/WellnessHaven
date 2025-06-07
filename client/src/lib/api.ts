@@ -263,7 +263,6 @@ export interface BookingData {
   time: string;
   price: number;
   duration: number;
-  vipNumber?: string;
 }
 
 // ----- Services API with caching -----

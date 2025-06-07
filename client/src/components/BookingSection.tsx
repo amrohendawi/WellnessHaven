@@ -28,7 +28,7 @@ import { useTranslation } from 'react-i18next';
 
 const BookingSection = () => {
   const { t } = useTranslation();
-  const { language, dir } = useLanguage();
+  const { language } = useLanguage();
   const [bookingStep, setBookingStep] = useState<number>(1);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedService, setSelectedService] = useState<ServiceDisplay | null>(null);
@@ -59,13 +59,13 @@ const BookingSection = () => {
   // Loading state for components
   const isLoading = isServicesLoading || isGroupsLoading;
 
-  // Form setup
+  // Form setup with toast hook
+  const { toast } = useToast();
   const form = useForm({
     defaultValues: {
       name: '',
       email: '',
       phone: '',
-      vipNumber: '',
     },
   });
 
@@ -126,7 +126,7 @@ const BookingSection = () => {
         }
       }
     }
-  }, [services, language, t]);
+  }, [services, language, t, toast]);
 
   // Helper function to maintain scroll position when changing steps
   const changeStepWithoutJump = (newStep: number) => {
@@ -186,11 +186,8 @@ const BookingSection = () => {
     }, 300);
   };
 
-  // Toast notification setup
-  const { toast } = useToast();
-
   // Handle form submission
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: { name: string; email: string; phone: string }) => {
     if (!selectedService || !selectedDate || !selectedTime) {
       return;
     }
@@ -206,8 +203,6 @@ const BookingSection = () => {
       price: selectedService.price,
       duration: selectedService.duration,
     };
-
-    console.log('Booking submitted:', bookingData);
 
     try {
       // Submit to server using the API function from our centralized client
@@ -236,9 +231,7 @@ const BookingSection = () => {
           duration: 5000,
         });
       }
-    } catch (error) {
-      console.error('Booking error:', error);
-
+    } catch {
       // Show error toast
       toast({
         title: t('bookingError'),
@@ -431,26 +424,6 @@ const BookingSection = () => {
                 </div>
               )}
 
-              {/* VIP Member Section */}
-              <div className="bg-beige-light rounded-lg p-4 flex flex-col md:flex-row items-center mb-6">
-                <div className={`${dir === 'rtl' ? 'ml-4' : 'mr-4'} text-xl text-gold-dark`}>
-                  <i className="fas fa-crown"></i>
-                </div>
-                <div>
-                  <h4 className="font-medium">{t('vipMember')}</h4>
-                  <p className="text-sm text-gray-600">{t('enterMembershipNumber')}</p>
-                </div>
-                <div className="md:ml-auto mt-3 md:mt-0 w-full md:w-auto">
-                  <Input
-                    type="text"
-                    placeholder={t('membershipPlaceholder')}
-                    className="border rounded-md px-3 py-2 text-sm w-full md:w-40"
-                    value={form.watch('vipNumber')}
-                    onChange={e => form.setValue('vipNumber', e.target.value)}
-                  />
-                </div>
-              </div>
-
               <div className="flex justify-between mt-8">
                 <Button variant="outline" onClick={() => form.reset()} className="hover-lift">
                   {t('cancel')}
@@ -637,12 +610,6 @@ const BookingSection = () => {
                         <span className="text-gray-600">{t('time')}:</span>
                         <span className="font-medium">{selectedTime}</span>
                       </div>
-                      {form.watch('vipNumber') && (
-                        <div className="grid grid-cols-2 gap-2">
-                          <span className="text-gray-600">{t('vipDiscount')}:</span>
-                          <span className="font-medium text-gold-dark">{t('applied')}</span>
-                        </div>
-                      )}
                     </div>
                   </div>
 
@@ -802,7 +769,7 @@ const AvailableTimeSlots = ({
   onSelectTime,
 }: AvailableTimeSlotsProps) => {
   const { t } = useTranslation();
-  const { language } = useLanguage();
+  const { language: _language } = useLanguage();
 
   // Format date for API request
   const formattedDate = format(date, 'yyyy-MM-dd');
@@ -850,7 +817,13 @@ const AvailableTimeSlots = ({
   };
 
   // Fetch available time slots from API
-  const { data, isLoading, error, refetch, isFetching } = useQuery<{ availableSlots: string[] }>({
+  const {
+    data,
+    isLoading,
+    error,
+    refetch: _refetch,
+    isFetching,
+  } = useQuery<{ availableSlots: string[] }>({
     queryKey: ['/api/time-slots', formattedDate, serviceId],
     queryFn: () => getAvailableTimeSlots(formattedDate, serviceId),
     enabled: !!date,
@@ -863,7 +836,7 @@ const AvailableTimeSlots = ({
   // Handle errors in useEffect instead of onError prop
   useEffect(() => {
     if (error) {
-      console.warn('Error fetching time slots, will use fallback:', error);
+      // API call failed, will use fallback time slots
     }
   }, [error]);
 

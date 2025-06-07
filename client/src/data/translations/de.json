@@ -57,9 +57,6 @@
   "beautyServices": "Schönheitsleistungen",
   "beautyServicesDesc": "Make-up, Wimpern und Augenbrauen",
 
-  "vipMember": "VIP-Mitglied?",
-  "enterMembershipNumber": "Geben Sie Ihre Mitgliedsnummer ein, um Ihren Rabatt zu erhalten",
-  "membershipPlaceholder": "Mitgliedsnummer",
   "continue": "Fortfahren",
   "cancel": "Abbrechen",
   "back": "Zurück",
@@ -68,7 +65,6 @@
   "service": "Leistung",
   "date": "Datum",
   "time": "Uhrzeit",
-  "vipDiscount": "VIP-Rabatt",
   "applied": "Angewendet",
   "bookingConfirmation": "Ihre Buchung wurde bestätigt! Wir senden Ihnen in Kürze eine Bestätigungsnachricht.",
 
@@ -121,7 +117,6 @@
   "sessionDuration": "Behandlungsdauer",
   "minutes": "Minuten",
   "price": "Preis",
-  "vipPrice": "VIP-Preis",
   "off": "Rabatt",
   "bookThisService": "Diese Leistung buchen",
   "includes": "Beinhaltet",

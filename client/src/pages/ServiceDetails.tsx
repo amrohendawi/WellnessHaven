@@ -193,13 +193,6 @@ const ServiceDetails = () => {
                     <span className="font-medium">{t('price')}:</span>
                     <span className="text-right font-bold">{service?.price || 0} €</span>
                   </div>
-                  <div className="flex justify-between mb-1 pb-2 border-b border-gold/20">
-                    <span className="font-medium">{t('vipPrice')}:</span>
-                    <span className="text-gold-dark font-semibold text-right">
-                      {/* Calculate VIP price based on regular price */}
-                      {`${(service?.price || 0) * 0.6} € (40% ${t('off')})`}
-                    </span>
-                  </div>
                   <div className="text-xs text-gray-500 mt-2 text-center italic">
                     Prices include VAT
                   </div>

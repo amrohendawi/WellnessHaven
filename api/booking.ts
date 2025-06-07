@@ -19,7 +19,6 @@ const bookings = pgTable('bookings', {
   service: integer('service').notNull(),
   date: date('date').notNull(),
   time: time('time', { precision: 0 }).notNull(),
-  vipNumber: varchar('vip_number', { length: 50 }),
   status: varchar('status', { length: 20 }).default('pending').notNull(),
 });
 
@@ -43,11 +42,11 @@ export default async function handler(request: VercelRequest, response: VercelRe
     // Create a new DB connection for this request
     const db = createDbConnection();
 
-    const { name, email, phone, service, date, time, vipNumber } = request.body;
+    const { name, email, phone, service, date, time } = request.body;
 
     if (!name || !email || !phone || !service || !date || !time) {
       return response.status(400).json({
-        message: 'All fields are required except VIP membership number',
+        message: 'All fields are required',
       });
     }
 
@@ -70,7 +69,6 @@ export default async function handler(request: VercelRequest, response: VercelRe
         service: serviceValue, // Using the column name that matches the database schema
         date,
         time,
-        vipNumber: vipNumber || null,
         status: 'pending',
       })
       .returning();
