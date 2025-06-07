@@ -125,7 +125,7 @@ router.get('/users/:userId', requireAuth, async (req, res) => {
 // Create a new user
 router.post('/users/create', requireAuth, upload.single('profileImage'), async (req, res) => {
   try {
-    const { username, password, isAdmin } = req.body;
+    const { username, password } = req.body;
 
     // Validate required fields
     if (!username || !password) {
@@ -138,14 +138,6 @@ router.post('/users/create', requireAuth, upload.single('profileImage'), async (
     if (existingUser && existingUser.length > 0) {
       return res.status(400).json({ message: 'Username already exists' });
     }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create new user
-
-    // Handle profile image if uploaded
-    // For a real app, you'd store this in the database and handle file paths
 
     res.status(201).json({ message: 'User created successfully' });
   } catch (error) {

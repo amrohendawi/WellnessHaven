@@ -135,9 +135,6 @@ export async function registerRoutes(app: Express): Promise<void> {
   app.get('/api/services', async (req, res) => {
     try {
       // Get language from query parameter, default to English
-      const lang = (req.query.lang as string) || 'en';
-      const validLangs = ['en', 'ar', 'de', 'tr'];
-      const language = validLangs.includes(lang) ? lang : 'en';
 
       // Get services from storage
       const services = await storage.getServices();
@@ -186,9 +183,6 @@ export async function registerRoutes(app: Express): Promise<void> {
   app.get('/api/service-groups', async (req, res) => {
     try {
       // Get language from query parameter, default to English
-      const lang = (req.query.lang as string) || 'en';
-      const validLangs = ['en', 'ar', 'de', 'tr'];
-      const language = validLangs.includes(lang) ? lang : 'en';
 
       // Get service groups from storage
       const groups = await storage.getServiceGroups();
@@ -228,9 +222,6 @@ export async function registerRoutes(app: Express): Promise<void> {
   app.get('/api/services/:slug', async (req, res) => {
     try {
       const { slug } = req.params;
-      const lang = (req.query.lang as string) || 'en';
-      const validLangs = ['en', 'ar', 'de', 'tr'];
-      const language = validLangs.includes(lang) ? lang : 'en';
 
       // Get service from storage
       const service = await storage.getServiceBySlug(slug);
