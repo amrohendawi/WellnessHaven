@@ -38,7 +38,7 @@ export const MembershipCard = ({
 
   return (
     <div
-      className={`w-full lg:w-96 animate-fadeInUp ${animationDelay} relative z-10 gpu-accelerated`}
+      className={`w-full lg:w-80 animate-fadeInUp ${animationDelay} relative z-10 gpu-accelerated`}
     >
       <div
         className={`vip-card-modern relative overflow-hidden rounded-3xl p-1 ${gradient} shadow-xl ${
@@ -46,7 +46,7 @@ export const MembershipCard = ({
         }`}
       >
         <div
-          className={`rounded-3xl p-6 lg:p-8 h-full relative overflow-hidden border ${borderColor}`}
+          className={`rounded-3xl p-4 lg:p-6 h-full relative overflow-hidden border ${borderColor}`}
         >
           {/* Background gradient */}
           <div className={`absolute inset-0 bg-gradient-to-br ${bgGradient} opacity-100 z-0`}></div>
@@ -68,48 +68,48 @@ export const MembershipCard = ({
           ></div>
 
           {/* Header section */}
-          <div className="flex justify-between items-start mb-10 relative z-10">
+          <div className="flex justify-between items-start mb-6 relative z-10">
             <div className="max-w-[65%]">
-              <h3 className="font-display text-3xl font-bold mb-3 flex items-center">
+              <h3 className="font-display text-2xl font-bold mb-2 flex items-center">
                 <div
-                  className={`w-12 h-12 ${isGold ? 'bg-gradient-to-br from-gold to-gold-dark' : 'bg-gradient-to-br from-gray-300 to-gray-400'} rounded-full flex items-center justify-center mr-3 rtl:ml-3 rtl:mr-0 shadow-lg`}
+                  className={`w-10 h-10 ${isGold ? 'bg-gradient-to-br from-gold to-gold-dark' : 'bg-gradient-to-br from-gray-300 to-gray-400'} rounded-full flex items-center justify-center mr-3 rtl:ml-3 rtl:mr-0 shadow-lg`}
                 >
-                  <i className={`fas fa-${isGold ? 'crown' : 'star'} ${iconColor} text-xl`}></i>
+                  <i className={`fas fa-${isGold ? 'crown' : 'star'} ${iconColor} text-lg`}></i>
                 </div>
                 <span className={textColor}>{title}</span>
               </h3>
               <div
-                className={`backdrop-blur-sm rounded-full px-4 py-1.5 inline-block border ${borderColor} bg-black/5 shadow-sm`}
+                className={`backdrop-blur-sm rounded-full px-3 py-1 inline-block border ${borderColor} bg-black/5 shadow-sm`}
               >
-                <span className={`text-sm font-bold ${textColor}`}>{subtitle}</span>
+                <span className={`text-xs font-bold ${textColor}`}>{subtitle}</span>
               </div>
             </div>
-            <div className="relative w-20 h-20 flex items-center justify-center ml-2 flex-shrink-0">
+            <div className="relative w-16 h-16 flex items-center justify-center ml-2 flex-shrink-0">
               <div
                 className={`absolute inset-0 ${isGold ? 'bg-gradient-to-br from-gold to-gold-dark' : 'bg-gradient-to-br from-gray-300 to-gray-400'} opacity-20 rounded-full animate-pulse`}
               ></div>
               <div
-                className={`relative z-10 w-16 h-16 rounded-full ${isGold ? 'bg-gold' : 'bg-gray-300'} flex items-center justify-center shadow-inner`}
+                className={`relative z-10 w-12 h-12 rounded-full ${isGold ? 'bg-gold' : 'bg-gray-300'} flex items-center justify-center shadow-inner`}
               >
-                <i className={`fas fa-${isGold ? 'crown' : 'star'} ${iconColor} text-2xl`}></i>
+                <i className={`fas fa-${isGold ? 'crown' : 'star'} ${iconColor} text-lg`}></i>
               </div>
             </div>
           </div>
 
           {/* Price section */}
           <div
-            className={`backdrop-blur-sm border ${borderColor} rounded-2xl p-6 mb-8 relative overflow-hidden shadow-md z-10`}
+            className={`backdrop-blur-sm border ${borderColor} rounded-2xl p-4 mb-6 relative overflow-hidden shadow-md z-10`}
           >
             <div
               className={`absolute -top-8 -right-8 w-16 h-16 ${gradient} rounded-full opacity-30`}
               style={{ animation: 'rotate 8s linear infinite' }}
             ></div>
             <div className="relative z-10">
-              <div className={`text-4xl font-bold ${textColor} mb-2 animate-slideInLeft`}>
+              <div className={`text-3xl font-bold ${textColor} mb-1 animate-slideInLeft`}>
                 {discount}
               </div>
               <div
-                className={`text-base font-medium ${textMutedColor} animate-slideInRight animation-delay-500`}
+                className={`text-sm font-medium ${textMutedColor} animate-slideInRight animation-delay-500`}
               >
                 {cost}
               </div>
@@ -117,20 +117,20 @@ export const MembershipCard = ({
           </div>
 
           {/* Benefits list */}
-          <div className="mb-8 relative z-10">
-            <h4 className="font-medium text-lg mb-4 text-gray-700">Benefits include:</h4>
-            <ul className="space-y-3">
+          <div className="mb-6 relative z-10">
+            <h4 className="font-medium text-base mb-3 text-gray-700">Benefits include:</h4>
+            <ul className="space-y-2">
               {benefits.map((benefit, index) => (
                 <li key={index}>
                   <div
-                    className={`group flex items-start ${dir === 'rtl' ? 'flex-row-reverse' : ''} hover:bg-white/20 p-2 rounded-lg transition-colors`}
+                    className={`group flex items-start ${dir === 'rtl' ? 'flex-row-reverse' : ''} hover:bg-white/20 p-1.5 rounded-lg transition-colors`}
                   >
                     <div
-                      className={`${dir === 'rtl' ? 'ml-4' : 'mr-4'} mt-1 ${gradient} rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 shadow-md group-hover:scale-110 transition-transform ${dir === 'rtl' ? 'order-2' : ''}`}
+                      className={`${dir === 'rtl' ? 'ml-3' : 'mr-3'} mt-0.5 ${gradient} rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 shadow-md group-hover:scale-110 transition-transform ${dir === 'rtl' ? 'order-2' : ''}`}
                     >
-                      <i className={`fas fa-${benefit.icon} ${iconColor} text-sm`}></i>
+                      <i className={`fas fa-${benefit.icon} ${iconColor} text-xs`}></i>
                     </div>
-                    <span className={`font-medium ${textColor}`}>{benefit.text}</span>
+                    <span className={`font-medium text-sm ${textColor}`}>{benefit.text}</span>
                   </div>
                 </li>
               ))}
@@ -138,12 +138,12 @@ export const MembershipCard = ({
           </div>
 
           {/* Footer */}
-          <div className={`pt-4 border-t ${borderColor} z-10 relative`}>
+          <div className={`pt-3 border-t ${borderColor} z-10 relative`}>
             <div className="text-center">
               <div
-                className={`backdrop-blur-sm px-4 py-2 rounded-full inline-block border ${borderColor} bg-white/10`}
+                className={`backdrop-blur-sm px-3 py-1.5 rounded-full inline-block border ${borderColor} bg-white/10`}
               >
-                <span className={`font-medium text-sm ${textMutedColor}`}>{byInvitationText}</span>
+                <span className={`font-medium text-xs ${textMutedColor}`}>{byInvitationText}</span>
               </div>
             </div>
           </div>

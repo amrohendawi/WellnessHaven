@@ -29,10 +29,9 @@ const MembershipSection = () => {
           <div className="fancy-divider-modern mb-4">
             <i className="fas fa-crown fancy-divider-icon-modern text-gold mx-2 animate-float"></i>
           </div>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">{t('membershipSubtitle')}</p>
         </div>
 
-        <div className="flex flex-col lg:flex-row justify-center gap-8 lg:gap-12 mt-8 will-change-transform">
+        <div className="flex flex-col lg:flex-row justify-center gap-6 lg:gap-8 mt-8 will-change-transform">
           {/* Gold Card */}
           <MembershipCard
             type="gold"

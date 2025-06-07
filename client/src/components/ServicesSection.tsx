@@ -1,10 +1,10 @@
+import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/context/LanguageContext';
+import { ServiceDisplay, ServiceGroupDisplay } from '@shared/schema';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'wouter';
-import { useLanguage } from '@/context/LanguageContext';
-import { useQuery } from '@tanstack/react-query';
-import { ServiceDisplay, ServiceGroup } from '@shared/schema';
-import { useEffect, useRef, useState, useMemo } from 'react';
-import { Button } from '@/components/ui/button';
 
 const ServicesSection = () => {
   const { t } = useTranslation();
@@ -33,8 +33,13 @@ const ServicesSection = () => {
   });
 
   // Use all services for the slideshow
-  const allServices = servicesData ? (servicesData as ServiceDisplay[]) : [];
-  const serviceGroups = serviceGroupsData ? (serviceGroupsData as ServiceGroup[]) : [];
+  const allServices = useMemo(() => {
+    return servicesData ? (servicesData as ServiceDisplay[]) : [];
+  }, [servicesData]);
+
+  const serviceGroups = useMemo(() => {
+    return serviceGroupsData ? (serviceGroupsData as ServiceGroupDisplay[]) : [];
+  }, [serviceGroupsData]);
 
   // Loading and error states
   const isLoading = isLoadingServices || isLoadingGroups;
@@ -46,12 +51,7 @@ const ServicesSection = () => {
 
     return serviceGroups.map(group => ({
       id: group.id,
-      name: {
-        en: group.name.en || group.name,
-        ar: group.name.ar || group.name,
-        de: group.name.de || group.name,
-        tr: group.name.tr || group.name,
-      },
+      name: group.name,
       slug: group.slug,
     }));
   }, [serviceGroups]);
@@ -63,13 +63,12 @@ const ServicesSection = () => {
   const filteredServices = useMemo(() => {
     if (!selectedCategory) return allServices;
 
-    const selectedGroup = serviceGroups.find(group => group.id === selectedCategory);
+    // Find the selected group to get both ID and slug for matching
+    const selectedGroup = serviceGroups.find(group => group.id.toString() === selectedCategory);
     if (!selectedGroup) return allServices;
 
     return allServices.filter(
-      service =>
-        service.groupId === selectedCategory ||
-        (Array.isArray(service.groups) && service.groups.includes(selectedCategory))
+      service => service.groupId === selectedGroup.id || service.category === selectedGroup.slug
     );
   }, [allServices, selectedCategory, serviceGroups]);
 
@@ -259,9 +258,9 @@ const ServicesSection = () => {
             {categories.map(category => (
               <Button
                 key={category.id}
-                variant={selectedCategory === category.id ? 'default' : 'outline'}
+                variant={selectedCategory === category.id.toString() ? 'default' : 'outline'}
                 size="sm"
-                onClick={() => setSelectedCategory(category.id)}
+                onClick={() => setSelectedCategory(category.id.toString())}
                 className="rounded-full px-4"
               >
                 {typeof category.name === 'string'
