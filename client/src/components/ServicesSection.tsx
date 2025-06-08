@@ -4,7 +4,7 @@ import { ServiceDisplay, ServiceGroupDisplay } from '@shared/schema';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 
 const ServicesSection = () => {
   const { t } = useTranslation();
@@ -170,40 +170,40 @@ const ServicesSection = () => {
     return services.map((service: ServiceDisplay) => (
       <div
         key={service.id}
-        className="service-card flex-shrink-0 bg-white/95 rounded-lg overflow-hidden shadow-lg gold-shadow group mx-2 my-2 w-[300px]"
+        className="service-card flex-shrink-0 bg-white/95 rounded-lg overflow-hidden shadow-lg gold-shadow group mx-1 my-1 w-[260px]"
         style={{ scrollSnapAlign: 'start' }}
       >
         <div className="relative overflow-hidden">
           <img
             src={service.imageUrl}
             alt={service.name[language] || service.name.en}
-            className="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110"
+            className="w-full h-36 object-cover transition-transform duration-700 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-          <div className="absolute bottom-3 right-3 bg-gold/90 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+          <div className="absolute bottom-2 right-2 bg-gold/90 text-white px-2 py-1 rounded-full text-xs font-bold shadow-md">
             {service.price} €
           </div>
         </div>
 
-        <div className="p-6 relative">
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-1 bg-gold rounded-full"></div>
+        <div className="p-4 relative">
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-0.5 bg-gold rounded-full"></div>
 
           <h3
-            className={`text-xl font-semibold mb-3 ${language === 'ar' ? 'font-arabic' : 'font-display'} text-black-gold`}
+            className={`text-lg font-semibold mb-2 ${language === 'ar' ? 'font-arabic' : 'font-display'} text-black-gold`}
           >
             {service.name[language] || service.name.en}
           </h3>
-          <p className="text-gray-600 text-sm mb-5 min-h-[3rem]">
+          <p className="text-gray-600 text-xs mb-3 min-h-[2.5rem] line-clamp-3">
             {service.description[language] || service.description.en}
           </p>
           <Link
             to={`/services/${service.slug}`}
-            className={`inline-flex items-center px-4 py-2 rounded-md border border-gold bg-transparent hover:bg-gold hover:text-white transition-colors duration-300 text-gold font-medium text-sm ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}
+            className={`inline-flex items-center px-3 py-1.5 rounded-md border border-gold bg-transparent hover:bg-gold hover:text-white transition-colors duration-300 text-gold font-medium text-xs ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}
           >
             <span>{t('bookNow')}</span>
             <i
-              className={`fas fa-chevron-${dir === 'rtl' ? 'left mr-auto' : 'right ml-2'} text-xs`}
+              className={`fas fa-chevron-${dir === 'rtl' ? 'left mr-auto' : 'right ml-1'} text-xs`}
             ></i>
           </Link>
         </div>
@@ -212,14 +212,14 @@ const ServicesSection = () => {
   };
 
   return (
-    <section id="services" className="py-16 bg-beige-light overflow-hidden">
+    <section id="services" className="py-8 bg-beige-light overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="royal-heading text-3xl md:text-4xl mb-8">{t('servicesTitle')}</h2>
-          <div className="fancy-divider mb-4">
+        <div className="text-center mb-8">
+          <h2 className="royal-heading text-2xl md:text-3xl mb-4">{t('servicesTitle')}</h2>
+          <div className="fancy-divider mb-2">
             <i className="fas fa-star fancy-divider-icon text-gold mx-2"></i>
           </div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t('servicesSubtitle')}</p>
+          <p className="text-base text-gray-600 max-w-2xl mx-auto">{t('servicesSubtitle')}</p>
         </div>
 
         {isLoading ? (
@@ -246,12 +246,12 @@ const ServicesSection = () => {
 
         {/* Category filters */}
         {!isLoading && !error && categories.length > 0 && (
-          <div className="mb-8 flex flex-wrap justify-center gap-2">
+          <div className="mb-6 flex flex-wrap justify-center gap-2">
             <Button
               variant={!selectedCategory ? 'default' : 'outline'}
               size="sm"
               onClick={() => setSelectedCategory(null)}
-              className="rounded-full px-4"
+              className="rounded-full px-3 py-1 text-sm"
             >
               {t('all')}
             </Button>
@@ -261,7 +261,7 @@ const ServicesSection = () => {
                 variant={selectedCategory === category.id.toString() ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setSelectedCategory(category.id.toString())}
-                className="rounded-full px-4"
+                className="rounded-full px-3 py-1 text-sm"
               >
                 {typeof category.name === 'string'
                   ? category.name
@@ -275,10 +275,10 @@ const ServicesSection = () => {
           <div className="relative">
             {/* Navigation buttons */}
             <button
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-lg text-gold hover:bg-gold hover:text-white transition-colors duration-200 focus:outline-none"
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 rounded-full p-2 shadow-lg text-gold hover:bg-gold hover:text-white transition-colors duration-200 focus:outline-none"
               onClick={() => {
                 if (slideContainerRef.current) {
-                  const delta = dir === 'rtl' ? 350 : -350;
+                  const delta = dir === 'rtl' ? 280 : -280;
                   const newPosition = currentPosition + delta;
                   setCurrentPosition(newPosition);
                   slideContainerRef.current.scrollTo({
@@ -297,7 +297,7 @@ const ServicesSection = () => {
             <div
               ref={slideContainerRef}
               dir={dir}
-              className={`overflow-x-scroll scrollbar-none relative flex snap-x snap-mandatory py-4 px-2 -mx-2 ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}
+              className={`overflow-x-scroll scrollbar-none relative flex snap-x snap-mandatory py-2 px-1 -mx-1 ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}
               style={{
                 scrollBehavior: isDragging ? 'auto' : 'smooth',
                 WebkitOverflowScrolling: 'touch',
@@ -315,10 +315,10 @@ const ServicesSection = () => {
             </div>
 
             <button
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-lg text-gold hover:bg-gold hover:text-white transition-colors duration-200 focus:outline-none"
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 rounded-full p-2 shadow-lg text-gold hover:bg-gold hover:text-white transition-colors duration-200 focus:outline-none"
               onClick={() => {
                 if (slideContainerRef.current) {
-                  const delta = dir === 'rtl' ? -350 : 350;
+                  const delta = dir === 'rtl' ? -280 : 280;
                   const newPosition = currentPosition + delta;
                   setCurrentPosition(newPosition);
                   slideContainerRef.current.scrollTo({
@@ -336,10 +336,10 @@ const ServicesSection = () => {
         )}
 
         {/* View all services link */}
-        <div className="text-center mt-12">
+        <div className="text-center mt-6">
           <Link
             to="/services"
-            className={`inline-flex items-center btn-royal px-6 py-3 rounded-md font-medium ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}
+            className={`inline-flex items-center btn-royal px-5 py-2.5 rounded-md font-medium text-sm ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}
           >
             <span>{t('exploreMore')}</span>
             <i
@@ -368,6 +368,14 @@ export default function ServicesCarousel() {
           .no-scrollbar {
             -ms-overflow-style: none;  /* IE and Edge */
             scrollbar-width: none;  /* Firefox */
+          }
+
+          /* Text truncation utility */
+          .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
           }
         `,
         }}

@@ -239,24 +239,24 @@ export default function ServicesPage() {
         />
       )}
 
-    <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{t('adminServices.deleteConfirmTitle')}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {t('adminServices.deleteConfirmDescription')}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => setServiceToDeleteId(null)}>
-            {t('adminDialog.cancelButton')}
-          </AlertDialogCancel>
-          <AlertDialogAction onClick={confirmDeleteService}>
-            {t('adminDialog.confirmDeleteButton')}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('adminServices.deleteConfirmTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('adminServices.deleteConfirmDescription')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setServiceToDeleteId(null)}>
+              {t('adminDialog.cancelButton')}
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteService}>
+              {t('adminDialog.confirmDeleteButton')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -12,11 +12,11 @@ import { fetchAdminAPI } from '@/lib/api';
 import type { Booking } from '@shared/schema';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useRoute } from 'wouter';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function BookingDetailPage() {
-  const [_match, params] = useRoute('/admin/bookings/:id');
-  const [, navigate] = useLocation();
+  const params = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const bookingId = params?.id;
   const [booking, setBooking] = useState<Booking | null>(null);
   const [status, setStatus] = useState<string>('');

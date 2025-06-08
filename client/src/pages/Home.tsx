@@ -1,18 +1,16 @@
-import Header from '@/components/Header';
-import HeroSection from '@/components/HeroSection';
-import ServicesSection from '@/components/ServicesSection';
-import MembershipSection from '@/components/MembershipSection';
-import BookingSection from '@/components/BookingSection';
 import AboutSection from '@/components/AboutSection';
+import BookingSection from '@/components/BookingSection';
 import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
+import Header from '@/components/Header';
+import HeroSection from '@/components/HeroSection';
+import MembershipSection from '@/components/MembershipSection';
+import ServicesSection from '@/components/ServicesSection';
 import { useEffect } from 'react';
-import { useLocation } from 'wouter';
 import { useTranslation } from 'react-i18next';
 
 const Home = () => {
   const { t } = useTranslation();
-  const [, setLocation] = useLocation();
 
   // Handle smooth scroll for navigation
   useEffect(() => {
