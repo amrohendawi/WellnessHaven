@@ -189,7 +189,8 @@ const Footer = () => {
                   <div
                     className={`w-8 h-8 bg-gold/10 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0 ${dir === 'ltr' ? 'mr-3' : 'ml-3'}`}
                   >
-                    <i className="fas fa-envelope text-gold text-sm"></i> {/* Changed far to fas */}
+                    <i className="fas fa-envelope text-gold text-sm" aria-hidden="true"></i>
+                    <span className="sr-only">{t('iconEnvelope')}</span>
                   </div>
                   <span className="text-gray-300">dubai.rose.m@gmail.com</span>
                 </li>
