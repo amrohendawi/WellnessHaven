@@ -1,11 +1,13 @@
-import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import { Link } from 'wouter';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import LanguageSwitcher from './LanguageSwitcher';
+import { useLanguage } from '@/context/LanguageContext';
+import { Button } from '@/components/ui/button';
 
 const Header = () => {
   const { t } = useTranslation();
+  const { dir } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -21,7 +23,7 @@ const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-3">
           <div className="flex items-center">
-            <Link to="/" className="flex items-center">
+            <Link href="/" className="flex items-center">
               <span className="font-display text-2xl md:text-3xl font-bold">
                 <span className="text-gold">Dubai</span> <span className="text-pink">Rose</span>
               </span>

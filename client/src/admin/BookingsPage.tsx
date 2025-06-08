@@ -18,9 +18,9 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { fetchAdminAPI } from '@/lib/api';
 import type { Booking } from '@shared/schema';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link } from 'wouter';
 
 const STATUS_OPTIONS = ['pending', 'confirmed', 'completed', 'cancelled'] as const;
 
@@ -31,7 +31,11 @@ export default function BookingsPage() {
   const { toast } = useToast();
   const { t } = useTranslation();
 
-  const loadBookings = useCallback(async () => {
+  useEffect(() => {
+    loadBookings();
+  }, []);
+
+  async function loadBookings() {
     try {
       const data = await fetchAdminAPI<Booking[]>('bookings');
       setBookings(data);
@@ -42,31 +46,24 @@ export default function BookingsPage() {
         variant: 'destructive',
       });
     }
-  }, [toast, t]);
+  }
 
-  const updateStatus = useCallback(
-    async (id: number, status: string) => {
-      try {
-        await fetchAdminAPI(`bookings/${id}`, { method: 'PUT', body: JSON.stringify({ status }) });
-        setBookings(prev => prev.map(b => (b.id === id ? { ...b, status } : b)));
-        toast({
-          title: t('adminMessages.successTitle'),
-          description: t('adminBookings.statusUpdatedSuccess'),
-        });
-      } catch {
-        toast({
-          title: t('adminMessages.errorTitle'),
-          description: t('adminBookings.failedToUpdateStatus'),
-          variant: 'destructive',
-        });
-      }
-    },
-    [toast, t]
-  );
-
-  useEffect(() => {
-    loadBookings();
-  }, [loadBookings]);
+  async function updateStatus(id: number, status: string) {
+    try {
+      await fetchAdminAPI(`bookings/${id}`, { method: 'PUT', body: JSON.stringify({ status }) });
+      setBookings(prev => prev.map(b => (b.id === id ? { ...b, status } : b)));
+      toast({
+        title: t('adminMessages.successTitle'),
+        description: t('adminBookings.statusUpdatedSuccess'),
+      });
+    } catch {
+      toast({
+        title: t('adminMessages.errorTitle'),
+        description: t('adminBookings.failedToUpdateStatus'),
+        variant: 'destructive',
+      });
+    }
+  }
 
   return (
     <div className="space-y-4">
@@ -138,13 +135,13 @@ export default function BookingsPage() {
                       </Select>
                     </TableCell>
                     <TableCell>
-                      <Link to={`/admin/bookings/${b.id}`}>
+                      <Link href={`/admin/bookings/${b.id}`}>
                         <Button size="sm">{t('adminBookings.viewButton')}</Button>
                       </Link>
                     </TableCell>
                   </TableRow>
                 )),
-            [bookings, search, statusFilter, updateStatus, t]
+            [bookings, search, statusFilter]
           )}
         </TableBody>
       </Table>

@@ -407,8 +407,7 @@ const BookingSection = () => {
                             {t('minutes')}
                           </span>
                           <span className="bg-white/70 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm text-gray-700 mb-1 border border-pink/30">
-                            <i className="fas fa-money-bill-alt mr-1"></i> {selectedService.price} €{' '}
-                            {/* Changed far to fas */}
+                            <i className="fas fa-money-bill-alt mr-1"></i> {selectedService.price} € {/* Changed far to fas */}
                           </span>
                         </div>
                       </div>
@@ -458,8 +457,7 @@ const BookingSection = () => {
                           !selectedDate && 'text-muted-foreground'
                         )}
                       >
-                        <i className="fas fa-calendar-alt mr-2 h-4 w-4"></i>{' '}
-                        {/* Replaced Lucide icon */}
+                        <i className="fas fa-calendar-alt mr-2 h-4 w-4"></i> {/* Replaced Lucide icon */}
                         {selectedDate ? (
                           format(selectedDate, 'PPP', { locale: getDateLocale() })
                         ) : (

@@ -1,7 +1,7 @@
-import { useLanguage } from '@/context/LanguageContext';
+import { Link } from 'wouter';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import LanguageSwitcher from './LanguageSwitcher';
+import { useLanguage } from '@/context/LanguageContext';
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -117,7 +117,7 @@ const Footer = () => {
               <ul className="space-y-3">
                 <li>
                   <Link
-                    to="/services/laser-hair-removal"
+                    href="/services/laser-hair-removal"
                     className="text-gray-300 hover:text-gold transition-colors inline-block"
                   >
                     {t('laserHairRemoval')}
@@ -125,7 +125,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to="/services/skin-tightening"
+                    href="/services/skin-tightening"
                     className="text-gray-300 hover:text-gold transition-colors inline-block"
                   >
                     {t('skinTightening')}
@@ -133,7 +133,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to="/services/facial-treatments"
+                    href="/services/facial-treatments"
                     className="text-gray-300 hover:text-gold transition-colors inline-block"
                   >
                     {t('facialTreatments')}
@@ -141,7 +141,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to="/services/hair-services"
+                    href="/services/hair-services"
                     className="text-gray-300 hover:text-gold transition-colors inline-block"
                   >
                     {t('hairServices')}
@@ -149,7 +149,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to="/services"
+                    href="/services"
                     className="text-gray-300 hover:text-gold transition-colors inline-block"
                   >
                     {t('viewAll')}
@@ -189,10 +189,9 @@ const Footer = () => {
                   <div
                     className={`w-8 h-8 bg-gold/10 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0 ${dir === 'ltr' ? 'mr-3' : 'ml-3'}`}
                   >
-                    <i className="fas fa-envelope text-gold text-sm" aria-hidden="true"></i>
-                    <span className="sr-only">{t('iconEnvelope')}</span>
+                    <i className="fas fa-envelope text-gold text-sm"></i> {/* Changed far to fas */}
                   </div>
-                  <span className="text-gray-300">dubai.rose.m@gmail.com</span>
+                  <span className="text-gray-300">info@dubairose.ae</span>
                 </li>
                 <li
                   className={`flex items-start ${dir === 'rtl' ? 'flex-row-reverse text-right' : ''}`}

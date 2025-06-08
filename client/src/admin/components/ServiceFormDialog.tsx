@@ -304,9 +304,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                       )}
                     >
                       {index < currentStep ? (
-                        <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                          {' '}
-                          {/* Assuming white check is fine on gold */}
+                        <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"> {/* Assuming white check is fine on gold */}
                           <path
                             fillRule="evenodd"
                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -669,9 +667,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>
-                          {t('adminServiceForm.fields.descriptionEn.labelRequired')}
-                        </FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.descriptionEn.labelRequired')}</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -879,8 +875,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                   >
                     {isLoadingOnSubmit ? (
                       <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />{' '}
-                        {/* Assuming text-white for loader is fine */}
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" /> {/* Assuming text-white for loader is fine */}
                         {t('adminServiceForm.loading.processing')}
                       </>
                     ) : (

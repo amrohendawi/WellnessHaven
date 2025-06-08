@@ -9,7 +9,6 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { fetchAdminAPI } from '@/lib/api';
 import {
-  ArrowRight,
   CalendarDays,
   CheckCircle,
   CircleEllipsis,
@@ -17,10 +16,10 @@ import {
   HelpCircle,
   PackageOpen,
   Users,
+  ArrowRight, // Added ArrowRight
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 
 interface DashboardSummary {
   totalBookings: number;
@@ -40,7 +39,7 @@ export default function DashboardPage() {
       try {
         const data = await fetchAdminAPI<DashboardSummary>('dashboard-summary');
         setSummary(data);
-      } catch {
+      } catch (_error) {
         toast({
           title: t('adminMessages.errorTitle'),
           description: t('adminMessages.errorLoadingDashboard'),
@@ -195,12 +194,12 @@ export default function DashboardPage() {
             <div className="text-2xl md:text-3xl font-bold">{summary.blockedSlotsCount}</div>
             <div className="flex justify-between items-center mt-4 md:mt-6 text-sm">
               <div className="text-xs md:text-sm text-muted-foreground">{t('manage')}</div>
-              <Link
-                to="/admin/blocked-slots"
+              <a
+                href="/admin/blocked-slots"
                 className="text-xs md:text-sm text-gold hover:text-gold-dark transition-colors duration-200 inline-flex items-center" // Added classes
               >
                 {t('view')} <ArrowRight className="w-4 h-4 ml-1" /> {/* Replaced arrow with icon */}
-              </Link>
+              </a>
             </div>
           </CardContent>
         </Card>
