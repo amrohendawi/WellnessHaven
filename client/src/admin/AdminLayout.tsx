@@ -158,7 +158,7 @@ export default function AdminLayout() {
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-pink-50 to-beige-light">
         <div className="text-center">
           <div className="h-12 w-12 mx-auto mb-4 border-4 border-gold/30 border-t-gold rounded-full animate-spin"></div>
-          <p className="text-gray-600">Loading dashboard...</p>
+          <p className="text-gray-600">{t('adminLoadingDashboard')}</p>
         </div>
       </div>
     );

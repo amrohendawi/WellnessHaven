@@ -9,11 +9,11 @@ import { ServiceDisplay } from '@shared/schema';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useRoute } from 'wouter';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const ServiceDetails = () => {
-  const [, setLocation] = useLocation();
-  const [, params] = useRoute('/services/:slug');
+  const params = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { language, dir } = useLanguage();
 
@@ -37,7 +37,6 @@ const ServiceDetails = () => {
 
         return foundService;
       } catch (err) {
-        console.error('Error fetching service:', err);
         return Promise.reject(err);
       }
     },
@@ -101,7 +100,7 @@ const ServiceDetails = () => {
         <main className="flex-grow flex items-center justify-center py-16">
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4">{t('serviceNotFound')}</h2>
-            <Button onClick={() => setLocation('/')}>{t('backToHome')}</Button>
+            <Button onClick={() => navigate('/')}>{t('backToHome')}</Button>
           </div>
         </main>
         <Footer />
@@ -253,7 +252,7 @@ const ServiceDetails = () => {
                   style={{ color: '#333' }}
                   onClick={() => {
                     // Include the service slug in the URL
-                    setLocation(`/#booking?service=${service.slug}`);
+                    navigate(`/#booking?service=${service.slug}`);
                     setTimeout(() => {
                       document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
                     }, 100);
@@ -286,13 +285,13 @@ const ServiceDetails = () => {
                     {relatedServices.length > 0 ? (
                       relatedServices.map(s => (
                         <li key={s.id} className="group">
-                          <a
-                            href={`/services/${s.slug}`}
+                          <Link
+                            to={`/services/${s.slug}`}
                             className="text-gray-700 hover:text-pink-dark group-hover:underline flex items-center"
                           >
                             <i className="fas fa-angle-right text-gold mr-2 group-hover:translate-x-1 transition-transform"></i>
                             {s.name[language as keyof typeof s.name] || s.name.en}
-                          </a>
+                          </Link>
                         </li>
                       ))
                     ) : (

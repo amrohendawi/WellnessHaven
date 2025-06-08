@@ -40,6 +40,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ImageUploader } from './ImageUploader';
+import { useToast } from '@/hooks/use-toast';
 
 interface Category {
   value: string;
@@ -72,6 +73,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
   isLoadingOnSubmit,
 }) => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(0);
 
   // Define the steps for the multi-step form
@@ -199,7 +201,11 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
       await onSubmit(values);
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('There was a problem saving your changes. Please try again.');
+      toast({
+        title: t('adminMessages.errorTitle'),
+        description: t('adminMessages.genericSaveError'), // Assuming this key will be added
+        variant: 'destructive',
+      });
     }
   };
 
@@ -291,14 +297,16 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                       className={cn(
                         'flex h-8 w-8 items-center justify-center rounded-full border-2 flex-shrink-0',
                         index < currentStep
-                          ? 'border-blue-600 bg-blue-600 text-white'
+                          ? 'border-gold-dark bg-gold text-white' // Gold for completed
                           : index === currentStep
-                            ? 'border-blue-600 text-blue-600'
+                            ? 'border-gold-dark text-gold-dark' // Gold for current
                             : 'border-gray-300 text-gray-500'
                       )}
                     >
                       {index < currentStep ? (
                         <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                          {' '}
+                          {/* Assuming white check is fine on gold */}
                           <path
                             fillRule="evenodd"
                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -339,12 +347,12 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('adminServiceForm.fields.slug.label')} *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.slug.labelRequired')}</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             placeholder={t('adminServiceForm.fields.slug.placeholder')}
-                            className="focus-visible:ring-blue-600/30 h-10"
+                            className="focus-visible:ring-gold/30 h-10" // Changed to gold ring
                           />
                         </FormControl>
                         <FormDescription className="text-xs text-muted-foreground">
@@ -360,7 +368,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem className="flex flex-col">
-                        <FormLabel>{t('adminServiceForm.fields.category.label')} *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.category.labelRequired')}</FormLabel>
                         <Popover>
                           <PopoverTrigger asChild>
                             <FormControl>
@@ -486,7 +494,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                           <Switch
                             checked={field.value}
                             onCheckedChange={field.onChange}
-                            className="data-[state=checked]:bg-blue-600"
+                            className="data-[state=checked]:bg-gold-dark" // Changed to gold
                           />
                         </FormControl>
                       </FormItem>
@@ -503,7 +511,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('adminServiceForm.fields.nameEn.label')} *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.nameEn.labelRequired')}</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -581,7 +589,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('adminServiceForm.fields.price.label')} *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.price.labelRequired')}</FormLabel>
                         <FormControl>
                           <div className="relative">
                             <span className="absolute left-3 top-2.5 text-muted-foreground text-xs">
@@ -606,7 +614,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('adminServiceForm.fields.duration.label')} *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.duration.labelRequired')}</FormLabel>
                         <FormControl>
                           <div className="relative">
                             <Input
@@ -631,7 +639,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem className="md:col-span-2">
-                        <FormLabel>{t('adminServiceForm.fields.imageUrl.label')} *</FormLabel>
+                        <FormLabel>{t('adminServiceForm.fields.imageUrl.labelRequired')}</FormLabel>
                         <FormControl>
                           <ImageUploader
                             initialImageUrl={field.value}
@@ -661,7 +669,9 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('adminServiceForm.fields.descriptionEn.label')} *</FormLabel>
+                        <FormLabel>
+                          {t('adminServiceForm.fields.descriptionEn.labelRequired')}
+                        </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -854,7 +864,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                 {currentStep < steps.length - 1 ? (
                   <Button
                     type="button"
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 h-10"
+                    className="bg-gold hover:bg-gold-dark text-white font-medium px-6 h-10" // Changed to gold
                     onClick={nextStep}
                     disabled={isLoadingOnSubmit || !isCurrentStepValid()}
                   >
@@ -863,13 +873,14 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                 ) : (
                   <Button
                     type="button"
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 h-10"
+                    className="bg-gold hover:bg-gold-dark text-white font-medium px-6 h-10" // Changed to gold
                     onClick={handleSaveClick}
                     disabled={isLoadingOnSubmit}
                   >
                     {isLoadingOnSubmit ? (
                       <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />{' '}
+                        {/* Assuming text-white for loader is fine */}
                         {t('adminServiceForm.loading.processing')}
                       </>
                     ) : (
