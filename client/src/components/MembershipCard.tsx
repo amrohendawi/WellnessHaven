@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 interface MembershipCardProps {
   type: 'gold' | 'silver';
   title: string;
@@ -21,6 +23,7 @@ export const MembershipCard = ({
   dir,
   animationDelay = '',
 }: MembershipCardProps) => {
+  const { t } = useTranslation();
   const isGold = type === 'gold';
   const gradient = isGold
     ? 'bg-gradient-to-br from-gold-light via-gold to-gold-dark'
@@ -118,7 +121,9 @@ export const MembershipCard = ({
 
           {/* Benefits list */}
           <div className="mb-6 relative z-10">
-            <h4 className="font-medium text-base mb-3 text-gray-700">Benefits include:</h4>
+            <h4 className="font-medium text-base mb-3 text-gray-700">
+              {t('membershipBenefitsInclude')}
+            </h4>
             <ul className="space-y-2">
               {benefits.map((benefit, index) => (
                 <li key={index}>

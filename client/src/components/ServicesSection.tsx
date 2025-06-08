@@ -240,7 +240,7 @@ const ServicesSection = () => {
             <p className="text-lg text-gray-600">
               {t('errorLoadingServices', 'Error loading services')}
             </p>
-            <p className="text-sm text-gray-500 mt-2">Please refresh to try again</p>
+            <p className="text-sm text-gray-500 mt-2">{t('errorPleaseRefresh')}</p>
           </div>
         )}
 

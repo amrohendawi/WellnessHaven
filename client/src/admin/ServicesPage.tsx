@@ -1,3 +1,13 @@
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'; // AlertDialogTrigger not used directly here
 import { useToast } from '@/hooks/use-toast';
 import { fetchAdminAPI } from '@/lib/api';
 import { AdminService, AdminServiceFormValues } from '@shared/schema';
@@ -13,6 +23,8 @@ export default function ServicesPage() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [currentService, setCurrentService] = useState<AdminService | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [serviceToDeleteId, setServiceToDeleteId] = useState<string | null>(null);
 
   const [services, setServices] = useState<AdminService[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -52,10 +64,15 @@ export default function ServicesPage() {
     setIsEditDialogOpen(true);
   };
 
-  const handleDelete = async (serviceId: string) => {
-    if (!confirm(t('adminServices.deleteConfirmation'))) return;
+  const handleDelete = (serviceId: string) => {
+    setServiceToDeleteId(serviceId);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteService = async () => {
+    if (!serviceToDeleteId) return;
     try {
-      await fetchAdminAPI(`services/${serviceId}`, { method: 'DELETE' });
+      await fetchAdminAPI(`services/${serviceToDeleteId}`, { method: 'DELETE' });
       toast({
         title: t('adminMessages.successTitle'),
         description: t('adminMessages.serviceDeleted'),
@@ -68,6 +85,9 @@ export default function ServicesPage() {
         variant: 'destructive',
       });
       console.error('Delete service error:', error);
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setServiceToDeleteId(null);
     }
   };
 
@@ -218,6 +238,25 @@ export default function ServicesPage() {
           isLoadingOnSubmit={isSubmitting}
         />
       )}
+
+    <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{t('adminServices.deleteConfirmTitle')}</AlertDialogTitle>
+          <AlertDialogDescription>
+            {t('adminServices.deleteConfirmDescription')}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => setServiceToDeleteId(null)}>
+            {t('adminDialog.cancelButton')}
+          </AlertDialogCancel>
+          <AlertDialogAction onClick={confirmDeleteService}>
+            {t('adminDialog.confirmDeleteButton')}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
     </div>
   );
 }

@@ -19,7 +19,7 @@ import type { ServiceDisplay, ServiceGroupDisplay } from '@shared/schema';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { ar, de, enUS, tr } from 'date-fns/locale';
-import { CalendarIcon } from 'lucide-react';
+// import { CalendarIcon } from 'lucide-react'; // Removed
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -407,7 +407,7 @@ const BookingSection = () => {
                             {t('minutes')}
                           </span>
                           <span className="bg-white/70 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm text-gray-700 mb-1 border border-pink/30">
-                            <i className="far fa-money-bill-alt mr-1"></i> {selectedService.price} €
+                            <i className="fas fa-money-bill-alt mr-1"></i> {selectedService.price} € {/* Changed far to fas */}
                           </span>
                         </div>
                       </div>
@@ -457,7 +457,7 @@ const BookingSection = () => {
                           !selectedDate && 'text-muted-foreground'
                         )}
                       >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        <i className="fas fa-calendar-alt mr-2 h-4 w-4"></i> {/* Replaced Lucide icon */}
                         {selectedDate ? (
                           format(selectedDate, 'PPP', { locale: getDateLocale() })
                         ) : (
