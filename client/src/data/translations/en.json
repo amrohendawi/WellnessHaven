@@ -36,6 +36,8 @@
   "specialOffers": "Special offers access",
   "prioritySupport": "Priority support",
   "byInvitationOnly": "By invitation only",
+  "membershipPremiumVIP": "Premium VIP",
+  "membershipBenefitsInclude": "Benefits include:",
 
   "bookingTitle": "Book Your Treatment",
   "selectService": "Select Service",
@@ -117,6 +119,7 @@
   "error": "Error",
   "messageFailed": "Failed to send message. Please try again.",
   "connectSocial": "Or connect with us on social media",
+  "errorPleaseRefresh": "Please refresh to try again.",
 
   "footerTagline": "Dubai's premier women-only beauty and aesthetics center, providing luxury treatments and exceptional service.",
   "quickLinks": "Quick Links",
@@ -166,6 +169,7 @@
   "unavailablePeriods": "Unavailable periods",
   "manage": "Manage",
   "view": "View",
+  "adminLoadingDashboard": "Loading dashboard...",
 
   "adminNavDashboard": "Dashboard",
   "adminNavBookings": "Bookings",
@@ -190,7 +194,6 @@
   "updated": "Updated",
   "statusUpdated": "Status updated",
   "failedToUpdateStatus": "Failed to update status",
-  "loadingDashboard": "Loading dashboard...",
 
   "bookingStatuses": {
     "pending": "Pending",
@@ -221,7 +224,8 @@
     "failedToDeleteCategory": "Failed to delete category",
     "failedToCreateCategory": "Failed to create category",
     "failedToUpdateCategory": "Failed to update category",
-    "updated": "Updated"
+    "updated": "Updated",
+    "genericSaveError": "There was a problem saving your changes. Please try again."
   },
 
   "adminServices": {
@@ -252,7 +256,14 @@
     "active": "Active",
     "inactive": "Inactive",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "deleteConfirmTitle": "Are you sure?",
+    "deleteConfirmDescription": "This action will permanently delete the service. This cannot be undone."
+  },
+
+  "adminDialog": {
+    "cancelButton": "Cancel",
+    "confirmDeleteButton": "Delete"
   },
 
   "adminCategories": {
@@ -377,61 +388,109 @@
       "shortDescriptions": "Short Descriptions",
       "longDescriptions": "Full Descriptions"
     },
-    "basicInfo": {
-      "slug": "Service Slug",
-      "slugPlaceholder": "facial-treatment",
-      "category": "Category",
+    "fields": {
+      "slug": {
+        "label": "Service Slug",
+        "labelRequired": "Service Slug *",
+        "placeholder": "facial-treatment",
+        "description": "URL-friendly identifier (lowercase, hyphens)"
+      },
+      "category": {
+        "label": "Category",
+        "labelRequired": "Category *",
+        "placeholder": "Select category"
+      },
+      "isActive": {
+        "label": "Status",
+        "description": "Enable or disable this service"
+      },
+      "nameEn": {
+        "label": "Name (English)",
+        "labelRequired": "Name (English) *",
+        "placeholder": "Facial Treatment"
+      },
+      "nameAr": {
+        "label": "Name (العربية)",
+        "placeholder": "علاج الوجه"
+      },
+      "nameDe": {
+        "label": "Name (Deutsch)",
+        "placeholder": "Gesichtsbehandlung"
+      },
+      "nameTr": {
+        "label": "Name (Türkçe)",
+        "placeholder": "Yüz Bakımı"
+      },
+      "price": {
+        "label": "Price (EUR)",
+        "labelRequired": "Price (EUR) *",
+        "placeholder": "e.g., 75"
+      },
+      "duration": {
+        "label": "Duration (minutes)",
+        "labelRequired": "Duration (minutes) *",
+        "placeholder": "e.g., 60"
+      },
+      "imageUrl": {
+        "label": "Service Image URL",
+        "labelRequired": "Service Image URL *",
+        "uploadLabel": "Upload or Enter URL",
+        "description": "Link to the main image for this service."
+      },
+      "descriptionEn": {
+        "label": "Short Description (English)",
+        "labelRequired": "Short Description (English) *",
+        "placeholder": "Brief description in English"
+      },
+      "descriptionAr": {
+        "label": "Short Description (العربية)",
+        "placeholder": "وصف قصير بالعربية"
+      },
+      "descriptionDe": {
+        "label": "Short Description (Deutsch)",
+        "placeholder": "Kurze Beschreibung auf Deutsch"
+      },
+      "descriptionTr": {
+        "label": "Short Description (Türkçe)",
+        "placeholder": "Kısa açıklama Türkçe"
+      },
+      "longDescriptionEn": {
+        "label": "Long Description (English)",
+        "placeholder": "Detailed description in English"
+      },
+      "longDescriptionAr": {
+        "label": "Long Description (العربية)",
+        "placeholder": "وصف مفصل بالعربية"
+      },
+      "longDescriptionDe": {
+        "label": "Long Description (Deutsch)",
+        "placeholder": "Ausführliche Beschreibung auf Deutsch"
+      },
+      "longDescriptionTr": {
+        "label": "Long Description (Türkçe)",
+        "placeholder": "Ayrıntılı açıklama Türkçe"
+      }
+    },
+    "loading": {
+      "categories": "Loading categories...",
+      "processing": "Processing..."
+    },
+    "placeholder": {
       "selectCategory": "Select category",
-      "searchCategories": "Search categories...",
-      "noCategoriesFound": "No categories found",
-      "createNewCategory": "Create New",
-      "newCategoryName": "New category name",
-      "addCategory": "Add Category",
-      "status": "Status",
-      "statusDescription": "Enable or disable this service"
+      "searchCategory": "Search categories...",
+      "newCategoryName": "New category name"
     },
-    "names": {
-      "nameEn": "Name (English)",
-      "nameEnPlaceholder": "Facial Treatment",
-      "nameAr": "Name (العربية)",
-      "nameArPlaceholder": "علاج الوجه",
-      "nameDe": "Name (Deutsch)",
-      "nameDePlaceholder": "Gesichtsbehandlung",
-      "nameTr": "Name (Türkçe)",
-      "nameTrPlaceholder": "Yüz Bakımı"
-    },
-    "pricing": {
-      "price": "Price (EUR)",
-      "duration": "Duration (minutes)",
-      "durationPlaceholder": "60",
-      "imageUrl": "Service Image",
-      "imageDescription": "Upload an image for this service"
-    },
-    "descriptions": {
-      "descriptionEn": "Short Description (English)",
-      "descriptionEnPlaceholder": "Brief description in English",
-      "descriptionAr": "Short Description (العربية)",
-      "descriptionArPlaceholder": "وصف قصير بالعربية",
-      "descriptionDe": "Short Description (Deutsch)",
-      "descriptionDePlaceholder": "Kurze Beschreibung auf Deutsch",
-      "descriptionTr": "Short Description (Türkçe)",
-      "descriptionTrPlaceholder": "Kısa açıklama Türkçe"
-    },
-    "longDescriptions": {
-      "longDescriptionEn": "Long Description (English)",
-      "longDescriptionEnPlaceholder": "Detailed description in English",
-      "longDescriptionAr": "Long Description (العربية)",
-      "longDescriptionArPlaceholder": "وصف مفصل بالعربية",
-      "longDescriptionDe": "Long Description (Deutsch)",
-      "longDescriptionDePlaceholder": "Ausführliche Beschreibung auf Deutsch",
-      "longDescriptionTr": "Long Description (Türkçe)",
-      "longDescriptionTrPlaceholder": "Ayrıntılı açıklama Türkçe"
+    "noCategoryFound": "No category found.",
+    "categories": "Categories",
+    "noCategoriesAvailable": "No categories available.",
+    "createNewCategory": "Create New Category",
+    "actions": {
+      "add": "Add",
+      "cancel": "Cancel"
     },
     "navigation": {
       "next": "Next",
-      "back": "Back",
-      "cancel": "Cancel",
-      "processing": "Processing..."
+      "back": "Back"
     }
   },
 
@@ -449,31 +508,6 @@
     "inactive": "Inactive",
     "editCategory": "Edit Category",
     "deleteCategory": "Delete Category"
-  },
-
-  "adminUsersTable": {
-    "tableHeaders": {
-      "avatar": "",
-      "username": "Username",
-      "email": "Email",
-      "name": "Name",
-      "role": "Role",
-      "created": "Created",
-      "actions": "Actions"
-    },
-    "loadingUsers": "Loading users...",
-    "noUsersFound": "No users found",
-    "you": "You",
-    "admin": "Admin",
-    "staff": "Staff",
-    "editUser": "Edit user",
-    "deleteUser": "Delete user",
-    "deleteConfirmTitle": "Are you sure?",
-    "deleteConfirmDescription": "This will permanently delete the user {username}. This action cannot be undone.",
-    "deleteButton": "Delete",
-    "actions": {
-      "cancel": "Cancel"
-    }
   },
 
   "adminCategoryForm": {

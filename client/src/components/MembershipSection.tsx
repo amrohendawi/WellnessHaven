@@ -36,7 +36,7 @@ const MembershipSection = () => {
           <MembershipCard
             type="gold"
             title={t('goldCard')}
-            subtitle="Premium VIP"
+            subtitle={t('membershipPremiumVIP')}
             discount={t('goldDiscount')}
             cost={t('goldCost')}
             benefits={goldBenefits}
