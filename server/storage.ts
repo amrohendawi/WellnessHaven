@@ -1,10 +1,4 @@
 import {
-  blockedTimeSlots,
-  bookings,
-  memberships,
-  serviceGroups,
-  services,
-  users,
   type BlockedTimeSlot,
   type Booking,
   type InsertBlockedTimeSlot,
@@ -15,6 +9,12 @@ import {
   type Service,
   type ServiceGroup,
   type User,
+  blockedTimeSlots,
+  bookings,
+  memberships,
+  serviceGroups,
+  services,
+  users,
 } from '@shared/schema';
 import { eq } from 'drizzle-orm';
 import { db } from './db';

@@ -1,28 +1,28 @@
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { queryClient } from './lib/queryClient';
-import { QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { useAuth } from '@/contexts/AuthContext';
 import { LanguageProvider } from '@/context/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { queryClient } from './lib/queryClient';
 
-// Pages
-import NotFound from '@/pages/not-found';
 import Home from '@/pages/Home';
 import ServiceDetails from '@/pages/ServiceDetails';
 import LoginPage from '@/pages/admin/LoginPage';
+// Pages
+import NotFound from '@/pages/not-found';
 
 // Admin Layouts
 import AdminLayout from '@/admin/AdminLayout';
 
+import AvailabilityPage from '@/admin/AvailabilityPage';
+import BookingDetailPage from '@/admin/BookingDetailPage';
+import BookingsPage from '@/admin/BookingsPage';
+import CategoriesPage from '@/admin/CategoriesPage';
 // Admin Pages
 import DashboardPage from '@/admin/DashboardPage';
-import BookingsPage from '@/admin/BookingsPage';
-import BookingDetailPage from '@/admin/BookingDetailPage';
-import AvailabilityPage from '@/admin/AvailabilityPage';
-import ServicesPage from '@/admin/ServicesPage';
-import CategoriesPage from '@/admin/CategoriesPage';
 import ProfilePage from '@/admin/ProfilePage';
+import ServicesPage from '@/admin/ServicesPage';
 import UsersPage from '@/admin/UsersPage';
 
 // Test Pages

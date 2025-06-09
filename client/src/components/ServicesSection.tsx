@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/LanguageContext';
-import { ServiceDisplay, ServiceGroupDisplay } from '@shared/schema';
+import type { ServiceDisplay, ServiceGroupDisplay } from '@shared/schema';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';

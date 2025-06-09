@@ -462,7 +462,9 @@ const BookingSection = () => {
                         <i className="fas fa-calendar-alt mr-2 h-4 w-4" />{' '}
                         {/* Replaced Lucide icon */}
                         {selectedDate ? (
-                          format(selectedDate, 'PPP', { locale: getDateLocale() })
+                          format(selectedDate, 'PPP', {
+                            locale: getDateLocale(),
+                          })
                         ) : (
                           <span>{t('pickDate')}</span>
                         )}
@@ -606,7 +608,10 @@ const BookingSection = () => {
                       <div className="grid grid-cols-2 gap-2 mb-1">
                         <span className="text-gray-600">{t('date')}:</span>
                         <span className="font-medium">
-                          {selectedDate && format(selectedDate, 'PPP', { locale: getDateLocale() })}
+                          {selectedDate &&
+                            format(selectedDate, 'PPP', {
+                              locale: getDateLocale(),
+                            })}
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-2 mb-1">

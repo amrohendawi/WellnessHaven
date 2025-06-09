@@ -1,5 +1,5 @@
-import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 const AboutSection = () => {
   const { t } = useTranslation();

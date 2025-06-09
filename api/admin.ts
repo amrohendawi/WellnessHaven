@@ -194,7 +194,7 @@ async function verifyAuth(
     const userResults = await db
       .select()
       .from(users)
-      .where(eq(users.id, parseInt(decoded.userId)))
+      .where(eq(users.id, Number.parseInt(decoded.userId)))
       .limit(1);
 
     if (!userResults || userResults.length === 0 || !userResults[0].isAdmin) {
@@ -790,7 +790,7 @@ async function handleUsers(
       const existingUser = await db
         .select()
         .from(users)
-        .where(eq(users.id, parseInt(userId)))
+        .where(eq(users.id, Number.parseInt(userId)))
         .limit(1);
 
       if (!existingUser || existingUser.length === 0) {
@@ -830,7 +830,7 @@ async function handleUsers(
         const [updated] = await db
           .update(users)
           .set(updateData)
-          .where(eq(users.id, parseInt(userId)))
+          .where(eq(users.id, Number.parseInt(userId)))
           .returning();
 
         return res.status(200).json({
@@ -863,7 +863,7 @@ async function handleUsers(
       const existingUser = await db
         .select()
         .from(users)
-        .where(eq(users.id, parseInt(userId)))
+        .where(eq(users.id, Number.parseInt(userId)))
         .limit(1);
 
       if (!existingUser || existingUser.length === 0) {
@@ -871,7 +871,7 @@ async function handleUsers(
       }
 
       // Delete the user
-      await db.delete(users).where(eq(users.id, parseInt(userId)));
+      await db.delete(users).where(eq(users.id, Number.parseInt(userId)));
 
       return res.status(200).json({ message: 'User deleted successfully' });
     } else {
@@ -879,9 +879,10 @@ async function handleUsers(
     }
   } catch (error: any) {
     console.error('Error handling users request:', error);
-    return res
-      .status(500)
-      .json({ message: 'An error occurred while processing the request', error: error.message });
+    return res.status(500).json({
+      message: 'An error occurred while processing the request',
+      error: error.message,
+    });
   }
 }
 
@@ -942,15 +943,23 @@ async function handleBookings(req: VercelRequest, res: VercelResponse, db: any) 
         return res.status(200).json(allBookings);
       } catch (dbError: any) {
         console.error('Database error when fetching bookings:', dbError);
-        return res
-          .status(500)
-          .json({ message: 'Database error when fetching bookings', error: dbError.message });
+        return res.status(500).json({
+          message: 'Database error when fetching bookings',
+          error: dbError.message,
+        });
       }
     } else if (req.method === 'POST') {
       try {
         // Create a new booking
         const { name, email, phone, date, time, service, notes, status } = req.body;
-        console.log('Creating new booking with data:', { name, email, phone, date, time, service });
+        console.log('Creating new booking with data:', {
+          name,
+          email,
+          phone,
+          date,
+          time,
+          service,
+        });
 
         // Use created_at field name instead of createdAt to match the schema
         const [newBooking] = await db
@@ -972,9 +981,10 @@ async function handleBookings(req: VercelRequest, res: VercelResponse, db: any) 
         return res.status(201).json(newBooking);
       } catch (dbError: any) {
         console.error('Database error when creating booking:', dbError);
-        return res
-          .status(500)
-          .json({ message: 'Database error when creating booking', error: dbError.message });
+        return res.status(500).json({
+          message: 'Database error when creating booking',
+          error: dbError.message,
+        });
       }
     } else {
       return res.status(405).json({ message: 'Method not allowed' });
@@ -1040,15 +1050,19 @@ async function handleBlockedSlots(req: VercelRequest, res: VercelResponse, db: a
         return res.status(200).json(slots);
       } catch (dbError: any) {
         console.error('Database error when fetching blocked time slots:', dbError);
-        return res
-          .status(500)
-          .json({ message: 'Database error when fetching blocked slots', error: dbError.message });
+        return res.status(500).json({
+          message: 'Database error when fetching blocked slots',
+          error: dbError.message,
+        });
       }
     } else if (req.method === 'POST') {
       try {
         // Create a new blocked slot
         const { date, time } = req.body;
-        console.log('Creating new blocked time slot with data:', { date, time });
+        console.log('Creating new blocked time slot with data:', {
+          date,
+          time,
+        });
 
         if (!date || !time) {
           return res.status(400).json({ message: 'Date and time are required' });
@@ -1068,14 +1082,15 @@ async function handleBlockedSlots(req: VercelRequest, res: VercelResponse, db: a
         return res.status(201).json(newSlot);
       } catch (dbError: any) {
         console.error('Database error when creating blocked time slot:', dbError);
-        return res
-          .status(500)
-          .json({ message: 'Database error when creating blocked slot', error: dbError.message });
+        return res.status(500).json({
+          message: 'Database error when creating blocked slot',
+          error: dbError.message,
+        });
       }
     } else if (req.method === 'DELETE') {
       try {
         // Delete a blocked slot
-        const id = parseInt(req.query.id as string);
+        const id = Number.parseInt(req.query.id as string);
         console.log('Attempting to delete blocked time slot with ID:', id);
 
         if (isNaN(id)) {
@@ -1087,9 +1102,10 @@ async function handleBlockedSlots(req: VercelRequest, res: VercelResponse, db: a
         return res.status(204).end();
       } catch (dbError: any) {
         console.error('Database error when deleting blocked time slot:', dbError);
-        return res
-          .status(500)
-          .json({ message: 'Database error when deleting blocked slot', error: dbError.message });
+        return res.status(500).json({
+          message: 'Database error when deleting blocked slot',
+          error: dbError.message,
+        });
       }
     } else {
       return res.status(405).json({ message: 'Method not allowed' });
@@ -1121,7 +1137,7 @@ async function handleProfile(
           createdAt: users.createdAt,
         })
         .from(users)
-        .where(eq(users.id, parseInt(auth.userId!)))
+        .where(eq(users.id, Number.parseInt(auth.userId!)))
         .limit(1);
 
       if (!userResults || userResults.length === 0) {
@@ -1156,7 +1172,7 @@ async function handleProfile(
         await db
           .update(users)
           .set(updateData)
-          .where(eq(users.id, parseInt(auth.userId!)));
+          .where(eq(users.id, Number.parseInt(auth.userId!)));
       }
 
       // Return updated profile data
@@ -1167,7 +1183,7 @@ async function handleProfile(
           isAdmin: users.isAdmin,
         })
         .from(users)
-        .where(eq(users.id, parseInt(auth.userId!)))
+        .where(eq(users.id, Number.parseInt(auth.userId!)))
         .limit(1);
 
       return res.status(200).json({
@@ -1182,8 +1198,9 @@ async function handleProfile(
     }
   } catch (error: any) {
     console.error('Error handling profile request:', error);
-    return res
-      .status(500)
-      .json({ message: 'An error occurred while processing the request', error: error.message });
+    return res.status(500).json({
+      message: 'An error occurred while processing the request',
+      error: error.message,
+    });
   }
 }

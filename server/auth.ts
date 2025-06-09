@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { db } from './db';
-import { users } from '../shared/schema';
 import { eq } from 'drizzle-orm';
+import type { NextFunction, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+import { users } from '../shared/schema';
+import { db } from './db';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 const JWT_EXPIRES_IN = '24h';

@@ -1,10 +1,10 @@
+import path from 'path';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 // scripts/migrate.ts
 import { config } from 'dotenv';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { db } from '../server/db';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 
 // Load environment variables
 config();

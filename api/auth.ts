@@ -1,13 +1,13 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import jwt from 'jsonwebtoken';
-import { config } from 'dotenv';
-import cookie from 'cookie';
-import { drizzle } from 'drizzle-orm/neon-serverless';
 import { Pool, neonConfig } from '@neondatabase/serverless';
-import ws from 'ws';
-import { pgTable, text, serial, boolean, timestamp } from 'drizzle-orm/pg-core';
-import { eq } from 'drizzle-orm';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import bcrypt from 'bcryptjs';
+import cookie from 'cookie';
+import { config } from 'dotenv';
+import { eq } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/neon-serverless';
+import { boolean, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import jwt from 'jsonwebtoken';
+import ws from 'ws';
 
 // Create a local copy of the schema elements needed for this file
 // This approach avoids path resolution issues in Vercel's serverless functions
@@ -177,7 +177,7 @@ async function handleMe(req: VercelRequest, res: VercelResponse) {
       const userResults = await db
         .select()
         .from(users)
-        .where(eq(users.id, parseInt(decoded.userId)))
+        .where(eq(users.id, Number.parseInt(decoded.userId)))
         .limit(1);
 
       if (!userResults || userResults.length === 0) {

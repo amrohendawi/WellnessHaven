@@ -20,11 +20,13 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ImageIcon, Loader2 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import type React from 'react';
+// eslint-disable-next-line no-duplicate-imports
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
-import { CategoryFormValues } from '../CategoriesPage';
+import type { CategoryFormValues } from '../CategoriesPage';
 
 // Validation schema for the category form
 const CategoryFormSchema = z.object({
@@ -192,7 +194,7 @@ export function CategoryFormDialog({
                             type="number"
                             {...field}
                             value={field.value || 0}
-                            onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)}
+                            onChange={e => field.onChange(Number.parseInt(e.target.value, 10) || 0)}
                             className="focus-visible:ring-gold/30"
                           />
                         </FormControl>

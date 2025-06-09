@@ -1,4 +1,4 @@
-import { ServiceDisplay, ServiceGroupDisplay } from '@shared/schema';
+import type { ServiceDisplay, ServiceGroupDisplay } from '@shared/schema';
 
 // Extend Window interface to include Clerk's properties
 declare global {
@@ -283,7 +283,9 @@ export async function getServices(): Promise<ServiceDisplay[]> {
 
   try {
     // Fetch fresh data with retries enabled
-    const services = await fetchAPI<ServiceDisplay[]>('/services', { retry: 2 });
+    const services = await fetchAPI<ServiceDisplay[]>('/services', {
+      retry: 2,
+    });
     // Update cache
     cachedServices = services;
     servicesLastFetched = now;
@@ -330,7 +332,9 @@ export async function getServiceGroups(): Promise<ServiceGroupDisplay[]> {
   }
 
   try {
-    const groups = await fetchAPI<ServiceGroupDisplay[]>('/service-groups', { retry: 2 });
+    const groups = await fetchAPI<ServiceGroupDisplay[]>('/service-groups', {
+      retry: 2,
+    });
     cachedServiceGroups = groups;
     groupsLastFetched = now;
     return groups;
@@ -529,7 +533,11 @@ export async function checkAppointment(
 ): Promise<AppointmentResponse> {
   return fetchAPI<AppointmentResponse>('/appointments', {
     method: 'POST',
-    body: JSON.stringify({ email, appointmentId, action: 'check' } as AppointmentCheckRequest),
+    body: JSON.stringify({
+      email,
+      appointmentId,
+      action: 'check',
+    } as AppointmentCheckRequest),
     retry: 1,
   });
 }
@@ -590,7 +598,9 @@ export async function getMemberships(): Promise<Membership[]> {
 }
 
 export async function getMembershipByTier(tier: string): Promise<Membership> {
-  return fetchAPI<Membership>(`/memberships?tier=${encodeURIComponent(tier)}`, { retry: 1 });
+  return fetchAPI<Membership>(`/memberships?tier=${encodeURIComponent(tier)}`, {
+    retry: 1,
+  });
 }
 
 // ----- Admin API -----

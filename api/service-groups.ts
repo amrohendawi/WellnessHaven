@@ -1,10 +1,10 @@
+import { Pool, neonConfig } from '@neondatabase/serverless';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { config } from 'dotenv';
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-serverless';
 import { eq } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/neon-serverless';
+import { integer, pgTable, serial, text, varchar } from 'drizzle-orm/pg-core';
 import ws from 'ws';
-import { pgTable, serial, varchar, text, integer } from 'drizzle-orm/pg-core';
 
 // Embedded minimal schema for this API route
 const serviceGroups = pgTable('service_groups', {

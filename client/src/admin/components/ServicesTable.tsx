@@ -12,7 +12,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { getLocalizedName } from '@/lib/localization';
 import type { AdminService, ServiceGroup } from '@shared/schema';
 import { Info, Loader2, Pencil, Trash2 } from 'lucide-react';
-import { React, useEffect, useState } from 'react';
+import { type React, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ServicesTableProps {
@@ -34,7 +34,7 @@ export const ServicesTable: React.FC<ServicesTableProps> = ({
   const { language } = useLanguage();
   // State for storing category data
   const [categories, setCategories] = useState<Record<string, ServiceGroup>>({});
-  const [isCategoriesLoading, setIsCategoriesLoading] = useState(false);
+  const [, setIsCategoriesLoading] = useState(false);
 
   // Fetch categories when component mounts
   useEffect(() => {

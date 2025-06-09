@@ -1,11 +1,11 @@
+import bcrypt from 'bcryptjs';
 import { config } from 'dotenv';
-import { db } from '../server/db';
-import { services, memberships, serviceGroups, users } from '../shared/schema';
 import { eq } from 'drizzle-orm';
-import servicesData from './data/services.json';
+import { db } from '../server/db';
+import { memberships, serviceGroups, services, users } from '../shared/schema';
 import membershipsData from './data/memberships.json';
 import serviceGroupsData from './data/service-groups.json' assert { type: 'json' };
-import bcrypt from 'bcryptjs';
+import servicesData from './data/services.json';
 
 // Load environment variables from .env file
 config();

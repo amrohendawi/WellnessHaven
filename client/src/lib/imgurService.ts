@@ -38,7 +38,7 @@ export async function uploadToImgur(file: File): Promise<string> {
       const xhr = new XMLHttpRequest();
 
       // Set up upload completion handler
-      xhr.onload = function () {
+      xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           try {
             const response = JSON.parse(xhr.responseText);
@@ -65,7 +65,7 @@ export async function uploadToImgur(file: File): Promise<string> {
       };
 
       // Set up error handler
-      xhr.onerror = function () {
+      xhr.onerror = () => {
         reject(new Error('Network error occurred while uploading image'));
       };
 

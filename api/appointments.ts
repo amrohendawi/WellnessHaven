@@ -1,9 +1,9 @@
+import { Pool, neonConfig } from '@neondatabase/serverless';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { config } from 'dotenv';
-import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
+import { date, integer, pgTable, serial, time, timestamp, varchar } from 'drizzle-orm/pg-core';
 import ws from 'ws';
-import { pgTable, serial, varchar, date, time, integer, timestamp } from 'drizzle-orm/pg-core';
 
 // Embedded minimal schema for this API route
 const bookings = pgTable('bookings', {
@@ -29,7 +29,7 @@ const services = pgTable('services', {
   price: integer('price').notNull(),
 });
 
-import { eq, and, gte, lt } from 'drizzle-orm';
+import { and, eq, gte, lt } from 'drizzle-orm';
 
 // Ensure environment variables are loaded
 config();

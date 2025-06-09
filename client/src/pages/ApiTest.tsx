@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -8,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import React, { useState, useEffect } from 'react';
 
 export default function ApiTest() {
   const [testResult, setTestResult] = useState<null | any>(null);

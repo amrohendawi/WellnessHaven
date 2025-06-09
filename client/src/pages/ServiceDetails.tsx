@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useLanguage } from '@/context/LanguageContext';
 import { servicesList } from '@/data/services'; // Keep as fallback for related services
 import { getServices } from '@/lib/api';
-import { ServiceDisplay } from '@shared/schema';
+import type { ServiceDisplay } from '@shared/schema';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';

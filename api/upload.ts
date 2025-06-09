@@ -1,6 +1,6 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
-import fetch from 'node-fetch';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import FormData from 'form-data';
+import fetch from 'node-fetch';
 
 // Allowed origins for CORS
 const allowedOrigins = [
@@ -111,7 +111,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(429).json({
           error: 'Rate limit exceeded',
           message: 'Too many requests to Imgur API. Please try again later.',
-          retryAfter: parseInt(retryAfter, 10),
+          retryAfter: Number.parseInt(retryAfter, 10),
           data,
         });
       }
@@ -128,9 +128,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     } catch (fetchError) {
       console.error('Error fetching from Imgur:', fetchError);
-      return res
-        .status(500)
-        .json({ error: 'Error communicating with Imgur API', details: fetchError.message });
+      return res.status(500).json({
+        error: 'Error communicating with Imgur API',
+        details: fetchError.message,
+      });
     }
 
     console.log('Image uploaded successfully to Imgur');

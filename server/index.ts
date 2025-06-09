@@ -1,21 +1,21 @@
-import 'dotenv/config'; // This loads the .env file at the start
-import express, { type Request, Response, NextFunction } from 'express';
-import { createServer } from 'http';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import 'dotenv/config'; // This loads the .env file at the start
+import express, { type NextFunction, type Request, type Response } from 'express';
+import { createServer } from 'node:http';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import adminAuthRoutes from './adminAuthRoutes';
+import adminProfileRoutes from './adminProfileRoutes';
+import adminRoutes from './adminRoutes';
+import { requireAuth } from './auth';
+import { registerRoutes } from './routes';
+import usersRoutes from './usersRoutes';
+import { log, serveStatic, setupVite } from './vite';
 
 // ES module equivalent for __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-import adminRoutes from './adminRoutes';
-import adminAuthRoutes from './adminAuthRoutes';
-import adminProfileRoutes from './adminProfileRoutes';
-import usersRoutes from './usersRoutes';
-import { registerRoutes } from './routes';
-import { setupVite, serveStatic, log } from './vite';
-import { requireAuth } from './auth';
 
 const app = express();
 
@@ -39,7 +39,7 @@ app.use((req, res, next) => {
   let capturedJsonResponse: Record<string, any> | undefined = undefined;
 
   const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
+  res.json = (bodyJson, ...args) => {
     capturedJsonResponse = bodyJson;
     return originalResJson.apply(res, [bodyJson, ...args]);
   };
@@ -53,7 +53,7 @@ app.use((req, res, next) => {
       }
 
       if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + '…';
+        logLine = `${logLine.slice(0, 79)}…`;
       }
 
       log(logLine);

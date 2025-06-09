@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { fetchAdminAPI } from '@/lib/api';
-import { ServiceGroup } from '@shared/schema';
+import type { ServiceGroup } from '@shared/schema';
 import { FolderTree, Loader2, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

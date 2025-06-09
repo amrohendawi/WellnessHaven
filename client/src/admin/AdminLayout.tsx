@@ -2,7 +2,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import React, { useEffect, useRef, useState } from 'react';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
@@ -90,9 +91,17 @@ export default function AdminLayout() {
   const navItems: NavItem[] = [
     { name: t('adminNavDashboard'), icon: Home, href: '/admin/dashboard' },
     { name: t('adminNavBookings'), icon: Calendar, href: '/admin/bookings' },
-    { name: t('adminNavAvailability'), icon: Clock, href: '/admin/availability' },
+    {
+      name: t('adminNavAvailability'),
+      icon: Clock,
+      href: '/admin/availability',
+    },
     { name: t('adminNavServices'), icon: Package, href: '/admin/services' },
-    { name: t('adminNavCategories'), icon: FolderTree, href: '/admin/categories' },
+    {
+      name: t('adminNavCategories'),
+      icon: FolderTree,
+      href: '/admin/categories',
+    },
     { name: t('adminNavUsers'), icon: User, href: '/admin/users' },
     { name: t('adminNavProfile'), icon: Settings, href: '/admin/profile' },
   ];

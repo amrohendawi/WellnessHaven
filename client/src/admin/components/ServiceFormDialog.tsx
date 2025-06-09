@@ -28,19 +28,21 @@ import {
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Switch } from '@/components/ui/switch';
+import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   AdminServiceFormSchema,
-  AdminServiceFormValues,
+  type AdminServiceFormValues,
   defaultAdminServiceFormValues,
 } from '@shared/schema';
 import { Check, ChevronsUpDown, Loader2, Plus } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import type React from 'react';
+// eslint-disable-next-line no-duplicate-imports
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ImageUploader } from './ImageUploader';
-import { useToast } from '@/hooks/use-toast';
 
 interface Category {
   value: string;
@@ -81,8 +83,14 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
     { id: 'basic-info', title: t('adminServiceForm.steps.basicInfo') },
     { id: 'translations', title: t('adminServiceForm.steps.translations') },
     { id: 'details', title: t('adminServiceForm.steps.details') },
-    { id: 'short-descriptions', title: t('adminServiceForm.steps.shortDescriptions') },
-    { id: 'long-descriptions', title: t('adminServiceForm.steps.longDescriptions') },
+    {
+      id: 'short-descriptions',
+      title: t('adminServiceForm.steps.shortDescriptions'),
+    },
+    {
+      id: 'long-descriptions',
+      title: t('adminServiceForm.steps.longDescriptions'),
+    },
   ];
 
   // Fetch categories from the API
@@ -599,7 +607,7 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                               type="number"
                               {...field}
                               value={field.value || ''}
-                              onChange={e => field.onChange(parseFloat(e.target.value) || 0)}
+                              onChange={e => field.onChange(Number.parseFloat(e.target.value) || 0)}
                               className="pl-12 focus-visible:ring-gold/30"
                             />
                           </div>
@@ -621,7 +629,9 @@ export const ServiceFormDialog: React.FC<ServiceFormDialogProps> = ({
                               type="number"
                               {...field}
                               value={field.value || ''}
-                              onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)}
+                              onChange={e =>
+                                field.onChange(Number.parseInt(e.target.value, 10) || 0)
+                              }
                               className="pr-12 focus-visible:ring-gold/30"
                             />
                             <span className="absolute right-3 top-2.5 text-muted-foreground text-xs">

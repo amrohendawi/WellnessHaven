@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import UserFormDialog from './components/UserFormDialog';
-import UsersTable, { UserData } from './components/UsersTable';
+import UsersTable, { type UserData } from './components/UsersTable';
 
 export default function UsersPage() {
   useAuth();

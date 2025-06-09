@@ -1,9 +1,9 @@
+import { Pool, neonConfig } from '@neondatabase/serverless';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { config } from 'dotenv';
-import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
+import { boolean, integer, pgTable, serial, text, varchar } from 'drizzle-orm/pg-core';
 import ws from 'ws';
-import { pgTable, serial, varchar, text, boolean, integer } from 'drizzle-orm/pg-core';
 
 // Embedded minimal schema for this API route
 const services = pgTable('services', {

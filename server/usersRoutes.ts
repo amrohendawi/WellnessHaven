@@ -1,10 +1,10 @@
-import bcrypt from 'bcryptjs';
-import { eq } from 'drizzle-orm';
-import { Request, Router } from 'express';
 import fs from 'fs';
-import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import bcrypt from 'bcryptjs';
+import { eq } from 'drizzle-orm';
+import { type Request, Router } from 'express';
+import multer from 'multer';
 import { users } from '../shared/schema';
 import { requireAuth } from './auth';
 import { db } from './db';
@@ -99,7 +99,7 @@ router.get('/users/:userId', requireAuth, async (req, res) => {
         createdAt: users.createdAt,
       })
       .from(users)
-      .where(eq(users.id, parseInt(userId)))
+      .where(eq(users.id, Number.parseInt(userId)))
       .limit(1);
 
     if (!user || user.length === 0) {
@@ -159,7 +159,7 @@ router.post('/users/update', requireAuth, upload.single('profileImage'), async (
     const existingUser = await db
       .select()
       .from(users)
-      .where(eq(users.id, parseInt(userId)))
+      .where(eq(users.id, Number.parseInt(userId)))
       .limit(1);
 
     if (!existingUser || existingUser.length === 0) {
@@ -199,7 +199,7 @@ router.post('/users/update', requireAuth, upload.single('profileImage'), async (
       await db
         .update(users)
         .set(updateData)
-        .where(eq(users.id, parseInt(userId)));
+        .where(eq(users.id, Number.parseInt(userId)));
     }
 
     // Handle profile image if uploaded
@@ -225,7 +225,7 @@ router.post('/users/delete', requireAuth, async (req, res) => {
     const existingUser = await db
       .select()
       .from(users)
-      .where(eq(users.id, parseInt(userId)))
+      .where(eq(users.id, Number.parseInt(userId)))
       .limit(1);
 
     if (!existingUser || existingUser.length === 0) {
@@ -233,7 +233,7 @@ router.post('/users/delete', requireAuth, async (req, res) => {
     }
 
     // Delete the user
-    await db.delete(users).where(eq(users.id, parseInt(userId)));
+    await db.delete(users).where(eq(users.id, Number.parseInt(userId)));
 
     res.json({ message: 'User deleted successfully' });
   } catch (error) {

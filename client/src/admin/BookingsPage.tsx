@@ -47,7 +47,10 @@ export default function BookingsPage() {
   const updateStatus = useCallback(
     async (id: number, status: string) => {
       try {
-        await fetchAdminAPI(`bookings/${id}`, { method: 'PUT', body: JSON.stringify({ status }) });
+        await fetchAdminAPI(`bookings/${id}`, {
+          method: 'PUT',
+          body: JSON.stringify({ status }),
+        });
         setBookings(prev => prev.map(b => (b.id === id ? { ...b, status } : b)));
         toast({
           title: t('adminMessages.successTitle'),

@@ -1,11 +1,11 @@
-import { Router, Request } from 'express';
-import multer from 'multer';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 import { fileURLToPath } from 'url';
-import { db } from './db';
-import { users } from '../shared/schema';
 import { eq } from 'drizzle-orm';
+import { type Request, Router } from 'express';
+import multer from 'multer';
+import { users } from '../shared/schema';
+import { db } from './db';
 
 // ES module equivalent for __dirname
 const __filename = fileURLToPath(import.meta.url);

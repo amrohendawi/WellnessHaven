@@ -25,7 +25,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import * as z from 'zod';
-import { UserData } from './UsersTable';
+import type { UserData } from './UsersTable';
 
 // Form validation schema factory (to use translations)
 const createUserFormSchema = (t: (key: string) => string) =>

@@ -1,4 +1,4 @@
-import { QueryClient, QueryFunction } from '@tanstack/react-query';
+import { QueryClient, type QueryFunction } from '@tanstack/react-query';
 import * as api from './api';
 
 async function throwIfResNotOk(res: Response) {
@@ -79,7 +79,7 @@ export const queryClient = new QueryClient({
       queryFn: getQueryFn({ on401: 'throw' }),
       refetchInterval: false,
       refetchOnWindowFocus: false,
-      staleTime: Infinity,
+      staleTime: Number.POSITIVE_INFINITY,
       retry: false,
     },
     mutations: {

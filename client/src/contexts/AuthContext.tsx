@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { type ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 interface AuthContextType {
@@ -61,7 +61,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       toast.success('Login successful');
 
       // Return success status and optional redirect path
-      return { success: true, redirectTo: onSuccessRedirect || '/admin/dashboard' };
+      return {
+        success: true,
+        redirectTo: onSuccessRedirect || '/admin/dashboard',
+      };
     } catch (error) {
       console.error('Login error:', error);
       toast.error(error instanceof Error ? error.message : 'Login failed');
@@ -71,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const logout = async (redirectPath: string = '/admin/login') => {
+  const logout = async (redirectPath = '/admin/login') => {
     try {
       setIsLoading(true);
       await fetch('/api/auth/logout', {

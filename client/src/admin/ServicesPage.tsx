@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/alert-dialog'; // AlertDialogTrigger not used directly here
 import { useToast } from '@/hooks/use-toast';
 import { fetchAdminAPI } from '@/lib/api';
-import { AdminService, AdminServiceFormValues } from '@shared/schema';
+import type { AdminService, AdminServiceFormValues } from '@shared/schema';
 import { Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -72,7 +72,9 @@ export default function ServicesPage() {
   const confirmDeleteService = async () => {
     if (!serviceToDeleteId) return;
     try {
-      await fetchAdminAPI(`services/${serviceToDeleteId}`, { method: 'DELETE' });
+      await fetchAdminAPI(`services/${serviceToDeleteId}`, {
+        method: 'DELETE',
+      });
       toast({
         title: t('adminMessages.successTitle'),
         description: t('adminMessages.serviceDeleted'),

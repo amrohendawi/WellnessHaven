@@ -173,7 +173,9 @@ export default function UsersTable({
           <AlertDialogHeader>
             <AlertDialogTitle>{t('adminUsersTable.deleteConfirmTitle')}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('adminUsersTable.deleteConfirmDescription', { username: userToDelete?.username })}
+              {t('adminUsersTable.deleteConfirmDescription', {
+                username: userToDelete?.username,
+              })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

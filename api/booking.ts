@@ -51,7 +51,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
     }
 
     // Insert booking into database
-    const serviceValue = typeof service === 'number' ? service : parseInt(service, 10);
+    const serviceValue = typeof service === 'number' ? service : Number.parseInt(service, 10);
 
     // Make sure we have a valid service ID
     if (isNaN(serviceValue)) {
