@@ -323,15 +323,16 @@ const BookingSection = () => {
           {/* Step 1: Service Selection */}
           {bookingStep === 1 && (
             <div className="p-6">
-              <h3 className="font-semibold text-xl mb-4">{t('chooseService')}</h3>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 {isLoading
                   ? // Loading state
                     Array(4)
                       .fill(0)
                       .map((_, index) => (
-                        <div key={index} className="border rounded-lg p-4 animate-pulse">
+                        <div
+                          key={`loading-skeleton-${index}-${Date.now()}`}
+                          className="border rounded-lg p-4 animate-pulse"
+                        >
                           <div className="h-5 bg-gray-200 rounded w-1/2 mb-2" />
                           <div className="h-4 bg-gray-100 rounded w-3/4" />
                         </div>
@@ -358,17 +359,6 @@ const BookingSection = () => {
                         )}
                       </div>
                     ))}
-              </div>
-
-              {/* Button to view all services directly */}
-              <div className="text-center mb-6">
-                <Button
-                  onClick={() => setServiceModalOpen(true)}
-                  variant="outline"
-                  className="w-full md:w-auto hover-lift"
-                >
-                  {t('viewAllServices')}
-                </Button>
               </div>
 
               {/* Selected Service Display */}
@@ -424,14 +414,26 @@ const BookingSection = () => {
                 </div>
               )}
 
-              <div className="flex justify-between mt-8">
-                <Button variant="outline" onClick={() => form.reset()} className="hover-lift">
+              {/* Action buttons in one row */}
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mt-8">
+                <Button
+                  onClick={() => setServiceModalOpen(true)}
+                  variant="outline"
+                  className="w-full sm:w-auto hover-lift"
+                >
+                  {t('viewAllServices')}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => form.reset()}
+                  className="w-full sm:w-auto hover-lift"
+                >
                   {t('cancel')}
                 </Button>
                 <Button
                   disabled={!selectedService}
                   onClick={nextStep}
-                  className="btn-royal text-white hover-lift"
+                  className="btn-royal text-white hover-lift w-full sm:w-auto"
                 >
                   {t('continue')}
                 </Button>
@@ -457,7 +459,7 @@ const BookingSection = () => {
                           !selectedDate && 'text-muted-foreground'
                         )}
                       >
-                        <i className="fas fa-calendar-alt mr-2 h-4 w-4"></i>{' '}
+                        <i className="fas fa-calendar-alt mr-2 h-4 w-4" />{' '}
                         {/* Replaced Lucide icon */}
                         {selectedDate ? (
                           format(selectedDate, 'PPP', { locale: getDateLocale() })
@@ -711,11 +713,11 @@ const BookingSection = () => {
                         </div>
                       )}
                       <div className="flex-1">
-                        <h3
+                        <h5
                           className={`font-medium ${selectedService && selectedService.id === service.id ? 'text-pink-dark font-semibold' : 'text-pink-dark'}`}
                         >
                           {service.name[language] || service.name.en}
-                        </h3>
+                        </h5>
                         <p className="text-sm text-gray-600 mb-1">
                           {service.description[language] || service.description.en}
                         </p>
@@ -728,7 +730,7 @@ const BookingSection = () => {
                       </div>
                       {selectedService && selectedService.id === service.id && (
                         <div className="ml-2 text-pink">
-                          <i className="fas fa-check-circle"></i>
+                          <i className="fas fa-check-circle" />
                         </div>
                       )}
                     </div>

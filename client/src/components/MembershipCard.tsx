@@ -120,11 +120,13 @@ export const MembershipCard = ({
           </div>
 
           {/* Benefits list */}
-          <div className="mb-6 relative z-10">
-            <h4 className="font-medium text-base mb-3 text-gray-700">
+          <div className={`mb-6 relative z-10 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
+            <h4
+              className={`font-medium text-base mb-3 text-gray-700 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
+            >
               {t('membershipBenefitsInclude')}
             </h4>
-            <ul className="space-y-2">
+            <ul className={`space-y-2 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
               {benefits.map((benefit, index) => (
                 <li key={index}>
                   <div
@@ -135,7 +137,11 @@ export const MembershipCard = ({
                     >
                       <i className={`fas fa-${benefit.icon} ${iconColor} text-xs`}></i>
                     </div>
-                    <span className={`font-medium text-sm ${textColor}`}>{benefit.text}</span>
+                    <span
+                      className={`font-medium text-sm ${textColor} ${dir === 'rtl' ? 'text-right' : 'text-left'} flex-1`}
+                    >
+                      {benefit.text}
+                    </span>
                   </div>
                 </li>
               ))}
