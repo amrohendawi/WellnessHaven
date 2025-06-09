@@ -73,17 +73,17 @@ const ContactSection = () => {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Dubai Rose Location"
-              ></iframe>
+              />
             </div>
 
             {/* Contact Info */}
             <div className="bg-white rounded-xl shadow-md overflow-hidden p-6">
               <div className={`flex items-start mb-4 ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
                 <div className={`text-gold-dark ${dir === 'ltr' ? 'mr-4' : 'ml-4'} mt-1`}>
-                  <i className="fas fa-map-marker-alt text-xl"></i>
+                  <i className="fas fa-map-marker-alt text-xl" />
                 </div>
                 <div>
-                  <h4 className="font-medium mb-1">{t('address')}</h4>
+                  <h5 className="font-medium mb-1">{t('address')}</h5>
                   <p className="text-gray-600">{t('contactAddress')}</p>
                 </div>
               </div>
@@ -93,20 +93,20 @@ const ContactSection = () => {
                   <i className="fas fa-phone-alt text-xl"></i>
                 </div>
                 <div>
-                  <h4 className="font-medium mb-1">{t('phone')}</h4>
+                  <h5 className="font-medium mb-1">{t('phone')}</h5>
                   <p className="text-gray-600">{t('contactPhone')}</p>
                   <div className="flex mt-2 space-x-2 rtl:space-x-reverse">
                     <a
                       href={'tel:+491784423645'}
                       className="bg-pink-light hover:bg-pink text-gray-800 px-3 py-1 rounded-full text-sm transition-colors"
                     >
-                      <i className="fas fa-phone-alt mr-1 rtl:ml-1 rtl:mr-0"></i> {t('call')}
+                      <i className="fas fa-phone-alt mr-1 rtl:ml-1 rtl:mr-0" /> {t('call')}
                     </a>
                     <a
                       href={`https://wa.me/491784423645`}
                       className="bg-[#25D366] hover:bg-[#128C7E] text-white px-3 py-1 rounded-full text-sm transition-colors"
                     >
-                      <i className="fab fa-whatsapp mr-1 rtl:ml-1 rtl:mr-0"></i> WhatsApp
+                      <i className="fab fa-whatsapp mr-1 rtl:ml-1 rtl:mr-0" /> WhatsApp
                     </a>
                   </div>
                 </div>
@@ -114,10 +114,10 @@ const ContactSection = () => {
 
               <div className={`flex items-start ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
                 <div className={`text-gold-dark ${dir === 'ltr' ? 'mr-4' : 'ml-4'} mt-1`}>
-                  <i className="fas fa-clock text-xl"></i>
+                  <i className="fas fa-clock text-xl" />
                 </div>
                 <div>
-                  <h4 className="font-medium mb-1">{t('hours')}</h4>
+                  <h5 className="font-medium mb-1">{t('hours')}</h5>
                   <p className="text-gray-600">{t('contactHours')}</p>
                   <p className="text-gray-600">{t('closedFriday')}</p>
                 </div>
@@ -198,16 +198,16 @@ const ContactSection = () => {
                 <p className="text-sm text-gray-500">{t('connectSocial')}</p>
                 <div className="flex justify-center space-x-4 rtl:space-x-reverse mt-3">
                   <a href="#" className="text-gray-400 hover:text-gold-dark transition-colors">
-                    <i className="fab fa-instagram text-xl"></i>
+                    <i className="fab fa-instagram text-xl" />
                   </a>
                   <a href="#" className="text-gray-400 hover:text-gold-dark transition-colors">
-                    <i className="fab fa-facebook text-xl"></i>
+                    <i className="fab fa-facebook text-xl" />
                   </a>
                   <a href="#" className="text-gray-400 hover:text-gold-dark transition-colors">
-                    <i className="fab fa-snapchat text-xl"></i>
+                    <i className="fab fa-snapchat text-xl" />
                   </a>
                   <a href="#" className="text-gray-400 hover:text-gold-dark transition-colors">
-                    <i className="fab fa-tiktok text-xl"></i>
+                    <i className="fab fa-tiktok text-xl" />
                   </a>
                 </div>
               </div>

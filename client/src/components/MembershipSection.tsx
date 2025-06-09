@@ -24,10 +24,10 @@ const MembershipSection = () => {
       className="section-modern bg-gradient-to-br from-white to-beige-light overflow-hidden"
     >
       <div className="container-modern">
-        <div className="text-center mb-16 animate-fadeInUp">
+        <div className="text-center mb-4 mt-8 animate-fadeInUp">
           <h2 className="royal-heading text-heading mb-8">{t('membershipTitle')}</h2>
           <div className="fancy-divider-modern mb-4">
-            <i className="fas fa-crown fancy-divider-icon-modern text-gold mx-2 animate-float"></i>
+            <i className="fas fa-crown fancy-divider-icon-modern text-gold mx-2 animate-float" />
           </div>
         </div>
 
@@ -60,7 +60,7 @@ const MembershipSection = () => {
         </div>
 
         {/* Modern CTA section */}
-        <div className="text-center mt-16 animate-fadeInUp animation-delay-1200">
+        <div className="text-center mt-8 mb-8 animate-fadeInUp animation-delay-1200">
           <div className="glass-card p-8 rounded-3xl max-w-2xl mx-auto border border-gold/20 shadow-lg">
             <h3 className="text-2xl font-bold text-black-gold mb-4">
               {t('interestedInMembership', 'Interested in Membership?')}

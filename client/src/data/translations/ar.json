@@ -34,6 +34,7 @@
   "specialOffers": "الوصول إلى العروض الخاصة",
   "prioritySupport": "دعم ذو أولوية",
   "byInvitationOnly": "بالدعوة فقط",
+  "membershipBenefitsInclude": "الفوائد تشمل:",
 
   "bookingTitle": "احجزي علاجك",
   "selectService": "اختر الخدمة",
@@ -161,7 +162,6 @@
   "bookingDetails": "تفاصيل الحجز",
   "name": "الاسم",
   "email": "البريد الإلكتروني",
-  "phone": "الهاتف",
   "serviceId": "معرف الخدمة",
   "bookingDate": "التاريخ",
   "bookingTime": "الوقت",
