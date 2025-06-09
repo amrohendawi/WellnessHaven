@@ -492,6 +492,16 @@
   font-family: 'Tajawal', sans-serif;
 }
 
+/* Royal brand font that always uses Playfair Display regardless of language */
+.font-royal-brand {
+  font-family: var(--font-display) !important;
+  letter-spacing: var(--tracking-tight);
+}
+
+[dir='rtl'] .font-royal-brand {
+  font-family: var(--font-display) !important;
+}
+
 /* Continue with existing styles... */
 .vip-card-modern {
   @apply relative overflow-hidden transition-all duration-700 ease-out;

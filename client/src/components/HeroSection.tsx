@@ -36,9 +36,12 @@ const HeroSection = () => {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 z-10 relative py-8 md:py-12">
         <div className="max-w-3xl mx-auto text-center">
-          <h1 className="font-display text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-3 sm:mb-4 md:mb-6 text-white drop-shadow-lg gold-shine">
-            <span className="block text-gold fade-in">Dubai</span>
-            <span className="text-pink fade-in animation-delay-500">Rose</span>
+          <h1
+            className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-extrabold mb-3 sm:mb-4 md:mb-6 text-white drop-shadow-lg gold-shine tracking-tight leading-tight"
+            style={{ fontFamily: 'var(--font-display)' }}
+          >
+            <span className="block text-gradient-gold fade-in brand-text">Dubai</span>
+            <span className="text-pink fade-in animation-delay-500 brand-text">Rose</span>
           </h1>
 
           <h2 className="font-display text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 md:mb-8 text-white fade-in animation-delay-700">
