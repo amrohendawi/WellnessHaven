@@ -28,7 +28,7 @@ const Home = () => {
 
         if (targetElement) {
           window.scrollTo({
-            top: targetElement.getBoundingClientRect().top + window.scrollY - 80, // Accounting for fixed header
+            top: targetElement.getBoundingClientRect().top + window.scrollY - 64, // Accounting for fixed header (64px = h-16)
             behavior: 'smooth',
           });
 

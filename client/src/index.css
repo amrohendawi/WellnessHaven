@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -41,19 +43,37 @@
   --black-gold: 40 30% 15%;
   --cream: 40 30% 96%;
 
-  /* Gradient variables for enhanced cards */
-  --gold-gradient: linear-gradient(
-    135deg,
-    hsl(var(--gold-light)) 0%,
-    hsl(var(--gold)) 50%,
-    hsl(var(--gold-dark)) 100%
-  );
-  --silver-gradient: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 50%, #c0c0c0 100%);
-  --glass-gradient: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.3) 0%,
-    rgba(255, 255, 255, 0.1) 100%
-  );
+  /* Typography System */
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-accent: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
+  --text-3xl: 1.875rem; /* 30px */
+  --text-4xl: 2.25rem; /* 36px */
+  --text-5xl: 3rem; /* 48px */
+  --text-6xl: 3.75rem; /* 60px */
+
+  /* Line Heights */
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+
+  /* Letter Spacing */
+  --tracking-tighter: -0.05em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
 }
 
 .dark {
@@ -83,19 +103,385 @@
     @apply border-border;
   }
 
+  /* Global Typography Base */
+  html {
+    font-family: var(--font-primary);
+    font-size: 16px;
+    line-height: var(--leading-normal);
+    color: hsl(var(--foreground));
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply bg-background text-foreground;
+    font-family: var(--font-primary);
+    font-size: var(--text-base);
+    font-weight: 400;
+    line-height: var(--leading-normal);
+    letter-spacing: var(--tracking-normal);
+  }
+
+  /* Heading Styles */
+  h1,
+  .h1 {
+    font-family: var(--font-display);
+    font-size: var(--text-5xl);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    color: hsl(var(--black-gold));
+    margin-bottom: 1.5rem;
+  }
+
+  h2,
+  .h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-4xl);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    color: hsl(var(--black-gold));
+    margin-bottom: 1.25rem;
+  }
+
+  h3,
+  .h3 {
+    font-family: var(--font-accent);
+    font-size: var(--text-3xl);
+    font-weight: 600;
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-normal);
+    color: hsl(var(--black-gold));
+    margin-bottom: 1rem;
+  }
+
+  h4,
+  .h4 {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-normal);
+    color: hsl(var(--black-gold));
+    margin-bottom: 0.75rem;
+  }
+
+  h5,
+  .h5 {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 500;
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-normal);
+    color: hsl(var(--black-gold));
+    margin-bottom: 0.5rem;
+  }
+
+  h6,
+  .h6 {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 500;
+    line-height: var(--leading-normal);
+    letter-spacing: var(--tracking-wide);
+    color: hsl(var(--black-gold));
+    margin-bottom: 0.5rem;
+  }
+
+  /* Body Text Styles */
+  p,
+  .body-text {
+    font-family: var(--font-primary);
+    font-size: var(--text-base);
+    font-weight: 400;
+    line-height: var(--leading-relaxed);
+    letter-spacing: var(--tracking-normal);
+    color: hsl(var(--foreground));
+    margin-bottom: 1rem;
+  }
+
+  .body-large {
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+  }
+
+  .body-small {
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+  }
+
+  /* Navigation Styles */
+  .nav-link {
+    font-family: var(--font-accent);
+    font-size: var(--text-base);
+    font-weight: 500;
+    line-height: var(--leading-normal);
+    letter-spacing: var(--tracking-normal);
+    color: hsl(var(--foreground));
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+  }
+
+  .nav-link:hover {
+    color: hsl(var(--gold));
+  }
+
+  /* Button Text Styles */
+  .btn-text {
+    font-family: var(--font-accent);
+    font-size: var(--text-base);
+    font-weight: 600;
+    line-height: var(--leading-normal);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .btn-text-sm {
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+
+  .btn-text-lg {
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+
+  /* Label Styles */
+  .label-text {
+    font-family: var(--font-accent);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    line-height: var(--leading-normal);
+    letter-spacing: var(--tracking-wide);
+    color: hsl(var(--muted-foreground));
+    text-transform: uppercase;
+  }
+
+  /* Caption Styles */
+  .caption {
+    font-family: var(--font-primary);
+    font-size: var(--text-xs);
+    font-weight: 400;
+    line-height: var(--leading-normal);
+    letter-spacing: var(--tracking-normal);
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* Luxury Brand Styles */
+  .brand-text {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .luxury-text {
+    font-family: var(--font-display);
+    font-style: italic;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  /* Form Input Styles */
+  input,
+  textarea,
+  select {
+    font-family: var(--font-primary);
+    font-size: var(--text-base);
+    font-weight: 400;
+    line-height: var(--leading-normal);
+    letter-spacing: var(--tracking-normal);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: hsl(var(--muted-foreground));
+    font-weight: 400;
+  }
+
+  /* Responsive Typography */
+  @media (max-width: 768px) {
+    h1,
+    .h1 {
+      font-size: var(--text-4xl);
+    }
+
+    h2,
+    .h2 {
+      font-size: var(--text-3xl);
+    }
+
+    h3,
+    .h3 {
+      font-size: var(--text-2xl);
+    }
+
+    h4,
+    .h4 {
+      font-size: var(--text-xl);
+    }
+
+    .body-large {
+      font-size: var(--text-base);
+    }
+  }
+
+  @media (max-width: 480px) {
+    html {
+      font-size: 14px;
+    }
+
+    h1,
+    .h1 {
+      font-size: var(--text-3xl);
+    }
+
+    h2,
+    .h2 {
+      font-size: var(--text-2xl);
+    }
   }
 }
 
-/* Custom font settings */
+@layer components {
+  /* Typography Utility Classes */
+  .text-display {
+    font-family: var(--font-display);
+  }
+
+  .text-accent {
+    font-family: var(--font-accent);
+  }
+
+  .text-primary {
+    font-family: var(--font-primary);
+  }
+
+  /* Weight Utilities */
+  .font-light {
+    font-weight: 300;
+  }
+
+  .font-normal {
+    font-weight: 400;
+  }
+
+  .font-medium {
+    font-weight: 500;
+  }
+
+  .font-semibold {
+    font-weight: 600;
+  }
+
+  .font-bold {
+    font-weight: 700;
+  }
+
+  .font-extrabold {
+    font-weight: 800;
+  }
+
+  .font-black {
+    font-weight: 900;
+  }
+
+  /* Spacing Utilities */
+  .tracking-tighter {
+    letter-spacing: var(--tracking-tighter);
+  }
+
+  .tracking-tight {
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .tracking-normal {
+    letter-spacing: var(--tracking-normal);
+  }
+
+  .tracking-wide {
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .tracking-wider {
+    letter-spacing: var(--tracking-wider);
+  }
+
+  .tracking-widest {
+    letter-spacing: var(--tracking-widest);
+  }
+
+  /* Line Height Utilities */
+  .leading-tight {
+    line-height: var(--leading-tight);
+  }
+
+  .leading-snug {
+    line-height: var(--leading-snug);
+  }
+
+  .leading-normal {
+    line-height: var(--leading-normal);
+  }
+
+  .leading-relaxed {
+    line-height: var(--leading-relaxed);
+  }
+
+  .leading-loose {
+    line-height: var(--leading-loose);
+  }
+
+  /* Color Utilities */
+  .text-gold {
+    color: hsl(var(--gold));
+  }
+
+  .text-pink {
+    color: hsl(var(--pink));
+  }
+
+  .text-rose-mauve {
+    color: hsl(var(--rose-mauve));
+  }
+
+  .text-black-gold {
+    color: hsl(var(--black-gold));
+  }
+
+  /* Special Text Effects */
+  .text-gradient-gold {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--gold-light)),
+      hsl(var(--gold)),
+      hsl(var(--gold-dark))
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-rose {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--pink)),
+      hsl(var(--rose-mauve)),
+      hsl(var(--pink-dark))
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* Legacy font classes for backward compatibility */
 .font-display {
-  font-family: 'Playfair Display', serif;
-  letter-spacing: 0.03em;
+  font-family: var(--font-display);
+  letter-spacing: var(--tracking-tight);
 }
 
 .font-body {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-primary);
 }
 
 .font-arabic {
@@ -106,7 +492,7 @@
   font-family: 'Tajawal', sans-serif;
 }
 
-/* Modern VIP Card with 3D tilt effect */
+/* Continue with existing styles... */
 .vip-card-modern {
   @apply relative overflow-hidden transition-all duration-700 ease-out;
   transform-style: preserve-3d;
@@ -143,7 +529,6 @@
   opacity: 0.3;
 }
 
-/* Animation for the rotating gradient */
 @keyframes rotate {
   from {
     transform: rotate(0deg);
@@ -153,7 +538,6 @@
   }
 }
 
-/* Royal styling elements */
 .royal-heading {
   @apply font-display font-bold relative;
   color: hsl(var(--black-gold));
@@ -175,7 +559,6 @@
   );
 }
 
-/* Gold border elements */
 .gold-border {
   border: 1px solid hsl(var(--gold));
 }
@@ -184,7 +567,6 @@
   box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
 }
 
-/* Fancy section divider */
 .fancy-divider {
   display: flex;
   align-items: center;
@@ -212,7 +594,6 @@
   color: hsl(var(--gold));
 }
 
-/* Service card transitions */
 .service-card {
   transition:
     transform 0.3s ease,
@@ -226,7 +607,6 @@
   border-color: hsl(var(--gold-light));
 }
 
-/* VIP card transitions */
 .vip-card {
   transition: all 0.4s ease;
   position: relative;
@@ -254,7 +634,6 @@
   opacity: 1;
 }
 
-/* Booking step styling */
 .booking-step.active {
   background-color: rgb(141, 91, 108);
   color: white;
@@ -263,7 +642,6 @@
   transition: all 0.3s ease;
 }
 
-/* Royal buttons */
 .btn-royal {
   @apply relative overflow-hidden transition-all duration-300;
   background: linear-gradient(
@@ -301,7 +679,6 @@
   left: 100%;
 }
 
-/* Dubai-style luxury patterns */
 .dubai-pattern {
   position: relative;
   z-index: 1;
@@ -319,7 +696,6 @@
   z-index: -1;
 }
 
-/* Custom scrollbar for Dubai luxury feel */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -337,7 +713,6 @@
   background: hsl(var(--gold-dark));
 }
 
-/* Luxury animation effects */
 .hover-lift {
   transition: transform 0.4s ease;
 }
@@ -361,7 +736,6 @@
   }
 }
 
-/* Float animation for decorative elements */
 @keyframes float {
   0%,
   100% {
@@ -376,7 +750,6 @@
   animation: float 4s ease-in-out infinite;
 }
 
-/* Fade In Up Animation */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -392,7 +765,6 @@
   animation: fadeInUp 0.8s ease-out forwards;
 }
 
-/* Pulse Animation */
 @keyframes pulse {
   0%,
   100% {
@@ -407,7 +779,6 @@
   animation: pulse 2s ease-in-out infinite;
 }
 
-/* Enhance gold effect with more depth */
 .gold-shine {
   position: relative;
   overflow: hidden;
@@ -439,7 +810,6 @@
   left: -100%;
 }
 
-/* Animation delay utility classes */
 .animation-delay-500 {
   animation-delay: 500ms;
 }
@@ -468,7 +838,6 @@
   animation-delay: 2500ms;
 }
 
-/* Animation utilities for service selection */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -500,7 +869,6 @@
   animation: pulse-border 2s infinite;
 }
 
-/* Service selection styling */
 .service-selected {
   position: relative;
   overflow: hidden;
@@ -531,7 +899,6 @@
   }
 }
 
-/* Selected Service Box styling */
 .selected-service-box {
   position: relative;
   overflow: hidden;
@@ -543,7 +910,6 @@
   box-shadow: 0 10px 25px -5px rgba(252, 185, 212, 0.4);
 }
 
-/* Gradient effect for service selection */
 .selected-service-gradient {
   background: linear-gradient(135deg, rgba(252, 185, 212, 0.3) 0%, rgba(255, 255, 255, 0.9) 100%);
   border-color: rgba(252, 185, 212, 0.5);

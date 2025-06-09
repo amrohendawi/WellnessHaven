@@ -44,6 +44,32 @@ export default {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
+
+        // Dubai Rose Custom Colors
+        pink: {
+          light: 'hsl(var(--pink-light))',
+          DEFAULT: 'hsl(var(--pink))',
+          dark: 'hsl(var(--pink-dark))',
+        },
+        gold: {
+          light: 'hsl(var(--gold-light))',
+          DEFAULT: 'hsl(var(--gold))',
+          dark: 'hsl(var(--gold-dark))',
+        },
+        'rose-grey': 'hsl(var(--rose-grey))',
+        'rose-mauve': 'hsl(var(--rose-mauve))',
+        beige: {
+          light: 'hsl(var(--beige-light))',
+          DEFAULT: 'hsl(var(--beige))',
+          dark: 'hsl(var(--beige-dark))',
+        },
+        'royal-purple': {
+          DEFAULT: 'hsl(var(--royal-purple))',
+          light: 'hsl(var(--royal-purple-light))',
+        },
+        'black-gold': 'hsl(var(--black-gold))',
+        cream: 'hsl(var(--cream))',
+
         chart: {
           '1': 'hsl(var(--chart-1))',
           '2': 'hsl(var(--chart-2))',

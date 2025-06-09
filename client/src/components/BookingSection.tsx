@@ -347,9 +347,9 @@ const BookingSection = () => {
                             : 'hover:shadow-sm hover:bg-pink-lightest'
                         }`}
                       >
-                        <h4 className="font-medium mb-2">
+                        <h5 className="font-small mb-2">
                           {group.name[language as keyof typeof group.name] || group.name.en}
-                        </h4>
+                        </h5>
                         {group.description && (
                           <div className="text-sm text-gray-600">
                             {group.description[language as keyof typeof group.description] ||
