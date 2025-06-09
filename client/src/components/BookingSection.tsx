@@ -100,7 +100,7 @@ const BookingSection = () => {
 
     // Get the service slug from URL if present
     const hash = window.location.hash;
-    if (hash && hash.includes('?service=')) {
+    if (hash?.includes('?service=')) {
       const serviceSlug = hash.split('?service=')[1];
 
       // Find the service by slug
@@ -251,9 +251,8 @@ const BookingSection = () => {
         <div className="text-center mb-16">
           <h2 className="royal-heading text-3xl md:text-4xl mb-8">{t('bookingTitle')}</h2>
           <div className="fancy-divider mb-4">
-            <i className="fas fa-calendar-alt fancy-divider-icon text-gold mx-2"></i>
+            <i className="fas fa-calendar-alt fancy-divider-icon text-gold mx-2" />
           </div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t('bookingSubtitle')}</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-lg overflow-hidden max-w-4xl mx-auto">
@@ -269,7 +268,7 @@ const BookingSection = () => {
                 >
                   <i
                     className={`fas fa-spa ${bookingStep === 1 ? 'text-white' : 'text-gray-500'}`}
-                  ></i>
+                  />
                 </div>
                 <span
                   className="text-sm font-medium transition-all duration-300"
@@ -289,7 +288,7 @@ const BookingSection = () => {
                 >
                   <i
                     className={`fas fa-calendar-alt ${bookingStep === 2 ? 'text-white' : 'text-gray-500'}`}
-                  ></i>
+                  />
                 </div>
                 <span
                   className="text-sm font-medium transition-all duration-300"
@@ -309,7 +308,7 @@ const BookingSection = () => {
                 >
                   <i
                     className={`fas fa-user ${bookingStep === 3 ? 'text-white' : 'text-gray-500'}`}
-                  ></i>
+                  />
                 </div>
                 <span
                   className="text-sm font-medium transition-all duration-300"
@@ -333,8 +332,8 @@ const BookingSection = () => {
                       .fill(0)
                       .map((_, index) => (
                         <div key={index} className="border rounded-lg p-4 animate-pulse">
-                          <div className="h-5 bg-gray-200 rounded w-1/2 mb-2"></div>
-                          <div className="h-4 bg-gray-100 rounded w-3/4"></div>
+                          <div className="h-5 bg-gray-200 rounded w-1/2 mb-2" />
+                          <div className="h-4 bg-gray-100 rounded w-3/4" />
                         </div>
                       ))
                   : // Display service groups
@@ -378,7 +377,7 @@ const BookingSection = () => {
                   <div className="p-4">
                     <div className="flex items-center mb-2">
                       <div className="w-6 h-6 rounded-full bg-pink-dark flex items-center justify-center mr-3 shadow-sm">
-                        <i className="fas fa-check text-white text-xs"></i>
+                        <i className="fas fa-check text-white text-xs" />
                       </div>
                       <h4 className="font-medium text-gray-800">{t('selectedService')}</h4>
                     </div>
@@ -403,11 +402,11 @@ const BookingSection = () => {
                         </p>
                         <div className="flex flex-wrap items-center text-sm">
                           <span className="bg-white/70 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm text-gray-700 mr-3 mb-1 border border-pink/30">
-                            <i className="far fa-clock mr-1"></i> {selectedService.duration}{' '}
+                            <i className="far fa-clock mr-1" /> {selectedService.duration}{' '}
                             {t('minutes')}
                           </span>
                           <span className="bg-white/70 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm text-gray-700 mb-1 border border-pink/30">
-                            <i className="far fa-money-bill-alt mr-1"></i> {selectedService.price} €
+                            <i className="far fa-money-bill-alt mr-1" /> {selectedService.price} €
                           </span>
                         </div>
                       </div>
@@ -580,7 +579,7 @@ const BookingSection = () => {
                     <div className="text-sm">
                       <div className="grid grid-cols-2 gap-2 mb-2">
                         <span className="text-gray-600 flex items-center">
-                          <i className="fas fa-check-circle text-pink mr-2"></i>
+                          <i className="fas fa-check-circle text-pink mr-2" />
                           {t('service')}:
                         </span>
                         <span className="font-medium text-pink-dark">
@@ -631,7 +630,7 @@ const BookingSection = () => {
                           !form.watch('name') || !form.watch('email') || !form.watch('phone')
                         }
                       >
-                        {t('confirmBooking')} <i className="ml-2 fas fa-check"></i>
+                        {t('confirmBooking')} <i className="ml-2 fas fa-check" />
                       </Button>
                     </div>
 
@@ -656,7 +655,7 @@ const BookingSection = () => {
 
           {isLoading ? (
             <div className="flex justify-center p-6">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink" />
             </div>
           ) : services && services.length > 0 ? (
             <div className="space-y-4">
@@ -844,7 +843,7 @@ const AvailableTimeSlots = ({
     return (
       <div className="grid grid-cols-3 gap-2">
         {[1, 2, 3, 4, 5, 6].map(i => (
-          <div key={i} className="h-10 bg-gray-100 animate-pulse rounded-md"></div>
+          <div key={i} className="h-10 bg-gray-100 animate-pulse rounded-md" />
         ))}
       </div>
     );
