@@ -5,8 +5,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { uploadToImgur } from '@/lib/imgurService';
 import { Image as ImageIcon, Link, Loader2, X } from 'lucide-react';
-import type React from 'react';
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ImageUploaderProps {
@@ -101,7 +100,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         title: t('adminImageUploader.imageUrlAdded'),
         description: t('adminImageUploader.imageUrlAddedDesc'),
       });
-    } catch (error) {
+    } catch {
       toast({
         title: t('adminImageUploader.invalidUrl'),
         description: t('adminImageUploader.invalidUrlDesc'),

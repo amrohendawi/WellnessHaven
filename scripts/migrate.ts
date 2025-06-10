@@ -1,5 +1,4 @@
-import path from 'path';
-import { dirname } from 'path';
+import { dirname, join as pathJoin } from 'path';
 import { fileURLToPath } from 'url';
 // scripts/migrate.ts
 import { config } from 'dotenv';
@@ -23,7 +22,7 @@ async function runMigrations() {
 
   try {
     // The migrate function needs the path to the migrations folder
-    const migrationsFolder = path.join(__dirname, '..', 'drizzle');
+    const migrationsFolder = pathJoin(__dirname, '..', 'drizzle');
 
     // Run the migrations
     await migrate(db, { migrationsFolder });

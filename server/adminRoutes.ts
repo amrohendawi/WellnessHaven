@@ -8,7 +8,7 @@ router.get('/bookings', async (_req: Request, res: Response) => {
   try {
     const bookings = await storage.getAllBookings();
     res.status(200).json(bookings);
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Failed to fetch bookings' });
   }
 });
@@ -20,7 +20,7 @@ router.get('/bookings/:id', async (req: Request, res: Response) => {
     const booking = await storage.getBookingById(id);
     if (!booking) return res.status(404).json({ message: 'Booking not found' });
     res.status(200).json(booking);
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Failed to fetch booking details' });
   }
 });
@@ -32,7 +32,7 @@ router.put('/bookings/:id', async (req: Request, res: Response) => {
     const updated = await storage.updateBooking(id, req.body);
     if (!updated) return res.status(404).json({ message: 'Booking not found' });
     res.status(200).json(updated);
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Failed to update booking' });
   }
 });
@@ -42,7 +42,7 @@ router.get('/blocked-slots', async (_req: Request, res: Response) => {
   try {
     const slots = await storage.getBlockedTimeSlots();
     res.status(200).json(slots);
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Failed to fetch blocked slots' });
   }
 });
@@ -52,7 +52,7 @@ router.post('/blocked-slots', async (req: Request, res: Response) => {
     const { date, time } = req.body;
     const newSlot = await storage.createBlockedTimeSlot({ date, time });
     res.status(201).json(newSlot);
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Failed to create blocked slot' });
   }
 });
@@ -62,7 +62,7 @@ router.delete('/blocked-slots/:id', async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     await storage.deleteBlockedTimeSlot(id);
     res.status(204).end();
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Failed to delete blocked slot' });
   }
 });
@@ -72,7 +72,7 @@ router.get('/services', async (_req: Request, res: Response) => {
   try {
     const services = await storage.getServices();
     res.status(200).json(services);
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Failed to fetch services' });
   }
 });
@@ -82,7 +82,7 @@ router.post('/services', async (req: Request, res: Response) => {
   try {
     const service = await storage.createService(req.body);
     res.status(201).json(service);
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Failed to create service' });
   }
 });
@@ -94,7 +94,7 @@ router.put('/services/:id', async (req: Request, res: Response) => {
     const updated = await storage.updateService(id, req.body);
     if (!updated) return res.status(404).json({ message: 'Service not found' });
     res.status(200).json(updated);
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Failed to update service' });
   }
 });
@@ -105,7 +105,7 @@ router.delete('/services/:id', async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     await storage.deleteService(id);
     res.status(204).end();
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Failed to delete service' });
   }
 });
@@ -117,7 +117,7 @@ router.get('/service-groups', async (_req: Request, res: Response) => {
     const groups = await storage.getServiceGroups();
     // Return the groups directly without transforming the structure
     res.status(200).json(groups);
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Failed to fetch service groups' });
   }
 });
@@ -147,7 +147,7 @@ router.get('/service-groups/:id', async (req: Request, res: Response) => {
       displayOrder: group.displayOrder || 0,
     };
     res.status(200).json(transformedGroup);
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Failed to fetch service group' });
   }
 });
@@ -188,7 +188,7 @@ router.post('/service-groups', async (req: Request, res: Response) => {
 
     // Return the new group directly without transforming
     res.status(201).json(newGroup);
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Failed to create service group' });
   }
 });
@@ -229,7 +229,7 @@ router.put('/service-groups/:id', async (req: Request, res: Response) => {
 
     // Return the updated group directly without transforming
     res.status(200).json(updated);
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Failed to update service group' });
   }
 });
@@ -240,7 +240,7 @@ router.delete('/service-groups/:id', async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     await storage.deleteServiceGroup(id);
     res.status(204).end();
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Failed to delete service group' });
   }
 });
@@ -262,7 +262,7 @@ router.get('/dashboard-summary', async (_req: Request, res: Response) => {
       servicesCount: services.length,
       blockedSlotsCount: blockedSlots.length,
     });
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Failed to fetch dashboard summary' });
   }
 });

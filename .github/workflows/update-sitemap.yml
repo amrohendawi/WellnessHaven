@@ -1,0 +1,56 @@
+name: Update Sitemap
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/data/services.json'
+      - 'scripts/data/service-groups.json'
+      - 'scripts/generate-sitemap.js'
+
+  # Allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  update-sitemap:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate sitemap
+        run: npm run sitemap:generate
+
+      - name: Check for sitemap changes
+        id: verify-changed-files
+        run: |
+          if [ -n "$(git status --porcelain client/public/sitemap.xml)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit updated sitemap
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add client/public/sitemap.xml
+          git commit -m "🤖 Auto-update sitemap [skip ci]"
+          git push
+
+      - name: Notify Google Search Console (optional)
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        run: |
+          echo "Sitemap updated! Consider submitting to Google Search Console:"
+          echo "https://search.google.com/search-console"

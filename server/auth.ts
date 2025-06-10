@@ -22,7 +22,7 @@ export async function verifyToken(token: string): Promise<string | null> {
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
     return decoded.userId;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -38,7 +38,7 @@ export async function authenticateUser(username: string, password: string): Prom
 
     // Compare the provided password with the stored hash
     return await bcrypt.compare(password, user[0].password);
-  } catch (error) {
+  } catch {
     console.error('Authentication error:', error);
     return false;
   }
@@ -73,7 +73,7 @@ export const login = async (req: Request, res: Response) => {
       console.error(`Login failed for user: ${username}`);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
-  } catch (error) {
+  } catch {
     console.error('Authentication error:', error);
     return res.status(500).json({ message: 'An error occurred during authentication' });
   }
@@ -118,7 +118,7 @@ export const getCurrentUser = async (req: AuthRequest, res: Response) => {
       username: adminUsers[0].username,
       role: 'admin',
     });
-  } catch (error) {
+  } catch {
     console.error('Error fetching current user:', error);
     res.status(500).json({ message: 'Error fetching user details' });
   }

@@ -21,7 +21,7 @@ export default function LoginPage() {
       if (result?.success && result.redirectTo) {
         navigate(result.redirectTo, { replace: true });
       }
-    } catch (error) {
+    } catch {
       // Error is handled by the login function
     }
   };

@@ -30,7 +30,7 @@ const ContactSection = () => {
 
     try {
       // Submit to server using the API function from our centralized client
-      const result = await submitContactForm(data);
+      await submitContactForm(data);
 
       toast({
         title: t('messageSent'),
@@ -38,7 +38,7 @@ const ContactSection = () => {
       });
 
       form.reset();
-    } catch (error) {
+    } catch {
       toast({
         variant: 'destructive',
         title: t('error'),

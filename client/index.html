@@ -1,28 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>Dubai Rose - Women Only Beauty & Aesthetics Center</title>
-    <meta name="description" content="Dubai's premier women-only beauty and aesthetics center offering luxury treatments and exceptional services in a private, elegant environment." />
-    <!-- Open Graph tags -->
-    <meta property="og:title" content="Dubai Rose - Women Only Beauty & Aesthetics Center" />
-    <meta property="og:description" content="Discover premium beauty and aesthetic treatments exclusively for women at Dubai Rose." />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Dubai Rose" />
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico" />
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
-    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>Dubai Rose - Premier Women Only Beauty Salon & Aesthetics Center in Berlin</title>
+  <meta name="description"
+    content="Dubai Rose is Berlin's premier women-only beauty salon offering luxury hair services, facial treatments, laser hair removal, bridal packages, and advanced aesthetic treatments. Book your appointment today!" />
+  <meta name="keywords"
+    content="Berlin beauty salon, women only beauty center Berlin, hair salon Berlin, facial treatments Berlin, laser hair removal Berlin, bridal makeup Berlin, aesthetic treatments Berlin, luxury beauty salon, women only spa Berlin, Frauensalon Berlin" />
+  <meta name="author" content="Dubai Rose Beauty Center" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph tags -->
+  <meta property="og:title" content="Dubai Rose - Premier Women Only Beauty Salon & Aesthetics Center in Berlin" />
+  <meta property="og:description"
+    content="Experience luxury beauty treatments at Berlin's premier women-only salon. Hair services, facials, laser treatments, and more in an exclusive environment." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Dubai Rose" />
+  <meta property="og:url" content="https://dubairose.com" />
+  <meta property="og:image" content="https://dubairose.com/og-image.jpg" />
+  <meta property="og:locale" content="de_DE" />
+  <meta property="og:locale:alternate" content="en_US" />
+  <meta property="og:locale:alternate" content="ar_AE" />
+  <meta property="og:locale:alternate" content="tr_TR" />
+
+  <!-- Twitter Card tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Dubai Rose - Premier Women Only Beauty Salon & Aesthetics Center in Berlin" />
+  <meta name="twitter:description"
+    content="Experience luxury beauty treatments at Berlin's premier women-only salon. Hair services, facials, laser treatments, and more in an exclusive environment." />
+  <meta name="twitter:image" content="https://dubairose.com/twitter-image.jpg" />
+
+  <!-- Additional SEO Meta Tags -->
+  <meta name="theme-color" content="#D4AF37" />
+  <meta name="application-name" content="Dubai Rose" />
+  <meta name="apple-mobile-web-app-title" content="Dubai Rose" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://dubairose.com/" />
+
+  <!-- Language alternates -->
+  <link rel="alternate" hreflang="en" href="https://dubairose.com/" />
+  <link rel="alternate" hreflang="ar" href="https://dubairose.com/?lang=ar" />
+  <link rel="alternate" hreflang="de" href="https://dubairose.com/?lang=de" />
+  <link rel="alternate" hreflang="tr" href="https://dubairose.com/?lang=tr" />
+  <link rel="alternate" hreflang="x-default" href="https://dubairose.com/" />
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BeautySalon",
+      "name": "Dubai Rose",
+      "description": "Berlin's premier women-only beauty and aesthetics center offering luxury treatments and exceptional services in a private, elegant environment.",
+      "url": "https://dubairose.com",
+      "telephone": "+49 178 4423 645",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Karl-Marx-Straße 45",
+        "addressLocality": "Berlin",
+        "addressRegion": "Berlin",
+        "postalCode": "12043",
+        "addressCountry": "DE"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "52.4845",
+        "longitude": "13.4326"
+      },
+      "openingHours": [
+        "Mo-Fr 09:00-20:00",
+        "Sa 09:00-18:00",
+        "Su closed"
+      ],
+      "priceRange": "$$$",
+      "paymentAccepted": ["Cash", "Credit Card", "Debit Card", "EC Card"],
+      "currenciesAccepted": "EUR",
+      "amenityFeature": [
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Women Only Environment",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification", 
+          "name": "Private Treatment Rooms",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Parking Available",
+          "value": true
+        }
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Beauty Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Hair Services",
+              "description": "Complete hair care services from cutting and styling to coloring and extensions"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Skin & Facial Treatments",
+              "description": "Advanced facial treatments and skin care solutions for radiant, healthy skin"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Advanced Aesthetic & Laser Treatments",
+              "description": "State-of-the-art laser and aesthetic treatments using cutting-edge technology"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Makeup, Brows & Lashes",
+              "description": "Professional makeup application and enhancement services for eyes, brows, and lashes"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Hair Removal Services",
+              "description": "Professional hair removal services using advanced techniques for smooth, lasting results"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Bridal & Special-Occasion Packages",
+              "description": "Complete beauty packages for your most special moments and celebrations"
+            }
+          }
+        ]
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "150",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "sameAs": [
+        "https://www.instagram.com/dubairosenails",
+        "https://www.facebook.com/dubairosenails",
+        "https://wa.me/491784423645"
+      ]
+    }
+    </script>
+
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#D4AF37" />
+  <meta name="msapplication-TileColor" content="#D4AF37" />
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&family=Tajawal:wght@300;400;500;700&display=swap"
+    rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+
+  <!-- Remove replit banner for production -->
+  <!-- <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script> -->
+</body>
+
 </html>

@@ -191,11 +191,11 @@ async function handleMe(req: VercelRequest, res: VercelResponse) {
         role: userResults[0].isAdmin ? 'admin' : 'user',
         firstName: 'Admin', // This could be added as a column in users table later
       });
-    } catch (error) {
+    } catch {
       return res.status(401).json({ message: 'Invalid or expired token' });
     }
-  } catch (error) {
-    console.error('Authentication error:', error);
+  } catch (_error) {
+    console.error('Authentication error:', _error);
     return res.status(500).json({ message: 'An error occurred during authentication' });
   }
 }

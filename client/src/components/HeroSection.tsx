@@ -15,6 +15,12 @@ const HeroSection = () => {
         backgroundColor: '#8D5B6C' /* Fallback color in case image fails to load */,
       }}
     >
+      {/* SEO-optimized heading structure */}
+      <div className="sr-only">
+        <h1>Dubai Rose - Premier Women Only Beauty Salon & Aesthetics Center in Berlin</h1>
+        <h2>Luxury Hair Services, Facial Treatments, Laser Hair Removal, and Bridal Packages</h2>
+      </div>
+
       {/* Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
         <div className="absolute top-10 left-10 w-48 md:w-96 h-48 md:h-96 rounded-full bg-gold opacity-30 blur-3xl animate-pulse-slow" />

@@ -3,7 +3,7 @@ import { logger } from './api';
 /**
  * Simple interface for Imgur API response
  */
-interface ImgurUploadResponse {
+interface _ImgurUploadResponse {
   data: {
     link: string; // The only field we really need
   };
@@ -23,7 +23,7 @@ export async function uploadToImgur(file: File): Promise<string> {
   try {
     // Get credentials from environment variables
     const clientId = import.meta.env.VITE_IMGUR_CLIENT_ID;
-    const accessToken = import.meta.env.VITE_IMGUR_ACCESS_TOKEN;
+    const _accessToken = import.meta.env.VITE_IMGUR_ACCESS_TOKEN;
 
     if (!clientId) {
       throw new Error('Imgur client ID not found in environment variables');
@@ -57,7 +57,7 @@ export async function uploadToImgur(file: File): Promise<string> {
           try {
             const errorResponse = JSON.parse(xhr.responseText);
             errorMsg += `: ${errorResponse.data?.error || 'Unknown error'}`;
-          } catch (e) {
+          } catch {
             errorMsg += `: ${xhr.statusText}`;
           }
           reject(new Error(errorMsg));
