@@ -14,10 +14,15 @@ on:
 jobs:
   update-sitemap:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Allow writing to repository content
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0  # Fetch full history for better git operations
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -42,12 +47,14 @@ jobs:
 
       - name: Commit updated sitemap
         if: steps.verify-changed-files.outputs.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add client/public/sitemap.xml
           git commit -m "🤖 Auto-update sitemap [skip ci]"
-          git push
+          git push origin HEAD
 
       - name: Notify Google Search Console (optional)
         if: steps.verify-changed-files.outputs.changed == 'true'
